@@ -690,7 +690,7 @@ Class DownloadHelper
 
                             _log.Info("Server supports Hash Alogrightm {0}", _hashcommand)
 
-                            _reply = _ftp_session.Expect(_ftp_session.SendCommand(_hashcommand, _item.FullPath), 250)
+                            _reply = _ftp_session.Expect(_ftp_session.SendCommand(_hashcommand, _item.FullPath), 250, 251)
 
                             If _reply.Code.IsSuccess = True Then
 
@@ -720,7 +720,7 @@ Class DownloadHelper
 
                                         _log.Debug("Directory sucessfully changed")
 
-                                        _reply = _ftp_session.Expect(_ftp_session.SendCommand(_hashcommand, _item.FileName), 250)
+                                        _reply = _ftp_session.Expect(_ftp_session.SendCommand(_hashcommand, _item.FileName), 250, 251)
 
                                         If _reply.Code.IsSuccess = True Then
 
