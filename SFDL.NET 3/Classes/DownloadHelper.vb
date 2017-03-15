@@ -16,6 +16,7 @@ Class DownloadHelper
 
 
     Public Sub New()
+        Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
         _settings = CType(Application.Current.Resources("Settings"), Settings)
     End Sub
 
@@ -308,6 +309,8 @@ Class DownloadHelper
         Dim _batr As New BasicAvailabilityTestResult
 
         Try
+
+            Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
 
             If _item.IWorkItemResult.IsCanceled = True Or CBool(Application.Current.Resources("DownloadStopped")) = True Then
                 Throw New DownloadStoppedException("Canceld!")

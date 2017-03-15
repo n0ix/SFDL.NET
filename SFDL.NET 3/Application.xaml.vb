@@ -47,6 +47,10 @@ Class Application
 
                 System.Threading.Thread.CurrentThread.CurrentUICulture = Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
 
+                Globalization.CultureInfo.DefaultThreadCurrentCulture = Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
+
+                FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement), New FrameworkPropertyMetadata(Markup.XmlLanguage.GetLanguage(_settings.Language)))
+
                 If _settings.PreventStandby = True Then
                     StandyHandler.PreventStandby()
                     _log.Info("System Standby is now blocked")

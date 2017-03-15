@@ -350,6 +350,8 @@ Decrypt:
 
         Dim _log As Logger = LogManager.GetLogger("CalculateETA")
 
+        System.Threading.Thread.CurrentThread.CurrentUICulture = Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
+
         While SmartThreadPool.IsWorkItemCanceled = False
 
             Dim _total_speed As Double = 0

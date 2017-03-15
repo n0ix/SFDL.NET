@@ -641,4 +641,37 @@ Restart the download to apply these settings.</value>
   <data name="ETA_AppTask_Status_4_Message" xml:space="preserve">
     <value>Download running - Speed: {0} KB/s | ETA: {1} | {2} %</value>
   </data>
+  <data name="DownloadStatus_Completed" xml:space="preserve">
+    <value>Download completed</value>
+  </data>
+  <data name="DownloadStatus_Completed_HashInvalid" xml:space="preserve">
+    <value>Download completed (Checksum: Error)</value>
+  </data>
+  <data name="DownloadStatus_Completed_HashValid" xml:space="preserve">
+    <value>Download completed (Checksum: OK)</value>
+  </data>
+  <data name="DownloadStatus_Failed" xml:space="preserve">
+    <value>Error: Unknown</value>
+  </data>
+  <data name="DownloadStatus_Failed_FileNameTooLong" xml:space="preserve">
+    <value>Fehler: Filename too long</value>
+  </data>
+  <data name="DownloadStatus_Failed_NotEnoughDiskSpace" xml:space="preserve">
+    <value>Error: Not enough disk space</value>
+  </data>
+  <data name="DownloadStatus_Failed_ServerFull" xml:space="preserve">
+    <value>Error: Server full</value>
+  </data>
+  <data name="DownloadStatus_Queued" xml:space="preserve">
+    <value>Queued</value>
+  </data>
+  <data name="DownloadStatus_Running" xml:space="preserve">
+    <value>Download running</value>
+  </data>
+  <data name="DownloadStatus_RunningWait" xml:space="preserve">
+    <value>Download is waiting for start ....</value>
+  </data>
+  <data name="DownloadStatus_Stopped" xml:space="preserve">
+    <value>Download stopped</value>
+  </data>
 </root>

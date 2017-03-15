@@ -823,7 +823,7 @@
                                                 <Expander IsExpanded="True">
                                                     <Expander.Header>
                                                         <DockPanel LastChildFill="False">
-                                                            
+
                                                             <StackPanel Orientation="Horizontal">
                                                                 <TextBlock
                                                                     VerticalAlignment="Bottom"
@@ -832,7 +832,7 @@
                                                                     Foreground="White"
                                                                     Text="{Binding Name, Converter={StaticResource CollectionViewNameConv}}" />
                                                             </StackPanel>
-                                                            
+
                                                             <Button
                                                                 Width="25"
                                                                 Height="25"
