@@ -551,7 +551,7 @@ Wollen Sie die Anwendung jetzt mit Administratorrechte neustarten?</value>
     <value>'{0}' - SFDL entschlüsseln abgebrochen</value>
   </data>
   <data name="OpenSFDL_Exception_FTPDown" xml:space="preserve">
-    <value>'{0}' - Versuch denn FTP Link, Server ist wahrscheinlich offline</value>
+    <value>'{0}' - Versuch den FTP Link, der Server ist wahrscheinlich offline</value>
   </data>
   <data name="OpenSFDL_Exception_SFDLContainerAlreadyOpen" xml:space="preserve">
     <value>SFDL Container '{0}' ist bereits geöffnet!</value>
