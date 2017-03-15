@@ -297,6 +297,10 @@ Decrypt:
 
             End If
 
+            If Application.Current.Resources("DownloadStopped") = False And Not _mycontainer_session.DownloadItems.Where(Function(myitem) myitem.isSelected = True).Count = 0 Then
+                CheckAndEnqueueSession(_mycontainer_session)
+            End If
+
         Catch ex As Exception
             _mytask.SetTaskStatus(TaskStatus.Faulted, ex.Message)
         End Try
@@ -482,7 +486,7 @@ Decrypt:
 
     End Sub
 
-    Private Sub QueryDownloadItems()
+    Friend Sub QueryDownloadItems()
 
         Dim _log As Logger = LogManager.GetLogger("QueryDownloadItems")
 

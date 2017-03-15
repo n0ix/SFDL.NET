@@ -4,7 +4,28 @@ Imports NLog
 Module SFDLFileHelper
 
     Private _log As NLog.Logger = NLog.LogManager.GetLogger("SFDLFileHelper")
+    Private _caes_lock As New Object
 
+
+    Sub CheckAndEnqueueSession(ByVal _session As ContainerSession)
+
+        If Not IsNothing(_session) Then
+
+            SyncLock _session.SynLock
+
+                If _session.SessionState = ContainerSessionState.None Then
+                    _session.SessionState = ContainerSessionState.Queued
+                End If
+
+            End SyncLock
+
+            SyncLock _caes_lock
+                MainViewModel.ThisInstance.QueryDownloadItems()
+            End SyncLock
+
+        End If
+
+    End Sub
 
     Public Async Function GetContainerTotalSize(ByVal _container As ContainerSession) As Task(Of Double)
 

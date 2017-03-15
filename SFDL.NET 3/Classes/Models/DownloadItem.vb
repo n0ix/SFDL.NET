@@ -63,12 +63,20 @@ Public Class DownloadItem
 
                     If value = True Then
                         IWorkItemResult = Nothing
+
+                        If Application.Current.Resources("DownloadStopped") = False Then
+                            CheckAndEnqueueSession(MainViewModel.ThisInstance.ContainerSessions.Where(Function(mysession) mysession.ID.Equals(ParentContainerID)).FirstOrDefault)
+                        End If
+
                     Else
                         If IsNothing(IWorkItemResult) = False And DownloadStatus = Status.Queued Then
                             IWorkItemResult.Cancel()
                         End If
+
                         DownloadStatus = Status.None
+
                     End If
+
                 End If
 
                 RaisePropertyChanged("isSelected")
