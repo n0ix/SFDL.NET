@@ -81,7 +81,7 @@
             _size = CalculateSizeAsMB(_tmp_list)
             _speed = CalculateSpeed(session.DownloadStartedTime, session.DownloadStoppedTime, _tmp_list)
 
-            _rt_speedreport = String.Format("{0} in {1} heruntergeladen @ ~ {2}", Math.Round(_size, 2) & " MB", SecToHMS(DateDiff(DateInterval.Second, session.DownloadStartedTime, session.DownloadStoppedTime)), Math.Round(_speed, 2) & " KB/s")
+            _rt_speedreport = String.Format(My.Resources.Strings.GenerateSimpleSpeedreport_AppTask_Completed_Message, Math.Round(_size, 2) & " MB", SecToHMS(DateDiff(DateInterval.Second, session.DownloadStartedTime, session.DownloadStoppedTime)), Math.Round(_speed, 2) & " KB/s")
 
         Catch ex As NoSpeedreportDataException
             _log.Info("Nothing was downloaded - Skipping Speedreport generation")

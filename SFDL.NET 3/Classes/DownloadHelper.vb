@@ -16,7 +16,6 @@ Class DownloadHelper
 
 
     Public Sub New()
-        Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
         _settings = CType(Application.Current.Resources("Settings"), Settings)
     End Sub
 

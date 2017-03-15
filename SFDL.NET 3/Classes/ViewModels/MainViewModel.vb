@@ -671,6 +671,8 @@ Decrypt:
 
         Try
 
+            System.Threading.Thread.CurrentThread.CurrentUICulture = Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
+
             If Not IsNothing(_overrride_item) Then
                 _item = _overrride_item
             Else
@@ -685,6 +687,8 @@ Decrypt:
 
 
             Task.Run(Sub()
+
+                         System.Threading.Thread.CurrentThread.CurrentUICulture = Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
 
                          If Not _mysession.UnRarChains.Count = 0 And _settings.UnRARSettings.UnRARAfterDownload = True Then
 
@@ -752,6 +756,8 @@ Decrypt:
 
             Task.Run(Sub()
 
+                         System.Threading.Thread.CurrentThread.CurrentUICulture = Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
+
 #Region "Check If Download Or Any Session Is Complete"
 
                          SyncLock _mysession.SynLock
@@ -769,52 +775,52 @@ Decrypt:
                                  If DLItemQuery.Count = 0 Or Application.Current.Resources("DownloadStopped") = True Then
 
                                      _mysession.SessionState = ContainerSessionState.DownloadComplete
-                                         _mysession.DownloadStoppedTime = Now
+                                     _mysession.DownloadStoppedTime = Now
 #Region "Speedreport"
-                                         If _settings.SpeedReportSettings.SpeedreportEnabled = True Then
+                                     If _settings.SpeedReportSettings.SpeedreportEnabled = True Then
 
-                                             Dim _speedreport As String = String.Empty
-                                             Dim _sr_filepath As String = String.Empty
+                                         Dim _speedreport As String = String.Empty
+                                         Dim _sr_filepath As String = String.Empty
                                          Dim _sr_task As New AppTask(My.Resources.Strings.Speedreport_AppTask_Start_Message)
 
                                          Try
 
-                                                 AddHandler _sr_task.TaskDone, AddressOf TaskDoneEvent
+                                             AddHandler _sr_task.TaskDone, AddressOf TaskDoneEvent
 
-                                                 ActiveTasks.Add(_sr_task)
+                                             ActiveTasks.Add(_sr_task)
 
-                                                 _sr_filepath = _mysession.LocalDownloadRoot
+                                             _sr_filepath = _mysession.LocalDownloadRoot
 
-                                                 _sr_filepath = Path.Combine(_sr_filepath, "speedreport.txt")
+                                             _sr_filepath = Path.Combine(_sr_filepath, "speedreport.txt")
 
-                                                 _speedreport = GenerateSpeedreport(_mysession, _settings.SpeedReportSettings)
+                                             _speedreport = GenerateSpeedreport(_mysession, _settings.SpeedReportSettings)
 
-                                                 If _speedreport.Equals("nodata") And System.IO.File.Exists(_sr_filepath) Then
-                                                     Throw New NoSpeedreportDataException
-                                                 End If
+                                             If _speedreport.Equals("nodata") And System.IO.File.Exists(_sr_filepath) Then
+                                                 Throw New NoSpeedreportDataException
+                                             End If
 
-                                                 If String.IsNullOrWhiteSpace(_speedreport) Then
+                                             If String.IsNullOrWhiteSpace(_speedreport) Then
                                                  Throw New Exception("speedreport failed")
                                              End If
 
-                                                 My.Computer.FileSystem.WriteAllText(_sr_filepath, _speedreport, False, Encoding.Default)
+                                             My.Computer.FileSystem.WriteAllText(_sr_filepath, _speedreport, False, Encoding.Default)
 
                                              _sr_task.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.Speedreport_AppTask_Completed_Message, GenerateSimpleSpeedreport(_mysession)))
 
                                          Catch ex As NoSpeedreportDataException
-                                                 _sr_task.SetTaskStatus(TaskStatus.RanToCompletion, String.Format("Speedreport | {0}", GenerateSimpleSpeedreport(_mysession)))
+                                             _sr_task.SetTaskStatus(TaskStatus.RanToCompletion, String.Format("Speedreport | {0}", GenerateSimpleSpeedreport(_mysession)))
 
-                                             Catch ex As Exception
+                                         Catch ex As Exception
                                              _sr_task.SetTaskStatus(TaskStatus.Faulted, My.Resources.Strings.Speedreport_Exception_SpeedreportFailed)
                                          End Try
 
-                                         End If
-
-#End Region
                                      End If
 
-
+#End Region
                                  End If
+
+
+                             End If
 
                          End SyncLock
 #End Region

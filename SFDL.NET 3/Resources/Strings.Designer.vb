@@ -470,6 +470,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die {0} in {1} heruntergeladen @ ~ {2} ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property GenerateSimpleSpeedreport_AppTask_Completed_Message() As String
+            Get
+                Return ResourceManager.GetString("GenerateSimpleSpeedreport_AppTask_Completed_Message", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die SFDL.NET 3 wird zum ersten Mal gestartet oder der Installationspfad hat sich geändert.
         '''
         '''Deshalb muss SFDL.NET 3 einmalig &quot;als Administrator&quot; gestartet werden damit die Dateiendung *.sfdl registriert wird.
@@ -780,7 +789,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die &apos;{0}&apos; - Versuch denn FTP Link, Server ist wahrscheinlich offline ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die &apos;{0}&apos; - Versuch den FTP Link, der Server ist wahrscheinlich offline ähnelt.
         '''</summary>
         Public Shared ReadOnly Property OpenSFDL_Exception_FTPDown() As String
             Get
