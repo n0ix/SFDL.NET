@@ -654,7 +654,7 @@ Restart the download to apply these settings.</value>
     <value>Error: Unknown</value>
   </data>
   <data name="DownloadStatus_Failed_FileNameTooLong" xml:space="preserve">
-    <value>Fehler: Filename too long</value>
+    <value>Error: Filename too long</value>
   </data>
   <data name="DownloadStatus_Failed_NotEnoughDiskSpace" xml:space="preserve">
     <value>Error: Not enough disk space</value>
