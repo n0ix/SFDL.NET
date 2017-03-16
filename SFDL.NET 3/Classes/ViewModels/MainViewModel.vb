@@ -371,66 +371,66 @@ Decrypt:
 
                     System.Threading.Tasks.Parallel.ForEach(Of DownloadItem)(DownloadItems, Sub(_item As DownloadItem)
 
-                                                                                                    If _item.DownloadStatus = DownloadItem.Status.Running Then
+                                                                                                If _item.DownloadStatus = DownloadItem.Status.Running Then
 
-                                                                                                        If Not String.IsNullOrWhiteSpace(_item.DownloadSpeed) Then
+                                                                                                    If Not String.IsNullOrWhiteSpace(_item.DownloadSpeed) Then
 
-                                                                                                            Dim _raw_speed As String = _item.DownloadSpeed.ToString
+                                                                                                        Dim _raw_speed As String = _item.DownloadSpeed.ToString
 
-                                                                                                            If _raw_speed.Contains("KB/s") Then
-                                                                                                                _raw_speed = _raw_speed.Replace("KB/s", "").Trim
-                                                                                                                _total_speed += Double.Parse(_raw_speed)
-                                                                                                            Else
+                                                                                                        If _raw_speed.Contains("KB/s") Then
+                                                                                                            _raw_speed = _raw_speed.Replace("KB/s", "").Trim
+                                                                                                            _total_speed += Double.Parse(_raw_speed)
+                                                                                                        Else
 
-                                                                                                                If _raw_speed.Contains("MB/s") Then
-                                                                                                                    _raw_speed = _raw_speed.Replace("MB/s", "").Trim
-                                                                                                                    _total_speed += Double.Parse(_raw_speed) * 1024
-                                                                                                                End If
-
+                                                                                                            If _raw_speed.Contains("MB/s") Then
+                                                                                                                _raw_speed = _raw_speed.Replace("MB/s", "").Trim
+                                                                                                                _total_speed += Double.Parse(_raw_speed) * 1024
                                                                                                             End If
 
                                                                                                         End If
 
                                                                                                     End If
 
-                                                                                                End Sub)
+                                                                                                End If
+
+                                                                                            End Sub)
+
+                End If
 
 
-                    _total_size = DownloadItems.Where(Function(myitem) Not myitem.DownloadStatus = DownloadItem.Status.None).Select(Function(_item) _item.FileSize).Sum
-                    _total_size_downloaded = DownloadItems.Where(Function(myitem) Not myitem.DownloadStatus = DownloadItem.Status.None).Select(Function(_item) _item.SizeDownloaded).Sum
+                _total_size = DownloadItems.Where(Function(myitem) Not myitem.DownloadStatus = DownloadItem.Status.None).Select(Function(_item) _item.FileSize).Sum
+                _total_size_downloaded = DownloadItems.Where(Function(myitem) Not myitem.DownloadStatus = DownloadItem.Status.None).Select(Function(_item) _item.SizeDownloaded).Sum
 
-                    _percent_done = CInt((_total_size_downloaded / _total_size) * 100)
+                _percent_done = CInt((_total_size_downloaded / _total_size) * 100)
 
-                        _size_remaining = _total_size - _total_size_downloaded
+                _size_remaining = _total_size - _total_size_downloaded
 
-                    If _size_remaining > 0 And _total_speed > 0 Then
+                Application.Current.Dispatcher.BeginInvoke(New Action(Sub()
+                                                                          WindowInstance.TaskbarItemInfo.ProgressValue = _percent_done / 100.0
+                                                                      End Sub))
 
-                        _time_remaining = Math.Round(Double.Parse(CStr(((_size_remaining / 1024) / _total_speed) / 60)), 2)
 
-                        If _mytask.TaskStatus = TaskStatus.Running Then
+                If _size_remaining > 0 And _total_speed > 0 Then
 
-                            Application.Current.Dispatcher.BeginInvoke(New Action(Sub()
-                                                                                      WindowInstance.TaskbarItemInfo.ProgressValue = _percent_done / 100.0
-                                                                                  End Sub))
+                    _time_remaining = Math.Round(Double.Parse(CStr(((_size_remaining / 1024) / _total_speed) / 60)), 2)
 
-                            If _total_speed >= 1024 Then
-                                _mytask.SetTaskStatus(TaskStatus.Running, String.Format(My.Resources.Strings.ETA_AppTask_Status_1_Message, Math.Round(_total_speed / 1024, 2), ConvertDecimal2Time(_time_remaining), _percent_done))
-                            Else
-                                _mytask.SetTaskStatus(TaskStatus.Running, String.Format(My.Resources.Strings.ETA_AppTask_Status_4_Message, Math.Round(_total_speed, 2), ConvertDecimal2Time(_time_remaining), _percent_done))
-                            End If
+                    If _mytask.TaskStatus = TaskStatus.Running Then
 
+                        If _total_speed >= 1024 Then
+                            _mytask.SetTaskStatus(TaskStatus.Running, String.Format(My.Resources.Strings.ETA_AppTask_Status_1_Message, Math.Round(_total_speed / 1024, 2), ConvertDecimal2Time(_time_remaining), _percent_done))
                         Else
-                            _mytask.SetTaskStatus(TaskStatus.Running, String.Format(My.Resources.Strings.ETA_AppTask_Status_2_Message, CInt((_total_size_downloaded / _total_size) * 100)))
+                            _mytask.SetTaskStatus(TaskStatus.Running, String.Format(My.Resources.Strings.ETA_AppTask_Status_4_Message, Math.Round(_total_speed, 2), ConvertDecimal2Time(_time_remaining), _percent_done))
                         End If
 
                     Else
-                        '_log.Debug("Nothing to Calculate")
+                        _mytask.SetTaskStatus(TaskStatus.Running, String.Format(My.Resources.Strings.ETA_AppTask_Status_2_Message, CInt((_total_size_downloaded / _total_size) * 100)))
+
                     End If
-
-
                 Else
-                    _log.Debug("Skipping Calculate - Window is Minimized")
+
+                    '_log.Debug("Nothing to Calculate")
                 End If
+
 
             Catch ex As Exception
                 _log.Error(ex, ex.Message)
