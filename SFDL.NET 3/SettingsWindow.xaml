@@ -18,6 +18,7 @@
     SaveWindowPosition="True"
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterOwner"
+    ResizeMode="NoResize"
     mc:Ignorable="d">
 
     <Window.Resources>
@@ -178,9 +179,8 @@
                                         <StackPanel>
                                             <TextBox
                                                 x:Name="TxtDownloadPath"
-                                                MinWidth="250"
                                                 Margin="5,5,0,0"
-                                                HorizontalAlignment="Left"
+                                                HorizontalAlignment="Stretch"
                                                 Controls:TextBoxHelper.ButtonCommand="{Binding BrowseFolderCommand}"
                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                 Controls:TextBoxHelper.Watermark="{x:Static p:Strings.Settings_DownloadDir}"
@@ -188,7 +188,7 @@
                                                 Text="{Binding DownloadDirectory, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" />
                                             <CheckBox
                                                 x:Name="ChkCreatePackageSubfolder"
-                                                Margin="5,5,0,5"
+                                                Margin="5,10,0,5"
                                                 Content="{x:Static p:Strings.Settings_CreateSubfolderEachPackage}"
                                                 IsChecked="{Binding CreatePackageSubfolder}" />
                                         </StackPanel>
@@ -247,10 +247,10 @@
                                                 </StackPanel>
 
                                             </StackPanel>
-                                            <Separator Margin="3,5" />
+                                            <Separator Margin="3,5,3,5" />
                                             <Label Content="{x:Static p:Strings.Settings_ExcludeFiles}" />
 
-                                            <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal" MaxHeight="120">
 
                                                 <ListBox
                                                     MinWidth="350"
@@ -260,7 +260,6 @@
                                                     SelectedItem="{Binding SelectedBlacklistItem, Mode=TwoWay}" />
 
                                                 <StackPanel>
-
                                                     <Button
                                                         Width="24"
                                                         Height="24"
@@ -345,11 +344,11 @@
                         <StackPanel>
                             <GroupBox
                                 x:Name="GroupBoxUnrarSettings"
-                                MinWidth="340"
+                                MinWidth="330"
                                 Header="{x:Static p:Strings.Settings_UnrarSettings}">
                                 <Grid>
                                     <StackPanel Orientation="Horizontal">
-                                        <StackPanel>
+                                        <StackPanel >
 
                                             <CheckBox
                                                 x:Name="ChkExtractArchives"
@@ -366,13 +365,14 @@
                                                 Margin="5,5,0,0"
                                                 Content="{x:Static p:Strings.Settings_UseUnRARPasswordList}"
                                                 IsChecked="{Binding UseUnRARPasswordList}" />
-                                            <Separator Margin="5,10,5,5" />
+                                            <Separator Margin="5,10,5,5" HorizontalAlignment="Stretch" />
                                             <Label Content="{x:Static p:Strings.Settings_PasswordList}" />
                                             <StackPanel Orientation="Horizontal">
                                                 <ListBox
                                                     x:Name="ListBoxUnrarPasswords"
-                                                    MinWidth="298"
+                                                    MinWidth="450"
                                                     MinHeight="100"
+                                                    MaxHeight="150"
                                                     BorderThickness="1"
                                                     ItemsSource="{Binding UnRARPasswordList}"
                                                     SelectedItem="{Binding SelectedUnRARPassword, Mode=TwoWay}" />
@@ -437,7 +437,7 @@
                 </TabItem>
                 <TabItem Controls:ControlsHelper.HeaderFontSize="15" Header="{x:Static p:Strings.Settings_SpeedreportSettings}">
                     <Grid>
-                        <StackPanel>
+                        <StackPanel MaxWidth="650">
                             <GroupBox Header="{x:Static p:Strings.Settings_SpeedreportSettings}">
                                 <Grid>
                                     <StackPanel>
@@ -645,6 +645,7 @@
                                         <TextBox
                                             x:Name="TxtSpeedreportTemplate"
                                             MinHeight="100"
+                                            Margin="5"
                                             AcceptsReturn="True"
                                             BorderThickness="1"
                                             IsEnabled="{Binding SpeedreportEnabled}"
