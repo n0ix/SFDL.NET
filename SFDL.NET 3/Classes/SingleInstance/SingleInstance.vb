@@ -124,13 +124,24 @@ Public Class SingleInstance
     Private disposed As [Boolean] = False
 
     Protected Overridable Sub Dispose(disposing As Boolean)
-        If Not disposed Then
-            If mutex IsNot Nothing AndAlso ownsMutex Then
-                mutex.ReleaseMutex()
-                mutex = Nothing
-            End If
-            disposed = True
-        End If
+
+        Try
+
+            DispatchService.DispatchService.Invoke(Sub()
+
+                                                       If Not disposed Then
+                                                           If mutex IsNot Nothing AndAlso ownsMutex Then
+                                                               mutex.ReleaseMutex()
+                                                               mutex = Nothing
+                                                           End If
+                                                           disposed = True
+                                                       End If
+
+                                                   End Sub)
+
+        Catch ex As Exception
+        End Try
+
     End Sub
 
     Protected Overrides Sub Finalize()
