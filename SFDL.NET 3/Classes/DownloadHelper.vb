@@ -396,7 +396,7 @@ Class DownloadHelper
         'Const Length As Integer = 256
         Dim buffer As [Byte]()
         Dim bytesRead As Integer = 0
-        Dim bytestotalread As Integer = 0
+        ' Dim bytestotalread As Integer = 0
         Dim _starttime As DateTime = DateTime.Now
 
         Dim _percent_downloaded As Integer = 0
@@ -475,10 +475,11 @@ Class DownloadHelper
                             _local_write_stream.Write(buffer, 0, bytesRead)
 
                             bytesRead = _ftp_read_stream.Read(buffer, 0, buffer.Length)
-                            bytestotalread += bytesRead
+                            'bytestotalread += bytesRead
+                            _item.SizeDownloaded += bytesRead
 
                             elapsed = DateTime.Now.Subtract(_starttime)
-                            bytesPerSec = CInt(If(elapsed.TotalSeconds < 1, bytestotalread, bytestotalread / elapsed.TotalSeconds))
+                            bytesPerSec = CInt(If(elapsed.TotalSeconds < 1, _item.SizeDownloaded, _item.SizeDownloaded / elapsed.TotalSeconds))
 
 #Region "Berechnung Download Speed / Fortschritt"
 
@@ -503,7 +504,7 @@ Class DownloadHelper
 
                                 _item.DownloadSpeed = _download_speed
                                 _item.DownloadProgress = _percent_downloaded
-                                _item.SizeDownloaded = bytestotalread
+                                '_item.SizeDownloaded = bytestotalread
                                 _item.LocalFileSize = _local_write_stream.Length
 
 
@@ -528,7 +529,7 @@ Class DownloadHelper
                                         _max_bytes_per_second = CInt((_max_bytes_per_second * 1024))
                                     End If
 
-                                    ThrottleByteTransfer(_max_bytes_per_second, bytestotalread, _ctime, bytesPerSec)
+                                    ThrottleByteTransfer(_max_bytes_per_second, _item.SizeDownloaded, _ctime, bytesPerSec)
 
                                 End If
 
