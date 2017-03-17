@@ -674,4 +674,13 @@ Restart the download to apply these settings.</value>
   <data name="DownloadStatus_Stopped" xml:space="preserve">
     <value>Download stopped</value>
   </data>
+  <data name="CloseSFDLContainer_AppTask_Completed_Message" xml:space="preserve">
+    <value>SFDL Container '{0}' closed</value>
+  </data>
+  <data name="CloseSFDLContainer_AppTask_Faulted_Message" xml:space="preserve">
+    <value>Cant' close Session because it's active (Download or UnRAR is Running)</value>
+  </data>
+  <data name="CloseSFDLContainer_AppTask_Start_Message" xml:space="preserve">
+    <value>Closing/Removing SFDL Containers..</value>
+  </data>
 </root>

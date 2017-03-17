@@ -577,87 +577,87 @@ Decrypt:
 
         Try
 
-            _stp = New SmartThreadPool
-            _stp.MaxThreads = _settings.MaxDownloadThreads + 1 '+1 for ETA Thread
-
             AddHandler _mytask.TaskDone, AddressOf TaskDoneEvent
 
             ActiveTasks.Add(_mytask)
 
-#Region "Cleanup"
+            If PreDownloadCheck(_mytask) = False Then
+                Throw New Exception("PreDownload Check has failed!")
+            Else
 
+#Region "Item and Session Cleanup"
 
-            _download_helper = New DownloadHelper
-            AddHandler _download_helper.ServerFull, AddressOf ServerFullEvent
+                System.Threading.Tasks.Parallel.ForEach(ContainerSessions, Sub(_session)
 
-            Application.Current.Resources("DownloadStopped") = False
-            ButtonInstantVideoEnabled = False
+                                                                               If _session.DownloadItems.Where(Function(myitem) myitem.isSelected = True).Count > 0 Then
+                                                                                   _session.SessionState = ContainerSessionState.Queued
+                                                                               Else
+                                                                                   _session.SessionState = ContainerSessionState.None
+                                                                               End If
+                                                                               _session.SingleSessionMode = False
+                                                                               _session.WIG = Nothing
+                                                                               _session.SynLock = New Object
+                                                                               _session.DownloadStartedTime = Date.MinValue
+                                                                               _session.DownloadStoppedTime = Date.MinValue
+                                                                               _session.InstantVideoStreams.Clear()
 
-            System.Threading.Tasks.Parallel.ForEach(ContainerSessions, Sub(_session)
+                                                                               For Each _chain In _session.UnRarChains
+                                                                                   _chain.UnRARRunning = False
+                                                                               Next
 
-                                                                           If _session.DownloadItems.Where(Function(myitem) myitem.isSelected = True).Count > 0 Then
-                                                                               _session.SessionState = ContainerSessionState.Queued
+                                                                           End Sub)
+
+                System.Threading.Tasks.Parallel.ForEach(DownloadItems, Sub(_dlitem)
+
+                                                                           If _dlitem.isSelected Then
+
+                                                                               _dlitem.IWorkItemResult = Nothing
+                                                                               _dlitem.DownloadProgress = 0
+                                                                               _dlitem.DownloadSpeed = String.Empty
+                                                                               _dlitem.SingleSessionMode = False
+                                                                               _dlitem.RetryCount = 0
+                                                                               _dlitem.RetryPossible = False
+                                                                               _dlitem.SizeDownloaded = 0
+                                                                               _dlitem.LocalFileSize = 0
+                                                                               _dlitem.LocalFile = GetDownloadFilePath(Application.Current.Resources("Settings"), ContainerSessions.Where(Function(mysession) mysession.ID.Equals(_dlitem.ParentContainerID)).First, _dlitem)
+
                                                                            Else
-                                                                               _session.SessionState = ContainerSessionState.None
+                                                                               _dlitem.DownloadStatus = DownloadItem.Status.None
+                                                                               _dlitem.SizeDownloaded = 0
+                                                                               _dlitem.LocalFileSize = 0
+                                                                               _dlitem.DownloadSpeed = String.Empty
                                                                            End If
-                                                                           _session.SingleSessionMode = False
-                                                                           _session.WIG = Nothing
-                                                                           _session.SynLock = New Object
-                                                                           _session.DownloadStartedTime = Date.MinValue
-                                                                           _session.DownloadStoppedTime = Date.MinValue
-                                                                           _session.InstantVideoStreams.Clear()
-
-                                                                           For Each _chain In _session.UnRarChains
-                                                                               _chain.UnRARRunning = False
-                                                                           Next
 
                                                                        End Sub)
-
-            System.Threading.Tasks.Parallel.ForEach(DownloadItems, Sub(_dlitem)
-
-                                                                       If _dlitem.isSelected Then
-
-                                                                           _dlitem.IWorkItemResult = Nothing
-                                                                           _dlitem.DownloadProgress = 0
-                                                                           _dlitem.DownloadSpeed = String.Empty
-                                                                           _dlitem.SingleSessionMode = False
-                                                                           _dlitem.RetryCount = 0
-                                                                           _dlitem.RetryPossible = False
-                                                                           _dlitem.SizeDownloaded = 0
-                                                                           _dlitem.LocalFileSize = 0
-                                                                           _dlitem.LocalFile = GetDownloadFilePath(Application.Current.Resources("Settings"), ContainerSessions.Where(Function(mysession) mysession.ID.Equals(_dlitem.ParentContainerID)).First, _dlitem)
-
-                                                                       Else
-                                                                           _dlitem.DownloadStatus = DownloadItem.Status.None
-                                                                           _dlitem.SizeDownloaded = 0
-                                                                           _dlitem.LocalFileSize = 0
-                                                                           _dlitem.DownloadSpeed = String.Empty
-                                                                       End If
-
-                                                                   End Sub)
 
 
 #End Region
 
-            If PreDownloadCheck(_mytask) = False Then
-                Throw New Exception("PreDownload Check has failed!")
+
+                _stp = New SmartThreadPool
+                _stp.MaxThreads = _settings.MaxDownloadThreads + 1 '+1 for ETA Thread
+
+                _download_helper = New DownloadHelper
+                AddHandler _download_helper.ServerFull, AddressOf ServerFullEvent
+
+                Application.Current.Resources("DownloadStopped") = False
+
+                ButtonInstantVideoEnabled = False
+
+                ButtonDownloadStartStop = False
+
+                _mytask.SetTaskStatus(TaskStatus.Running, My.Resources.Strings.ETA_AppTask_Status_3_Message)
+
+                DispatchService.DispatchService.Invoke(Sub()
+                                                           WindowInstance.TaskbarItemInfo.ProgressState = Shell.TaskbarItemProgressState.Normal
+                                                       End Sub)
+
+                _eta_thread = _stp.QueueWorkItem(New Func(Of AppTask, Boolean)(AddressOf CalculateETA), _mytask)
+
+                QueryDownloadItems()
+
             End If
 
-            Application.Current.Resources("DownloadStopped") = False
-
-            ButtonInstantVideoEnabled = False
-
-            ButtonDownloadStartStop = False
-
-            _mytask.SetTaskStatus(TaskStatus.Running, My.Resources.Strings.ETA_AppTask_Status_3_Message)
-
-            DispatchService.DispatchService.Invoke(Sub()
-                                                       WindowInstance.TaskbarItemInfo.ProgressState = Shell.TaskbarItemProgressState.Normal
-                                                   End Sub)
-
-            _eta_thread = _stp.QueueWorkItem(New Func(Of AppTask, Boolean)(AddressOf CalculateETA), _mytask)
-
-            QueryDownloadItems()
 
         Catch ex As Exception
             _log.Error(ex, ex.Message)

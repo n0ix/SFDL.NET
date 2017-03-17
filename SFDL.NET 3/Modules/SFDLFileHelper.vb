@@ -9,7 +9,7 @@ Module SFDLFileHelper
 
     Sub CheckAndEnqueueSession(ByVal _session As ContainerSession)
 
-        If Not IsNothing(_session) Then
+        If Not IsNothing(_session) AndAlso Application.Current.Resources("DownloadStopped") = False Then
 
             SyncLock _session.SynLock
 

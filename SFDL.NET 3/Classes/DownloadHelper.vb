@@ -393,10 +393,8 @@ Class DownloadHelper
         Dim _restart As Long = 0
 
         'IO Stream Variablen
-        'Const Length As Integer = 256
         Dim buffer As [Byte]()
         Dim bytesRead As Integer = 0
-        ' Dim bytestotalread As Integer = 0
         Dim _starttime As DateTime = DateTime.Now
 
         Dim _percent_downloaded As Integer = 0
@@ -475,7 +473,6 @@ Class DownloadHelper
                             _local_write_stream.Write(buffer, 0, bytesRead)
 
                             bytesRead = _ftp_read_stream.Read(buffer, 0, buffer.Length)
-                            'bytestotalread += bytesRead
                             _item.SizeDownloaded += bytesRead
 
                             elapsed = DateTime.Now.Subtract(_starttime)
@@ -504,7 +501,6 @@ Class DownloadHelper
 
                                 _item.DownloadSpeed = _download_speed
                                 _item.DownloadProgress = _percent_downloaded
-                                '_item.SizeDownloaded = bytestotalread
                                 _item.LocalFileSize = _local_write_stream.Length
 
 
