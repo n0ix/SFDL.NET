@@ -40,27 +40,22 @@ Module UnRARHelper
 
     End Function
 
-    Friend Function ParseUnRarProgress(ByVal _line As String) As Integer
+    Friend Function ParseUnRarProgress(ByVal _line As String) As String
 
         Dim _percent As String = String.Empty
-        Dim sourcestring As String = _line
-        Dim _percent_int As Integer = -1
 
         Dim re As Regex = New Regex("[0-9]{1,3}%")
-        Dim mc As MatchCollection = re.Matches(sourcestring)
-        Dim mIdx As Integer = 0
+        Dim mc As Match = re.Match(_line.Trim)
 
-        For Each m As Match In mc
-            For groupIdx As Integer = 0 To m.Groups.Count - 1
-                If Not String.IsNullOrEmpty(m.Value.ToString) Then
-                    _percent = m.Value.ToString.Trim.Replace("%", "")
-                    _percent_int = Integer.Parse(_percent)
-                End If
-            Next
-            mIdx = mIdx + 1
-        Next
+        If mc.Success Then
+            _line = mc.Value
+            _percent = _line.TrimEnd("%")
+        Else
+            _percent = String.Empty
 
-        Return _percent_int
+        End If
+
+        Return _percent
 
     End Function
 
@@ -230,10 +225,14 @@ Module UnRARHelper
         Dim _tmp_output As String
         Dim _out_lines As New Text.StringBuilder
         Dim _log As NLog.Logger = NLog.LogManager.GetLogger("DoUnRAR")
+        Dim _exitcode As Int32
+
+        Dim _line As String
+        Dim _percent1 As String
 
         Try
 
-            _unrar_exe = IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "bin", "unrar.exe")
+            _unrar_exe = IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "bin", "7z.exe")
 
             If IO.File.Exists(_unrar_exe) = False Then
                 Throw New Exception("UnRAR Executable Is missing!")
@@ -251,9 +250,9 @@ Module UnRARHelper
                 .StandardOutputEncoding = Text.Encoding.UTF8
 
                 If String.IsNullOrWhiteSpace(_password) Then
-                    .Arguments = String.Format("x -o- -p- {0} {1}", Chr(34) & _filename & Chr(34), Chr(34) & _extract_dir & Chr(34))
+                    .Arguments = String.Format("x -aos -bso1 -bse1 -bsp1 -bt -p -o{0} {1}", Chr(34) & _extract_dir & Chr(34), Chr(34) & _filename & Chr(34))
                 Else
-                    .Arguments = String.Format("x -o- -p{0} {1} {2}", _password, Chr(34) & _filename & Chr(34), Chr(34) & _extract_dir & Chr(34))
+                    .Arguments = String.Format("x -aos -bso0 -bse1 -bsp1 -p{0} -o{1} {2}", Chr(34) & _password & Chr(34), Chr(34) & _extract_dir & Chr(34), Chr(34) & _filename & Chr(34))
                 End If
 
             End With
@@ -262,23 +261,20 @@ Module UnRARHelper
 
             _unrar_process.Start()
 
-            While _unrar_process.HasExited = False
+            '_unrar_process.BeginOutputReadLine()
 
-                Dim _line As String
-                Dim _percent As Integer
+            While _unrar_process.HasExited = False
 
                 Try
 
                     _line = _unrar_process.StandardOutput.ReadLine
                     _out_lines.AppendLine(_line)
+                    ' _log.Debug(_line)
+                    _percent1 = ParseUnRarProgress(_line.Trim)
 
-                    _log.Debug(_line)
-
-                    _percent = ParseUnRarProgress(_line.Trim)
-
-                    If Not _percent = -1 Then
-                        _log.Debug("{0} % entpackt", _percent)
-                        _app_task.SetTaskStatus(TaskStatus.Running, String.Format(My.Resources.Strings.UnRAR_AppTask_Status_1_Message, _filename, _percent))
+                    If Not _percent1 = String.Empty Then
+                        '_log.Debug("{0}__% entpackt", _percent1)
+                        _app_task.SetTaskStatus(TaskStatus.Running, String.Format(My.Resources.Strings.UnRAR_AppTask_Status_1_Message, _filename, _percent1))
                     End If
 
                 Catch ex As Exception
@@ -288,32 +284,37 @@ Module UnRARHelper
             End While
 
             _unrar_process.WaitForExit()
-
-            _log.Info("UnRAR Process has exited")
-
-
+            _exitcode = _unrar_process.ExitCode
             _tmp_output = _out_lines.ToString
             _tmp_output = _tmp_output & _unrar_process.StandardOutput.ReadToEnd
-
             _tmp_output = _tmp_output.Trim
 
-            If _tmp_output.ToString.Contains("OK") Then
+            If _exitcode = 0 Then
+                _log.Info("UnRAR Process has exited with Code=" & _exitcode)
+                _log.Info(_tmp_output)
+                _result = True
 
-                If _tmp_output.ToString.Contains("Total errors:") Then
-                    _result = False
-                Else
-                    _result = True
-                End If
+            ElseIf _exitcode = 1 Then
+                _log.Info("UnRAR Process has exited with Code=" & _exitcode)
+
+                _result = False
+
+            ElseIf _exitcode = 2 Then
+                _log.Info("UnRAR Process has exited with Code=" & _exitcode)
+
+                _result = False
+
+            ElseIf _exitcode = 8 Then
+                _log.Info("UnRAR Process has exited with Code=" & _exitcode)
+
+                _result = False
 
             Else
-
-                If _tmp_output.ToString.Contains("No files to extract") Then
-                    _result = True
-                Else
-                    Throw New Exception("Output missmatch! Output was: " & vbNewLine & _tmp_output)
-                End If
+                _log.Info("UnRAR Process has exited with Code=" & _exitcode)
+                Throw New Exception("UnRAR Process has exited with Code=" & _exitcode)
 
             End If
+
 
         Catch ex As Exception
             _log.Error(ex, ex.Message)
@@ -321,6 +322,7 @@ Module UnRARHelper
         End Try
 
         Return _result
+
 
 
     End Function
