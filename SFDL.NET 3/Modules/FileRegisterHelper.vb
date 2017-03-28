@@ -58,10 +58,11 @@ Module FileRegisterHelper
         Dim _runas As String
         Dim _process As New Process
 
-        _runas = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "runasadmin.exe")
+        _runas = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "bin", "runasadmin.exe")
 
         _process.StartInfo.FileName = _runas
         _process.StartInfo.WorkingDirectory = System.AppDomain.CurrentDomain.BaseDirectory
+        _process.StartInfo.Arguments = String.Format("/exec:{0}{1}{2}", Chr(34), Reflection.Assembly.GetExecutingAssembly().Location, Chr(34))
 
         _process.Start()
 
