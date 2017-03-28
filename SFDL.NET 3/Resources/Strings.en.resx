@@ -686,4 +686,10 @@ Restart the download to apply these settings.</value>
   <data name="VariousStrings_LibrHashMissingException" xml:space="preserve">
     <value>LibRHash Libary not found!</value>
   </data>
+  <data name="Settings_ResetSettings" xml:space="preserve">
+    <value>Reset settings</value>
+  </data>
+  <data name="Settings_ResetSpeedreport" xml:space="preserve">
+    <value>Reset Speedreport</value>
+  </data>
 </root>

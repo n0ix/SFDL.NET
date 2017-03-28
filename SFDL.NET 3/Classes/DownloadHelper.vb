@@ -788,6 +788,8 @@
 
                         _log.Info("Check if CRC hashes match ")
 
+                        _item.FileHash = _item.FileHash.PadLeft(8, "0"c)
+
                         If RHash.Hasher.GetHashForFile(_item.LocalFile, RHash.HashType.CRC32).ToLower.Equals(_item.FileHash.ToLower) Then
                             _log.Info("CRC Hash is Valid!")
                             _item.DownloadStatus = NET3.DownloadItem.Status.Completed_HashValid
@@ -828,6 +830,7 @@
         End Try
 
     End Sub
+
 
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' Dient zur Erkennung redundanter Aufrufe.

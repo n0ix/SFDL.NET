@@ -1302,6 +1302,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Einstellungen zurücksetzten ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_ResetSettings() As String
+            Get
+                Return ResourceManager.GetString("Settings_ResetSettings", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Speedreport zurücksetzten ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_ResetSpeedreport() As String
+            Get
+                Return ResourceManager.GetString("Settings_ResetSpeedreport", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Beim Speichern der Einstellungen ist ein Fehler aufgetreten! ähnelt.
         '''</summary>
         Public Shared ReadOnly Property Settings_SaveError() As String

@@ -692,4 +692,10 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="VariousStrings_LibrHashMissingException" xml:space="preserve">
     <value>LibRHash Bibliothek nicht gefunden!</value>
   </data>
+  <data name="Settings_ResetSettings" xml:space="preserve">
+    <value>Einstellungen zurücksetzten</value>
+  </data>
+  <data name="Settings_ResetSpeedreport" xml:space="preserve">
+    <value>Speedreport zurücksetzten</value>
+  </data>
 </root>
