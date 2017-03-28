@@ -142,7 +142,6 @@
     <Compile Include="Classes\DownloadHelper.vb" />
     <Compile Include="Modules\FTPHelper.vb" />
     <Compile Include="Modules\FileRegisterHelper.vb" />
-    <Compile Include="Modules\HashHelper.vb" />
     <Compile Include="Modules\InstantVideoHelper.vb" />
     <Compile Include="Modules\LogHelper.vb" />
     <Compile Include="Modules\SFDLFileHelper.vb" />
@@ -271,6 +270,10 @@
     <ProjectReference Include="..\..\SFDL.FTP\ArxOne.Ftp\SFDL.FTP.csproj">
       <Project>{2ffe845d-2e4f-440e-8b9f-17afcb9d166b}</Project>
       <Name>SFDL.FTP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SFDL.RHash\SFDL.RHash\SFDL.RHash.csproj">
+      <Project>{dc1e9537-4d62-4c04-8b61-8da5ff9ff0e4}</Project>
+      <Name>SFDL.RHash</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,4 @@
-﻿
-Imports Amib.Threading
-Imports ArxOne.Ftp.Exceptions
-
-Class DownloadHelper
+﻿Class DownloadHelper
     Implements IDisposable
 
     Private _log As NLog.Logger = NLog.LogManager.GetLogger("DownloadHelper")
@@ -768,7 +764,7 @@ Class DownloadHelper
 
                         _log.Info("Check if MD5 hashes match")
 
-                        If HashHelper.MD5FileHash(_item.LocalFile).ToLower.Equals(_item.FileHash.ToLower) Then
+                        If RHash.Hasher.GetHashForFile(_item.LocalFile, RHash.HashType.MD5).ToLower.Equals(_item.FileHash.ToLower) Then
                             _log.Info("MD5 Hash is Valid!")
                             _item.DownloadStatus = NET3.DownloadItem.Status.Completed_HashValid
                         Else
@@ -780,7 +776,7 @@ Class DownloadHelper
 
                         _log.Info("Check if SHA1 hashes match ")
 
-                        If HashHelper.SHA1FileHash(_item.LocalFile).ToLower.Equals(_item.FileHash.ToLower) Then
+                        If RHash.Hasher.GetHashForFile(_item.LocalFile, RHash.HashType.SHA1).ToLower.Equals(_item.FileHash.ToLower) Then
                             _log.Info("SHA1 Hash is Valid!")
                             _item.DownloadStatus = NET3.DownloadItem.Status.Completed_HashValid
                         Else
@@ -792,7 +788,7 @@ Class DownloadHelper
 
                         _log.Info("Check if CRC hashes match ")
 
-                        If HashHelper.CRC32FileHash(_item.LocalFile).ToLower.Equals(_item.FileHash.ToLower) Then
+                        If RHash.Hasher.GetHashForFile(_item.LocalFile, RHash.HashType.CRC32).ToLower.Equals(_item.FileHash.ToLower) Then
                             _log.Info("CRC Hash is Valid!")
                             _item.DownloadStatus = NET3.DownloadItem.Status.Completed_HashValid
                         Else

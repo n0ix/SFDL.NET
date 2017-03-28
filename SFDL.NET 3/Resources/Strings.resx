@@ -689,4 +689,7 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="GenerateSimpleSpeedreport_AppTask_Completed_Message" xml:space="preserve">
     <value>{0} in {1} heruntergeladen @ ~ {2}</value>
   </data>
+  <data name="VariousStrings_LibrHashMissingException" xml:space="preserve">
+    <value>LibRHash Bibliothek nicht gefunden!</value>
+  </data>
 </root>

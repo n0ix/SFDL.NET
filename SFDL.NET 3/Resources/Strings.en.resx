@@ -683,4 +683,7 @@ Restart the download to apply these settings.</value>
   <data name="CloseSFDLContainer_AppTask_Start_Message" xml:space="preserve">
     <value>Closing/Removing SFDL Containers..</value>
   </data>
+  <data name="VariousStrings_LibrHashMissingException" xml:space="preserve">
+    <value>LibRHash Libary not found!</value>
+  </data>
 </root>

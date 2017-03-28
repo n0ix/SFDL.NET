@@ -1663,6 +1663,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die LibRHash Bibliothek nicht gefunden! ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property VariousStrings_LibrHashMissingException() As String
+            Get
+                Return ResourceManager.GetString("VariousStrings_LibrHashMissingException", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Benötigte Downloadzeit ähnelt.
         '''</summary>
         Public Shared ReadOnly Property VariousStrings_NeededDownloadTime() As String
