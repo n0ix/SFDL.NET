@@ -698,4 +698,16 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="Settings_ResetSpeedreport" xml:space="preserve">
     <value>Speedreport zurücksetzten</value>
   </data>
+  <data name="Settings_Question_ResetSettings_Message" xml:space="preserve">
+    <value>Möchtest du wirklich die Einstellungen zurücksetzten?</value>
+  </data>
+  <data name="Settings_Question_ResetSettings_Title" xml:space="preserve">
+    <value>Einstellungen zurücksetzten</value>
+  </data>
+  <data name="Settings_Question_ResetSpeedreport_Message" xml:space="preserve">
+    <value>Möchtest du dein Speedreport wirklich zurücksetzten?</value>
+  </data>
+  <data name="Settings_Question_ResetSpeedreport_Title" xml:space="preserve">
+    <value>Speedreport zurücksetzten</value>
+  </data>
 </root>

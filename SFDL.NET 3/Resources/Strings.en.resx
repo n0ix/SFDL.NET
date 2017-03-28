@@ -692,4 +692,16 @@ Restart the download to apply these settings.</value>
   <data name="Settings_ResetSpeedreport" xml:space="preserve">
     <value>Reset Speedreport</value>
   </data>
+  <data name="Settings_Question_ResetSettings_Message" xml:space="preserve">
+    <value>Do you really want to reset all settings?</value>
+  </data>
+  <data name="Settings_Question_ResetSettings_Title" xml:space="preserve">
+    <value>Reset settings</value>
+  </data>
+  <data name="Settings_Question_ResetSpeedreport_Message" xml:space="preserve">
+    <value>Do you really want to reset your speedreport template?</value>
+  </data>
+  <data name="Settings_Question_ResetSpeedreport_Title" xml:space="preserve">
+    <value>Reset speedreport template</value>
+  </data>
 </root>

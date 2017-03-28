@@ -1266,6 +1266,42 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Möchtest du wirklich die Einstellungen zurücksetzten? ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_Question_ResetSettings_Message() As String
+            Get
+                Return ResourceManager.GetString("Settings_Question_ResetSettings_Message", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Einstellungen zurücksetzten ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_Question_ResetSettings_Title() As String
+            Get
+                Return ResourceManager.GetString("Settings_Question_ResetSettings_Title", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Möchtest du dein Speedreport wirklich zurücksetzten? ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_Question_ResetSpeedreport_Message() As String
+            Get
+                Return ResourceManager.GetString("Settings_Question_ResetSpeedreport_Message", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Speedreport zurücksetzten ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_Question_ResetSpeedreport_Title() As String
+            Get
+                Return ResourceManager.GetString("Settings_Question_ResetSpeedreport_Title", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Remote Control ähnelt.
         '''</summary>
         Public Shared ReadOnly Property Settings_RemoteControl() As String

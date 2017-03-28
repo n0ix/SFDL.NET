@@ -531,6 +531,53 @@ Public Class SettingsViewModel
         End Get
     End Property
 
+    Public ReadOnly Property ResetSettingsCommand As ICommand
+        Get
+            Return New DelegateCommand(AddressOf ResetSettings)
+        End Get
+    End Property
+
+    Private Async Sub ResetSettings()
+
+        Dim _result As MessageDialogResult
+
+        _result = Await DialogCoordinator.Instance.ShowMessageAsync(Me, My.Resources.Strings.Settings_Question_ResetSettings_Title, My.Resources.Strings.Settings_Question_ResetSettings_Message, MessageDialogStyle.AffirmativeAndNegative)
+
+        _settings = Settings.InitNewSettings
+
+        SaveSettings()
+
+    End Sub
+
+    Public ReadOnly Property ResetSpeedreportCommand As ICommand
+        Get
+            Return New DelegateCommand(AddressOf ResetSpeedreport)
+        End Get
+    End Property
+
+    Private Async Sub ResetSpeedreport()
+
+
+        Dim _template As New Text.StringBuilder
+        Dim _result As MessageDialogResult
+
+
+        _result = Await DialogCoordinator.Instance.ShowMessageAsync(Me, My.Resources.Strings.Settings_Question_ResetSpeedreport_Title, My.Resources.Strings.Settings_Question_ResetSpeedreport_Message, MessageDialogStyle.AffirmativeAndNegative)
+
+
+        _template.AppendLine("SFDL: %%SFDL_FILENAME%%")
+        _template.AppendLine("Upper: %%SFDL_UPPER%%")
+        _template.AppendLine("")
+        _template.AppendLine("%%SFDL_SIZE%% in %%DLTIME%% heruntergeladen @ %%SPEED%% (Im Durchschnitt)")
+        _template.AppendLine("")
+        _template.AppendLine("Kommentar: %%COMMENT%%")
+
+        SpeedreportTemplate = _template.ToString()
+
+
+
+    End Sub
+
 #End Region
 
 
