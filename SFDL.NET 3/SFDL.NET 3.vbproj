@@ -259,10 +259,6 @@
       <Project>{d2fe83a4-c5ba-4e87-8435-c01362ae8467}</Project>
       <Name>SFDL.Container</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\SFDL.CRC32\src\crc32\SFDL.CRC32.csproj">
-      <Project>{2f44f389-b431-45bc-9434-dddacd0ea34a}</Project>
-      <Name>SFDL.CRC32</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\SFDL.DragnDrop\SFDL.DragnDrop.csproj">
       <Project>{22c703f7-4514-4b3e-8668-0ab0c3599392}</Project>
       <Name>SFDL.DragnDrop</Name>
