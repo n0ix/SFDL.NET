@@ -142,6 +142,7 @@
     <Compile Include="Classes\DownloadHelper.vb" />
     <Compile Include="Modules\FTPHelper.vb" />
     <Compile Include="Modules\FileRegisterHelper.vb" />
+    <Compile Include="Modules\GeneralHelper.vb" />
     <Compile Include="Modules\InstantVideoHelper.vb" />
     <Compile Include="Modules\LogHelper.vb" />
     <Compile Include="Modules\SFDLFileHelper.vb" />

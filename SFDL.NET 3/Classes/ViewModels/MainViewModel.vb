@@ -36,7 +36,7 @@ Public Class MainViewModel
 
         _instance = Me
         _settings = CType(Application.Current.Resources("Settings"), Settings)
-        Application.Current.Resources("DownloadStopped") = True
+        GeneralHelper.SetDownloadStoppedFlag(True)
 
         'Init ThreadSafe Observ Collections
 
@@ -297,7 +297,7 @@ Decrypt:
 
             End If
 
-            If Application.Current.Resources("DownloadStopped") = False And Not _mycontainer_session.DownloadItems.Where(Function(myitem) myitem.isSelected = True).Count = 0 Then
+            If GeneralHelper.IsDownloadStopped = False And Not _mycontainer_session.DownloadItems.Where(Function(myitem) myitem.isSelected = True).Count = 0 Then
                 CheckAndEnqueueSession(_mycontainer_session)
             End If
 
@@ -462,7 +462,7 @@ Decrypt:
 
             For Each _mytask As AppTask In _mytasklist
 
-                If CBool(Application.Current.Resources("DownloadStopped")) = False Then
+                If GeneralHelper.IsDownloadStopped = False Then
                     _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.PostDownload_AppTask_Completed_2_Message, Now.ToString))
                 Else
                     _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.PostDownload_AppTask_Completed_1_Message, Now.ToString))
@@ -477,7 +477,8 @@ Decrypt:
 
         End Try
 
-        Application.Current.Resources("DownloadStopped") = True
+        GeneralHelper.SetDownloadStoppedFlag(True)
+
         ButtonDownloadStartStop = True
 
         Tasks.Task.Run(Sub()
@@ -640,7 +641,7 @@ Decrypt:
                 _download_helper = New DownloadHelper
                 AddHandler _download_helper.ServerFull, AddressOf ServerFullEvent
 
-                Application.Current.Resources("DownloadStopped") = False
+                GeneralHelper.SetDownloadStoppedFlag(False)
 
                 ButtonInstantVideoEnabled = False
 
@@ -776,7 +777,7 @@ Decrypt:
                                  DLItemQuery.AddRange(_mysession.DownloadItems.Where(Function(myitem) (myitem.DownloadStatus = DownloadItem.Status.RetryWait)))
                                  DLItemQuery.AddRange(_mysession.DownloadItems.Where(Function(myitem) (myitem.isSelected = True)))
 
-                                 If DLItemQuery.Count = 0 Or Application.Current.Resources("DownloadStopped") = True Then
+                                 If DLItemQuery.Count = 0 Or GeneralHelper.IsDownloadStopped = True Then
 
                                      _mysession.SessionState = ContainerSessionState.DownloadComplete
                                      _mysession.DownloadStoppedTime = Now
@@ -831,7 +832,7 @@ Decrypt:
                      End Sub).ContinueWith(Sub()
 
 
-                                               If ContainerSessions.Where(Function(mysession) mysession.SessionState = ContainerSessionState.Queued Or mysession.SessionState = ContainerSessionState.DownloadRunning).Count = 0 Or Application.Current.Resources("DownloadStopped") = True Then
+                                               If ContainerSessions.Where(Function(mysession) mysession.SessionState = ContainerSessionState.Queued Or mysession.SessionState = ContainerSessionState.DownloadRunning).Count = 0 Or GeneralHelper.IsDownloadStopped = True Then
 
                                                    'Alle DL Fertig
                                                    _log.Info("All downloads cancled/stopped")
@@ -936,7 +937,7 @@ Decrypt:
 
                            _eta_thread.Cancel()
 
-                           Application.Current.Resources("DownloadStopped") = True
+                           GeneralHelper.SetDownloadStoppedFlag(True)
 
                        End Sub)
 
@@ -1049,7 +1050,7 @@ Decrypt:
 
         ActiveTasks.Add(_mytask)
 
-        If CBool(Application.Current.Resources("DownloadStopped")) = False Then
+        If GeneralHelper.IsDownloadStopped = False Then
             _mytask.SetTaskStatus(TaskStatus.Canceled, My.Resources.Strings.RemoveAllCompletedDownloads_AppTask_Faulted_Message)
         Else
 

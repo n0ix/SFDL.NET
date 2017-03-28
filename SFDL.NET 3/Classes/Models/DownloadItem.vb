@@ -64,7 +64,7 @@ Public Class DownloadItem
                     If value = True Then
                         IWorkItemResult = Nothing
 
-                        If Application.Current.Resources("DownloadStopped") = False Then
+                        If GeneralHelper.IsDownloadStopped = False Then
                             CheckAndEnqueueSession(MainViewModel.ThisInstance.ContainerSessions.Where(Function(mysession) mysession.ID.Equals(ParentContainerID)).FirstOrDefault)
                         End If
 

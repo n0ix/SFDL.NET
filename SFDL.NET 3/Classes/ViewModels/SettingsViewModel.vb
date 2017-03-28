@@ -324,7 +324,7 @@ Public Class SettingsViewModel
 
             My.Computer.FileSystem.WriteAllText(_password_def_file, _password_def.ToString, False, System.Text.Encoding.Default)
 
-            If CBool(Application.Current.Resources("DownloadStopped")) = False Then
+            If GeneralHelper.IsDownloadStopped = False Then
                 Await MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance.ShowMessageAsync(Me, My.Resources.Strings.VariousStrings_Warning, My.Resources.Strings.Settings_SaveSettings_DownloadActive_Message)
             End If
 

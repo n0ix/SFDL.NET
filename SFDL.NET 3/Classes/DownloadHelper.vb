@@ -307,7 +307,7 @@
 
             Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
 
-            If _item.IWorkItemResult.IsCanceled = True Or CBool(Application.Current.Resources("DownloadStopped")) = True Then
+            If _item.IWorkItemResult.IsCanceled = True AndAlso GeneralHelper.IsDownloadStopped = True Then
                 Throw New DownloadStoppedException("Canceld!")
             End If
 
@@ -406,7 +406,7 @@
                 _dl_count += 1
             End SyncLock
 
-            If _item.IWorkItemResult.IsCanceled = True Or CBool(Application.Current.Resources("DownloadStopped")) = True Then
+            If _item.IWorkItemResult.IsCanceled = True AndAlso GeneralHelper.IsDownloadStopped = True Then
                 Throw New Exception("Canceld")
             End If
 
@@ -460,7 +460,7 @@
 
                     Using _local_write_stream As New IO.FileStream(_item.LocalFile, _filemode, IO.FileAccess.Write, IO.FileShare.None, 8192, False)
 
-                        While bytesRead > 0 And (_item.IWorkItemResult.IsCanceled = False And CBool(Application.Current.Resources("DownloadStopped")) = False)
+                        While bytesRead > 0 And (_item.IWorkItemResult.IsCanceled = False And GeneralHelper.IsDownloadStopped = False)
 
                             Dim _tmp_percent_downloaded As Double = 0
                             Dim _new_perc As Integer = 0
@@ -552,7 +552,7 @@
 
         Catch ex As ArxOne.Ftp.Exceptions.FtpAuthenticationException
 
-            If _item.IWorkItemResult.IsCanceled = True Or CBool(Application.Current.Resources("DownloadStopped")) = True Then
+            If _item.IWorkItemResult.IsCanceled = True Or GeneralHelper.IsDownloadStopped = True Then
                 _log.Info("Download has been stopped")
                 _item.DownloadStatus = NET3.DownloadItem.Status.Stopped
             Else
@@ -562,7 +562,7 @@
 
         Catch ex As ArxOne.Ftp.Exceptions.FtpFileException
 
-            If CBool(Application.Current.Resources("DownloadStopped")) = True Then
+            If GeneralHelper.IsDownloadStopped = True Then
                 _log.Info("Download has been stopped")
                 _item.DownloadStatus = NET3.DownloadItem.Status.Stopped
             Else
@@ -572,7 +572,7 @@
 
         Catch ex As ArxOne.Ftp.Exceptions.FtpProtocolException
 
-            If _item.IWorkItemResult.IsCanceled = True Or CBool(Application.Current.Resources("DownloadStopped")) = True Then
+            If _item.IWorkItemResult.IsCanceled = True Or GeneralHelper.IsDownloadStopped = True Then
                 _log.Info("Download has been stopped")
                 _item.DownloadStatus = NET3.DownloadItem.Status.Stopped
             Else
@@ -582,7 +582,7 @@
 
         Catch ex As ArxOne.Ftp.Exceptions.FtpTransportException
 
-            If _item.IWorkItemResult.IsCanceled = True Or CBool(Application.Current.Resources("DownloadStopped")) = True Then
+            If _item.IWorkItemResult.IsCanceled = True Or GeneralHelper.IsDownloadStopped = True Then
                 _log.Info("Download has been stopped!")
                 _item.DownloadStatus = NET3.DownloadItem.Status.Stopped
             Else
@@ -592,7 +592,7 @@
 
         Catch ex As ArxOne.Ftp.Exceptions.FtpException
 
-            If _item.IWorkItemResult.IsCanceled = True Or CBool(Application.Current.Resources("DownloadStopped")) = True Then
+            If _item.IWorkItemResult.IsCanceled = True Or GeneralHelper.IsDownloadStopped = True Then
                 _log.Info("Download has been stopped!")
                 _item.DownloadStatus = NET3.DownloadItem.Status.Stopped
             Else
@@ -612,7 +612,7 @@
 
 
         Catch ex As Exception
-            If _item.IWorkItemResult.IsCanceled = True Or CBool(Application.Current.Resources("DownloadStopped")) = True Then
+            If _item.IWorkItemResult.IsCanceled = True Or GeneralHelper.IsDownloadStopped = True Then
                 _log.Info("Download has been stopped!")
                 _item.DownloadStatus = NET3.DownloadItem.Status.Stopped
             Else
@@ -642,7 +642,7 @@
 
         Try
 
-            If _item.IWorkItemResult.IsCanceled = True Or CBool(Application.Current.Resources("DownloadStopped")) = True Then
+            If _item.IWorkItemResult.IsCanceled = True AndAlso GeneralHelper.IsDownloadStopped = True Then
                 Throw New DownloadStoppedException("Cancel!")
             End If
 
@@ -650,7 +650,7 @@
 
             _item.PreserveStatusAndUnCheck()
 
-            If CBool(Application.Current.Resources("DownloadStopped")) = False And _item.DownloadStatus = NET3.DownloadItem.Status.Completed Then
+            If GeneralHelper.IsDownloadStopped = False And _item.DownloadStatus = NET3.DownloadItem.Status.Completed Then
 
                 _item.DownloadStatus = NET3.DownloadItem.Status.Completed
 
