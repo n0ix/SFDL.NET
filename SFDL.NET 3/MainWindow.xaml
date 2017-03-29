@@ -898,6 +898,7 @@
                     <ListView.ContextMenu>
                         <ContextMenu>
                             <MenuItem
+                                x:Name="LV_DownloadItems_CM_OpenParentFolder"
                                 Command="{Binding OpenParentFolderCommand}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
                                 Header="{x:Static p:Strings.DownloadItems_ContextMenu_OpenParentFolder}">
@@ -914,6 +915,7 @@
                             </MenuItem>
 
                             <MenuItem
+                                x:Name="LV_DownloadItems_CM_CloseContainer"
                                 Command="{Binding CloseSFDLContainerCommand}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
                                 Header="{x:Static p:Strings.DownloadItems_ContextMenu_CloseSFDLContainer}">
@@ -930,6 +932,7 @@
                             </MenuItem>
 
                             <MenuItem
+                                x:Name="LV_DownloadItems_CM_MarkAllItems"
                                 Command="{Binding MarkAllItemsInPackageCommand}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
                                 Header="{x:Static p:Strings.DownloadItems_ContextMenu_MarkAllItemsInPackage}">
@@ -946,6 +949,7 @@
                             </MenuItem>
 
                             <MenuItem
+                                x:Name="LV_DownloadItems_CM_UnMarkAllItems"
                                 Command="{Binding UnMarkAllItemsInPackageCommand}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
                                 Header="{x:Static p:Strings.DownloadItems_ContextMenu_UnMarkAllItemsInPackage}">

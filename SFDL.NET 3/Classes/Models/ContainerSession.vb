@@ -1,5 +1,13 @@
-﻿<Serializable>
+﻿Imports System.ComponentModel
+
+<Serializable>
 Public Class ContainerSession
+    Implements INotifyPropertyChanged
+
+    Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
+    Public Sub RaisePropertyChanged(ByVal propertyName As String)
+        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(propertyName))
+    End Sub
 
     Private _lock_instant_video_streams As New Object
 
@@ -30,7 +38,6 @@ Public Class ContainerSession
     Public Property DisplayName As String = String.Empty
     Public Property ContainerFileName As String = String.Empty
     Public Property ContainerFilePath As String = String.Empty
-    Public Property SessionState As ContainerSessionState = ContainerSessionState.Queued
     Public Property DownloadStartedTime As Date = Date.MinValue
     Public Property DownloadStoppedTime As Date = Date.MinValue
     Public Property UnRarChains As New List(Of UnRARChain)
@@ -43,5 +50,58 @@ Public Class ContainerSession
     Public Property SingleSessionMode As Boolean = False
     Public Property InstantVideoStreams As ObjectModel.ObservableCollection(Of InstantVideoStream)
     Public Property LocalDownloadRoot As String = String.Empty
+
+    Private _session_state_image As String = "None"
+
+    Public Property SessionStateImage As String
+        Set(value As String)
+            _session_state_image = value
+            RaisePropertyChanged("SessionStateImage")
+        End Set
+        Get
+            Return _session_state_image
+        End Get
+    End Property
+
+    Private _session_state As ContainerSessionState = ContainerSessionState.Queued
+
+    Public Property SessionState As ContainerSessionState
+        Set(value As ContainerSessionState)
+
+            _session_state = value
+
+            RaisePropertyChanged("SessionState")
+
+            Select Case _session_state
+
+                Case ContainerSessionState.None
+
+                    SessionStateImage = "None"
+
+                Case ContainerSessionState.DonwloadStopped
+
+                    SessionStateImage = "Stopped"
+
+                Case ContainerSessionState.DownloadComplete
+
+                    SessionStateImage = "Completed"
+
+                Case ContainerSessionState.DownloadRunning
+
+                    SessionStateImage = "Running"
+
+                Case ContainerSessionState.Queued
+
+                    SessionStateImage = "Queued"
+
+            End Select
+
+
+        End Set
+        Get
+            Return _session_state
+        End Get
+    End Property
+
 
 End Class

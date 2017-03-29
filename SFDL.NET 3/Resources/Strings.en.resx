@@ -704,4 +704,13 @@ Restart the download to apply these settings.</value>
   <data name="Settings_Question_ResetSpeedreport_Title" xml:space="preserve">
     <value>Reset speedreport template</value>
   </data>
+  <data name="ExcutePostDownloadActions_Progress_ApplicationExit_Message" xml:space="preserve">
+    <value>SFDL.NET will be shutdown in 30 seconds</value>
+  </data>
+  <data name="ExcutePostDownloadActions_Progress_ShutdownComputer_Message" xml:space="preserve">
+    <value>The computer will be shut down in 30 seconds</value>
+  </data>
+  <data name="VariousStrings_CancelButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

@@ -122,6 +122,7 @@
     <Compile Include="Classes\SingleInstance\SingleInstance.vb" />
     <Compile Include="Classes\ViewModels\MainViewModel.vb" />
     <Compile Include="Classes\Interfaces\IDownloadStatusImage.vb" />
+    <Compile Include="Classes\XAML Converter\CollectioViewStatusImageConverter.vb" />
     <Compile Include="Classes\XAML Converter\FileSizeConverter.vb" />
     <Compile Include="Classes\XAML Converter\CollectionViewNameConverter.vb" />
     <Compile Include="Classes\XAML Converter\ExistingFileHandlingConverter.vb" />

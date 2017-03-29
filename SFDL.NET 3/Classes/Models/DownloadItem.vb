@@ -17,7 +17,7 @@ Public Class DownloadItem
     Private _selected As Boolean = False
     Private _download_progress As Integer = 0
     Private _parent_container_id As Guid
-    Private _status_image As String = "Resources/Icons/appbar.sign.parking.png"
+    Private _status_image As String = "None"
     Private _status As Status = Status.None
     Private _id As Guid
     Private _tmp_preserve_status As Boolean = False

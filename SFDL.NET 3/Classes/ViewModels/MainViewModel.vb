@@ -25,6 +25,7 @@ Public Class MainViewModel
     Private _lock_container_sessions As New Object
     Private _eta_thread As IWorkItemResult(Of Boolean)
     Private _download_helper As New DownloadHelper
+    Private _progress_dialog_controller As ProgressDialogController
 
     Public Sub UpdateSettings()
 
@@ -717,12 +718,6 @@ Decrypt:
 
                                          _chain.UnRARDone = True
 
-                                         'If UnRAR(_chain, _unrar_task, _settings.UnRARSettings) = True Then
-                                         '    _chain.UnRARDone = True
-                                         'Else
-                                         '    _chain.UnRARDone = False
-                                         'End If
-
                                          _chain.UnRARRunning = False
 
                                      Else
@@ -855,53 +850,108 @@ Decrypt:
     Private Async Sub ExcutePostDownloadActions()
 
         Dim _wait As Boolean = True
-
         Dim _m_container_sessions As New List(Of ContainerSession)
+        Dim _dialog_settings As New MetroDialogSettings
+        Dim _log As Logger = LogManager.GetLogger("ExcutePostDownloadActions")
 
-        _m_container_sessions = ContainerSessions.ToList
+        Try
 
-        Await Task.Run(Sub()
+            _m_container_sessions = ContainerSessions.ToList
 
-                           While _wait = True
+            Await Task.Run(Sub()
 
-                               For Each _session In _m_container_sessions
+                               While _wait = True
 
-                                   If Not _session.SessionState = ContainerSessionState.DownloadRunning And _session.UnRarChains.Where(Function(mychain) mychain.UnRARRunning = True).Count = 0 Then
-                                       _wait = False
-                                   Else
-                                       _wait = True
-                                   End If
+                                   For Each _session In _m_container_sessions
 
-                               Next
+                                       If Not _session.SessionState = ContainerSessionState.DownloadRunning And _session.UnRarChains.Where(Function(mychain) mychain.UnRARRunning = True).Count = 0 Then
+                                           _wait = False
+                                       Else
+                                           _wait = True
+                                       End If
 
-                           End While
+                                   Next
 
-                       End Sub)
+                               End While
+
+                           End Sub)
 
 
-        If CheckedPostDownloadShutdownComputer = True Then
+            _dialog_settings.DefaultButtonFocus = MessageDialogResult.Negative
+            _dialog_settings.NegativeButtonText = My.Resources.Strings.VariousStrings_CancelButton
 
-            Dim _shutdown_cmd As String = "shutdown -s -t 30"
 
-            Process.Start("cmd", String.Format("/c {0}", _shutdown_cmd))
+            If CheckedPostDownloadShutdownComputer = True Then
 
-            DispatchService.DispatchService.Invoke(Sub()
-                                                       Application.Current.Shutdown()
-                                                   End Sub)
+                _progress_dialog_controller = Await DialogCoordinator.Instance.ShowProgressAsync(Me, "SFDL.NET", My.Resources.Strings.ExcutePostDownloadActions_Progress_ShutdownComputer_Message, True, _dialog_settings)
 
-        Else
-            If CheckedPostDownloadExitApp = True Then
+                AddHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
 
-                DispatchService.DispatchService.Invoke(Sub()
-                                                           Application.Current.Shutdown()
-                                                       End Sub)
+                _progress_dialog_controller.SetIndeterminate()
+
+                Await Tasks.Task.Delay(TimeSpan.FromSeconds(30).TotalMilliseconds)
+
+                If _progress_dialog_controller.IsOpen Then
+                    Await _progress_dialog_controller.CloseAsync()
+                End If
+
+                If _progress_dialog_controller.IsCanceled = False Then
+
+                    Dim _shutdown_cmd As String = "shutdown -s -t 3"
+
+                    Process.Start("cmd", String.Format("/c {0}", _shutdown_cmd))
+
+                    RemoveHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
+
+                    DispatchService.DispatchService.Invoke(Sub()
+                                                               Application.Current.Shutdown()
+                                                           End Sub)
+
+                End If
+
+            Else
+
+                If CheckedPostDownloadExitApp = True Then
+
+                    _progress_dialog_controller = Await DialogCoordinator.Instance.ShowProgressAsync(Me, "SFDL.NET", My.Resources.Strings.ExcutePostDownloadActions_Progress_ApplicationExit_Message, True, _dialog_settings)
+
+                    AddHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
+
+                    _progress_dialog_controller.SetIndeterminate()
+
+                    Await Tasks.Task.Delay(TimeSpan.FromSeconds(30).TotalMilliseconds)
+
+                    If _progress_dialog_controller.IsOpen Then
+                        Await _progress_dialog_controller.CloseAsync()
+                    End If
+
+                    If _progress_dialog_controller.IsCanceled = False Then
+
+                        RemoveHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
+
+                        DispatchService.DispatchService.Invoke(Sub()
+                                                                   Application.Current.Shutdown()
+                                                               End Sub)
+
+                    End If
+
+                End If
 
             End If
-        End If
 
+        Catch ex As Exception
+            _log.Error(ex, ex.Message)
+        End Try
 
     End Sub
 
+    Private Sub PostDownloadProgressDialogCancelEvent(sender As Object, e As EventArgs)
+
+        If IsNothing(_progress_dialog_controller) = False AndAlso _progress_dialog_controller.IsOpen Then
+            _progress_dialog_controller.CloseAsync()
+        End If
+
+    End Sub
 
     Private Sub ServerFullEvent(_item As DownloadItem)
 

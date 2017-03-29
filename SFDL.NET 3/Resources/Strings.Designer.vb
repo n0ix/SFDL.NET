@@ -443,6 +443,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die SFDL.NET wird in 30 Sekunden beendet ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property ExcutePostDownloadActions_Progress_ApplicationExit_Message() As String
+            Get
+                Return ResourceManager.GetString("ExcutePostDownloadActions_Progress_ApplicationExit_Message", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Der Computer wird in 30 Sekunden heruntergefahren ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property ExcutePostDownloadActions_Progress_ShutdownComputer_Message() As String
+            Get
+                Return ResourceManager.GetString("ExcutePostDownloadActions_Progress_ShutdownComputer_Message", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Es läuft aktuell noch ein Download oder Entpackvorgang. Wollen Sie die Anwendung trotzdem beenden? ähnelt.
         '''</summary>
         Public Shared ReadOnly Property ExitApplication_Prompt_Message() As String
@@ -1623,6 +1641,15 @@ Namespace My.Resources
         Public Shared ReadOnly Property VariousStrings_AffirmativeButton() As String
             Get
                 Return ResourceManager.GetString("VariousStrings_AffirmativeButton", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Abbruch ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property VariousStrings_CancelButton() As String
+            Get
+                Return ResourceManager.GetString("VariousStrings_CancelButton", resourceCulture)
             End Get
         End Property
         

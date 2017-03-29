@@ -232,5 +232,22 @@ Public Class MainWindow
 
     End Sub
 
+    Private Sub ListView_DownloadItems_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs) Handles ListView_DownloadItems.ContextMenuOpening
 
+
+        If ListView_DownloadItems.SelectedItems.Count = 0 Then
+            'Disable ContextMenu Items
+            LV_DownloadItems_CM_CloseContainer.IsEnabled = False
+            LV_DownloadItems_CM_MarkAllItems.IsEnabled = False
+            LV_DownloadItems_CM_OpenParentFolder.IsEnabled = False
+            LV_DownloadItems_CM_UnMarkAllItems.IsEnabled = False
+        Else
+            LV_DownloadItems_CM_CloseContainer.IsEnabled = True
+            LV_DownloadItems_CM_MarkAllItems.IsEnabled = True
+            LV_DownloadItems_CM_OpenParentFolder.IsEnabled = True
+            LV_DownloadItems_CM_UnMarkAllItems.IsEnabled = True
+
+        End If
+
+    End Sub
 End Class

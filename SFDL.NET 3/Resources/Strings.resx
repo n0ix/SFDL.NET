@@ -710,4 +710,13 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="Settings_Question_ResetSpeedreport_Title" xml:space="preserve">
     <value>Speedreport zurücksetzten</value>
   </data>
+  <data name="ExcutePostDownloadActions_Progress_ApplicationExit_Message" xml:space="preserve">
+    <value>SFDL.NET wird in 30 Sekunden beendet</value>
+  </data>
+  <data name="ExcutePostDownloadActions_Progress_ShutdownComputer_Message" xml:space="preserve">
+    <value>Der Computer wird in 30 Sekunden heruntergefahren</value>
+  </data>
+  <data name="VariousStrings_CancelButton" xml:space="preserve">
+    <value>Abbruch</value>
+  </data>
 </root>
