@@ -980,9 +980,22 @@ Decrypt:
                            For Each _session In ContainerSessions
 
                                If Not IsNothing(_session.WIG) Then
+
                                    _session.WIG.Cancel()
+
+                                   SyncLock _session.SynLock
+                                       _session.DownloadStoppedTime = Now
+                                       _session.SessionState = ContainerSessionState.DonwloadStopped
+                                   End SyncLock
+
                                End If
 
+                           Next
+
+                           For Each _item In DownloadItems
+                               If IsNothing(_item.IWorkItemResult) = False Then
+                                   _item.IWorkItemResult.Cancel()
+                               End If
                            Next
 
                            _eta_thread.Cancel()

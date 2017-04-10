@@ -307,8 +307,12 @@
 
             Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
 
-            If _item.IWorkItemResult.IsCanceled = True AndAlso GeneralHelper.IsDownloadStopped = True Then
-                Throw New DownloadStoppedException("Canceld!")
+            'If _item.IWorkItemResult.IsCanceled = True AndAlso GeneralHelper.IsDownloadStopped = True Then
+            '    Throw New DownloadStoppedException("Canceld!")
+            'End If
+
+            If _item.IWorkItemResult.IsCanceled = True Then
+                Throw New DownloadStoppedException("DownloadStopped!")
             End If
 
 
@@ -406,8 +410,8 @@
                 _dl_count += 1
             End SyncLock
 
-            If _item.IWorkItemResult.IsCanceled = True AndAlso GeneralHelper.IsDownloadStopped = True Then
-                Throw New Exception("Canceld")
+            If _item.IWorkItemResult.IsCanceled = True Then
+                Throw New DownloadStoppedException("DownloadStopped")
             End If
 
             If String.IsNullOrWhiteSpace(_item.LocalFile) Then
@@ -460,7 +464,7 @@
 
                     Using _local_write_stream As New IO.FileStream(_item.LocalFile, _filemode, IO.FileAccess.Write, IO.FileShare.None, 8192, False)
 
-                        While bytesRead > 0 And (_item.IWorkItemResult.IsCanceled = False And GeneralHelper.IsDownloadStopped = False)
+                        While bytesRead > 0 And (_item.IWorkItemResult.IsCanceled = False)
 
                             Dim _tmp_percent_downloaded As Double = 0
                             Dim _new_perc As Integer = 0
@@ -540,6 +544,10 @@
             End If
 
             _item.DownloadStatus = NET3.DownloadItem.Status.Completed
+
+        Catch ex As DownloadStoppedException
+            _log.Info("Download Stopped")
+            _item.DownloadStatus = NET3.DownloadItem.Status.Stopped
 
         Catch ex As NotEnoughFreeDiskSpaceException
             _log.Error(ex, ex.Message)
@@ -642,8 +650,8 @@
 
         Try
 
-            If _item.IWorkItemResult.IsCanceled = True AndAlso GeneralHelper.IsDownloadStopped = True Then
-                Throw New DownloadStoppedException("Cancel!")
+            If _item.IWorkItemResult.IsCanceled = True Then
+                Throw New DownloadStoppedException("DownloadStopped!")
             End If
 
             _item.DownloadSpeed = String.Empty
