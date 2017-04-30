@@ -719,4 +719,10 @@ Restart the download to apply these settings.</value>
   <data name="Settings_ExcludeMalicious_FileExtensions" xml:space="preserve">
     <value>Automatically exclude malicious file extensions</value>
   </data>
+  <data name="Settings_ExcludeMalicious_FileExtensions_ToolTip" xml:space="preserve">
+    <value>This setting blocks known malicious files.
+
+The following file extensions are blocked:
+- *.scr</value>
+  </data>
 </root>

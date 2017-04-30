@@ -1086,6 +1086,18 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Mit dieser Einstellung werden bekannte bösartige Dateiendungen blockiert.
+        '''
+        '''Folgende Dateiendungen werden blockiert:
+        '''- *.scr ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_ExcludeMalicious_FileExtensions_ToolTip() As String
+            Get
+                Return ResourceManager.GetString("Settings_ExcludeMalicious_FileExtensions_ToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Existierende Datei: ähnelt.
         '''</summary>
         Public Shared ReadOnly Property Settings_ExistingFile() As String

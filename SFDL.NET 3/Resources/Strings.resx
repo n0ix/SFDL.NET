@@ -725,4 +725,10 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="Settings_ExcludeMalicious_FileExtensions" xml:space="preserve">
     <value>Automatisch schädliche Dateierweiterungen ausschließen</value>
   </data>
+  <data name="Settings_ExcludeMalicious_FileExtensions_ToolTip" xml:space="preserve">
+    <value>Mit dieser Einstellung werden bekannte bösartige Dateiendungen blockiert.
+
+Folgende Dateiendungen werden blockiert:
+- *.scr</value>
+  </data>
 </root>
