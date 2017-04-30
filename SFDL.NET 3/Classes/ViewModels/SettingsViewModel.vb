@@ -177,6 +177,15 @@ Public Class SettingsViewModel
         End Get
     End Property
 
+    Public Property ExcludeMaliciousFileExtensions As Boolean
+        Set(value As Boolean)
+            _settings.ExcludeMaliciousFileExtensions = value
+        End Set
+        Get
+            Return _settings.ExcludeMaliciousFileExtensions
+        End Get
+    End Property
+
 
 #End Region
 

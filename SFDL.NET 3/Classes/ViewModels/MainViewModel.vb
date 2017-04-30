@@ -181,6 +181,7 @@ Public Class MainViewModel
         Dim _mycontainer_session As ContainerSession
         Dim _decrypt_password As String
         Dim _decrypt As New Decrypt
+        Dim _exclude_blacklist As New List(Of String)
 
         AddHandler _mytask.TaskDone, AddressOf TaskDoneEvent
 
@@ -267,8 +268,19 @@ Decrypt:
                 _bulk_result = True
             End If
 
-            GenerateContainerSessionDownloadItems(_mycontainer_session, _settings.NotMarkAllContainerFiles, _settings.DownloadItemBlacklist.ToList)
+            If _settings.ExcludeMaliciousFileExtensions = True Then
 
+                _exclude_blacklist.AddRange(_settings.DownloadItemBlacklist.ToList)
+
+                For Each _item In My.Settings.MaliciousFileBlockList
+                    _exclude_blacklist.Add(_item)
+                Next
+
+            Else
+                _exclude_blacklist.AddRange(_settings.DownloadItemBlacklist.ToList)
+            End If
+
+            GenerateContainerSessionDownloadItems(_mycontainer_session, _settings.NotMarkAllContainerFiles, _exclude_blacklist)
 
             If _bulk_result = False Or _mycontainer_session.DownloadItems.Count = 0 Then
                 Throw New Exception(String.Format(My.Resources.Strings.OpenSFDL_Exception_FTPDown, Path.GetFileName(_sfdl_container_path)))

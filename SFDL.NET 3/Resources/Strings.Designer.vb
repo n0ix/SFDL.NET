@@ -1077,6 +1077,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Automatisch schädliche Dateierweiterungen ausschließen ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_ExcludeMalicious_FileExtensions() As String
+            Get
+                Return ResourceManager.GetString("Settings_ExcludeMalicious_FileExtensions", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Existierende Datei: ähnelt.
         '''</summary>
         Public Shared ReadOnly Property Settings_ExistingFile() As String

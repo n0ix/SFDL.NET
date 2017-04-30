@@ -18,6 +18,7 @@
     Public Property AppAccent As String = "Blue"
     Public Property AppTheme As String = "BaseLight"
     Public Property DownloadItemBlacklist As New ObjectModel.ObservableCollection(Of String)
+    Public Property ExcludeMaliciousFileExtensions As Boolean = True
 
     Public Shared Function InitNewSettings() As Settings
 
@@ -37,6 +38,7 @@
             .MaxRetry = 3
             .PreventStandby = True
             .UnRARSettings = New UnRARSettings
+            .ExcludeMaliciousFileExtensions = True
             .SpeedReportSettings = New SpeedreportSettings
 
         End With

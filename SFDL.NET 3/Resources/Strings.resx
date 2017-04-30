@@ -722,4 +722,7 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="MainMenu_Help_Wiki" xml:space="preserve">
     <value>SFDL.NET Wiki</value>
   </data>
+  <data name="Settings_ExcludeMalicious_FileExtensions" xml:space="preserve">
+    <value>Automatisch schädliche Dateierweiterungen ausschließen</value>
+  </data>
 </root>

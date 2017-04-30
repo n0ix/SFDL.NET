@@ -716,4 +716,7 @@ Restart the download to apply these settings.</value>
   <data name="MainMenu_Help_Wiki" xml:space="preserve">
     <value>SFDL.NET Wiki</value>
   </data>
+  <data name="Settings_ExcludeMalicious_FileExtensions" xml:space="preserve">
+    <value>Automatically exclude malicious file extensions</value>
+  </data>
 </root>
