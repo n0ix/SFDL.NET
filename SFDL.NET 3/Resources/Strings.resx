@@ -154,7 +154,7 @@
     <value>Einstellungen</value>
   </data>
   <data name="MainMenu_Help" xml:space="preserve">
-    <value>Über</value>
+    <value>Hilfe</value>
   </data>
   <data name="MainMenu_Help_About" xml:space="preserve">
     <value>Über</value>
@@ -718,5 +718,8 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   </data>
   <data name="VariousStrings_CancelButton" xml:space="preserve">
     <value>Abbruch</value>
+  </data>
+  <data name="MainMenu_Help_Wiki" xml:space="preserve">
+    <value>SFDL.NET Wiki</value>
   </data>
 </root>

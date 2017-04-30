@@ -571,7 +571,7 @@
                             </MenuItem>
                         </MenuItem>
                     </MenuItem>
-                    <MenuItem Command="{Binding ShowHelpCommand}" Header="{x:Static p:Strings.MainMenu_Help}">
+                    <MenuItem Header="{x:Static p:Strings.MainMenu_Help}">
                         <MenuItem.Icon>
                             <Rectangle
                                 Width="16"
@@ -583,6 +583,35 @@
                                 </Rectangle.OpacityMask>
                             </Rectangle>
                         </MenuItem.Icon>
+
+                        <MenuItem Command="{Binding ShowHelpCommand}" Header="{x:Static p:Strings.MainMenu_Help_About}">
+                            <MenuItem.Icon>
+                                <Rectangle
+                                    Width="16"
+                                    Height="16"
+                                    Fill="{DynamicResource AccentColorBrush}">
+                                    <Rectangle.OpacityMask>
+
+                                        <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_people_magnify}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <MenuItem Command="{Binding ShowSFDLWikiCommand}" Header="{x:Static p:Strings.MainMenu_Help_Wiki}">
+                            <MenuItem.Icon>
+                                <Rectangle
+                                    Width="16"
+                                    Height="16"
+                                    Fill="{DynamicResource AccentColorBrush}">
+                                    <Rectangle.OpacityMask>
+
+                                        <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_book_open}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </MenuItem.Icon>
+                        </MenuItem>
+
                     </MenuItem>
 
                 </Menu>

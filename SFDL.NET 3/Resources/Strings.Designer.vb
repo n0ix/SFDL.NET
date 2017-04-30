@@ -645,7 +645,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Über ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Hilfe ähnelt.
         '''</summary>
         Public Shared ReadOnly Property MainMenu_Help() As String
             Get
@@ -659,6 +659,15 @@ Namespace My.Resources
         Public Shared ReadOnly Property MainMenu_Help_About() As String
             Get
                 Return ResourceManager.GetString("MainMenu_Help_About", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die SFDL.NET Wiki ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property MainMenu_Help_Wiki() As String
+            Get
+                Return ResourceManager.GetString("MainMenu_Help_Wiki", resourceCulture)
             End Get
         End Property
         

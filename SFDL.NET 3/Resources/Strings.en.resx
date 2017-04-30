@@ -154,7 +154,7 @@
     <value>Settings</value>
   </data>
   <data name="MainMenu_Help" xml:space="preserve">
-    <value>About</value>
+    <value>Help</value>
   </data>
   <data name="MainMenu_Help_About" xml:space="preserve">
     <value>About</value>
@@ -712,5 +712,8 @@ Restart the download to apply these settings.</value>
   </data>
   <data name="VariousStrings_CancelButton" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="MainMenu_Help_Wiki" xml:space="preserve">
+    <value>SFDL.NET Wiki</value>
   </data>
 </root>

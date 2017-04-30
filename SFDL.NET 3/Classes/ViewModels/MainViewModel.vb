@@ -1261,6 +1261,28 @@ Decrypt:
 
     End Sub
 
+    Public ReadOnly Property ShowSFDLWikiCommand As ICommand
+        Get
+            Return New DelegateCommand(AddressOf ShowSFDLWiki)
+        End Get
+    End Property
+
+    Private Async Sub ShowSFDLWiki()
+
+        Dim _wiki_url As String = "https://github.com/n0ix/SFDL.NET/wiki"
+
+        Try
+
+            Await Task.Run(Sub()
+                               System.Diagnostics.Process.Start(_wiki_url)
+                           End Sub)
+
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
 
     Public ReadOnly Property InstantVideoCommand As ICommand
         Get
