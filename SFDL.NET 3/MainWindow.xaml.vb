@@ -81,7 +81,7 @@ Public Class MainWindow
                 Await ShowMessageAsync(My.Resources.Strings.VariousStrings_Warning, My.Resources.Strings.VariousStrings_UnRARExecutableMissingException)
             End If
 
-            If IO.File.Exists(IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "lib", "lib32", "librhash_x86.dll")) = False Then
+            If IO.File.Exists(IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "lib", "lib32", "librhash.dll")) = False Then
                 Await ShowMessageAsync(My.Resources.Strings.VariousStrings_Warning, My.Resources.Strings.VariousStrings_LibrHashMissingException)
             End If
 

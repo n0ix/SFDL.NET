@@ -344,6 +344,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Download abgeschlossen - Checksumme wird überprüft ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property DownloadStatus_HashCheck() As String
+            Get
+                Return ResourceManager.GetString("DownloadStatus_HashCheck", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die In Warteschlange ähnelt.
         '''</summary>
         Public Shared ReadOnly Property DownloadStatus_Queued() As String

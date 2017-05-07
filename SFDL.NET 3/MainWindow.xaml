@@ -118,6 +118,11 @@
                 Stretch="Uniform"
                 Visual="{StaticResource appbar_type_bit}" />
 
+            <VisualBrush
+                x:Key="DownloadStatusHashCheck"
+                Stretch="Uniform"
+                Visual="{StaticResource appbar_radar_screen}" />
+
 
             <VisualBrush
                 x:Key="TaskStatusFailed"
@@ -592,7 +597,7 @@
                                     Fill="{DynamicResource AccentColorBrush}">
                                     <Rectangle.OpacityMask>
 
-                                        <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_people_magnify}" />
+                                        <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_home_people}" />
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </MenuItem.Icon>
@@ -824,6 +829,10 @@
                                                             <DataTrigger Binding="{Binding DownloadStatusImage}" Value="IOError">
                                                                 <Setter Property="OpacityMask" Value="{StaticResource DownloadStatusIOError}" />
                                                             </DataTrigger>
+                                                            <DataTrigger Binding="{Binding DownloadStatusImage}" Value="HashCheck">
+                                                                <Setter Property="OpacityMask" Value="{StaticResource DownloadStatusHashCheck}" />
+                                                            </DataTrigger>
+
 
                                                         </Style.Triggers>
                                                     </Style>

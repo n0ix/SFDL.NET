@@ -123,6 +123,10 @@ Public Class DownloadItem
 
                     Return Strings.DownloadStatus_Completed
 
+                Case Status.HashCheck
+
+                    Return Strings.DownloadStatus_HashCheck
+
                 Case Status.Completed_HashInvalid
 
                     Return Strings.DownloadStatus_Completed_HashInvalid
@@ -214,6 +218,10 @@ Public Class DownloadItem
                 Case Status.Completed
 
                     DownloadStatusImage = "Completed"
+
+                Case Status.HashCheck
+
+                    DownloadStatusImage = "HashCheck"
 
                 Case Status.Queued
 
@@ -377,6 +385,7 @@ Public Class DownloadItem
         Failed_InternalServerError
         Failed_IOError
         Completed
+        HashCheck
         Completed_HashValid
         Completed_HashInvalid
         AlreadyDownloaded

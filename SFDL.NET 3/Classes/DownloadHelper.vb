@@ -646,7 +646,7 @@
         Dim _hashcommand As String = String.Empty
         Dim _reply As ArxOne.Ftp.FtpReply
         Dim _tmp_hash As String = String.Empty
-        Dim _hashtype As Container.HashType
+        Dim _hashtype As Container.HashType = Container.HashType.None
 
         Try
 
@@ -660,7 +660,7 @@
 
             If GeneralHelper.IsDownloadStopped = False And _item.DownloadStatus = NET3.DownloadItem.Status.Completed Then
 
-                _item.DownloadStatus = NET3.DownloadItem.Status.Completed
+                _item.DownloadStatus = NET3.DownloadItem.Status.HashCheck
 
                 If _item.HashType = Container.HashType.None Then
 

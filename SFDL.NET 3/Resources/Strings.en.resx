@@ -713,6 +713,9 @@ Restart the download to apply these settings.</value>
   <data name="VariousStrings_CancelButton" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="DownloadStatus_HashCheck" xml:space="preserve">
+    <value>Download completed - Checksumm is being verified</value>
+  </data>
   <data name="MainMenu_Help_Wiki" xml:space="preserve">
     <value>SFDL.NET Wiki</value>
   </data>
