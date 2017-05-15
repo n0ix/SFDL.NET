@@ -636,10 +636,15 @@ Decrypt:
                                                                                _dlitem.LocalFile = GetDownloadFilePath(Application.Current.Resources("Settings"), ContainerSessions.Where(Function(mysession) mysession.ID.Equals(_dlitem.ParentContainerID)).First, _dlitem)
 
                                                                            Else
-                                                                               _dlitem.DownloadStatus = DownloadItem.Status.None
+
+                                                                               If Not _dlitem.DownloadStatus = DownloadItem.Status.AlreadyDownloaded Then
+                                                                                   _dlitem.DownloadStatus = DownloadItem.Status.None
+                                                                               End If
+
                                                                                _dlitem.SizeDownloaded = 0
                                                                                _dlitem.LocalFileSize = 0
                                                                                _dlitem.DownloadSpeed = String.Empty
+
                                                                            End If
 
                                                                        End Sub)

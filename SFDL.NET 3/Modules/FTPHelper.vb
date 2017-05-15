@@ -18,6 +18,7 @@ Module FTPHelper
             End If
 
             With _ftp_client_param
+
                 .ActiveTransferHost = Net.IPAddress.Parse(_connection_info.Host)
                 .AnonymousPassword = "sfdl@anon.net"
 
