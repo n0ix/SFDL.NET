@@ -637,9 +637,30 @@ Decrypt:
 
                                                                            Else
 
-                                                                               If Not _dlitem.DownloadStatus = DownloadItem.Status.AlreadyDownloaded Then
-                                                                                   _dlitem.DownloadStatus = DownloadItem.Status.None
-                                                                               End If
+                                                                               Select Case _dlitem.DownloadStatus
+
+                                                                                   Case DownloadItem.Status.AlreadyDownloaded
+
+                                                                                       'do not touch Status
+
+                                                                                   Case DownloadItem.Status.Completed
+
+                                                                                       'do not touch Status
+
+                                                                                   Case DownloadItem.Status.Completed_HashInvalid
+
+                                                                                       'do not touch Status
+
+                                                                                   Case DownloadItem.Status.Completed_HashValid
+
+                                                                                       'do not touch Status
+
+                                                                                   Case Else
+
+                                                                                       _dlitem.DownloadStatus = DownloadItem.Status.None
+
+                                                                               End Select
+
 
                                                                                _dlitem.SizeDownloaded = 0
                                                                                _dlitem.LocalFileSize = 0

@@ -58,6 +58,11 @@ Module FTPHelper
 
             _ftp_client = New ArxOne.Ftp.FtpClient(New Uri(String.Format("ftp://{0}:{1}", .Host, .Port)), _creds, _ftp_client_param)
 
+            AddHandler _ftp_client.ConnectionInitialized, AddressOf FTPConnectionInitialized
+            AddHandler _ftp_client.Reply, AddressOf _log_ftp
+            AddHandler _ftp_client.Request, AddressOf _log_ftp
+            AddHandler _ftp_client.IOError, AddressOf _log_ftp
+
             _ftp_client.SendSingleCommand("NOOP")
 
             If _ftp_client.ServerFeatures.HasFeature("UTF8") And _connection_info.CharacterEncoding = Container.CharacterEncoding.UTF8 Then
@@ -66,11 +71,11 @@ Module FTPHelper
 
         End With
 
-        AddHandler _ftp_client.Reply, AddressOf _log_ftp
-        AddHandler _ftp_client.Request, AddressOf _log_ftp
-        AddHandler _ftp_client.IOError, AddressOf _log_ftp
 
+    End Sub
 
+    Private Sub FTPConnectionInitialized(sender As Object, e As EventArgs)
+        Debug.WriteLine("FTP Connection initialized")
     End Sub
 
     Public Function BasicAvailabilityTest(ByVal _connection_info As SFDL.Container.Connection) As BasicAvailabilityTestResult
