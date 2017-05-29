@@ -26,7 +26,6 @@ Public Class ContainerSession
         Me.ID = Guid.NewGuid
         Me.ContainerFile = _container
         Me.SessionState = ContainerSessionState.Queued
-        Me.Priority = 0
         Me.InstantVideoStreams = New ObjectModel.ObservableCollection(Of InstantVideoStream)
 
         BindingOperations.EnableCollectionSynchronization(InstantVideoStreams, _lock_instant_video_streams)
@@ -42,7 +41,6 @@ Public Class ContainerSession
     Public Property DownloadStoppedTime As Date = Date.MinValue
     Public Property UnRarChains As New List(Of UnRARChain)
     Public Property DownloadItems As New List(Of DownloadItem)
-    Public Property Priority As Integer = 0 '0 is Default -> All Container Sessions are equal
     Public Property Fingerprint As String = String.Empty
     Public Property SynLock As New Object
     <Xml.Serialization.XmlIgnore>
@@ -50,6 +48,7 @@ Public Class ContainerSession
     Public Property SingleSessionMode As Boolean = False
     Public Property InstantVideoStreams As ObjectModel.ObservableCollection(Of InstantVideoStream)
     Public Property LocalDownloadRoot As String = String.Empty
+    Public Property Priority As Integer = 0
 
     Private _session_state_image As String = "None"
 

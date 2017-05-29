@@ -307,10 +307,6 @@
 
             Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
 
-            'If _item.IWorkItemResult.IsCanceled = True AndAlso GeneralHelper.IsDownloadStopped = True Then
-            '    Throw New DownloadStoppedException("Canceld!")
-            'End If
-
             If _item.IWorkItemResult.IsCanceled = True Then
                 Throw New DownloadStoppedException("DownloadStopped!")
             End If

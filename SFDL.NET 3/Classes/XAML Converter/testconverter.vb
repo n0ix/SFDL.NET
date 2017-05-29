@@ -1,6 +1,6 @@
 ﻿Imports System.Globalization
 
-Public Class CollectioViewStatusImageConverter
+Public Class TestConverter
     Implements IValueConverter
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
@@ -20,15 +20,27 @@ Public Class CollectioViewStatusImageConverter
 
         If Not IsNothing(_container) Then
 
-            Return _container .SessionStateImage
+            Select Case parameter
+
+                Case "SessionState"
+
+                    Return _container.SessionState.ToString
+
+                Case Else
+                    Return String.Empty
+
+
+            End Select
 
         Else
             Return Binding.DoNothing
         End If
 
     End Function
-
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
+
         Return Binding.DoNothing
+
     End Function
+
 End Class

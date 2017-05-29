@@ -31,6 +31,7 @@
         <ResourceDictionary>
             <local:InvertBooleanConverter x:Key="boolConvert" />
             <local:CollectionViewNameConverter x:Key="CollectionViewNameConv" />
+            <local:TestConverter x:Key="TestConv" />
             <local:FileSizeConverter x:Key="FileSizeConv" />
 
             <VisualBrush
@@ -722,7 +723,7 @@
                     x:Name="ListView_DownloadItems"
                     MinHeight="250"
                     dng:DropBehavior.PreviewDropCommand="{Binding PreviewDropCommand}"
-                    ItemsSource="{Binding DownloadItems}"
+                    ItemsSource="{Binding DownloadItems, IsAsync=True}"
                     PreviewKeyUp="OnGridKeyUp"
                     SelectionMode="Extended">
 
@@ -863,32 +864,58 @@
                                                         <DockPanel LastChildFill="False">
 
                                                             <StackPanel Orientation="Horizontal">
+
                                                                 <TextBlock
                                                                     VerticalAlignment="Bottom"
                                                                     FontSize="12"
                                                                     FontWeight="Bold"
                                                                     Foreground="White"
                                                                     Text="{Binding Name, Converter={StaticResource CollectionViewNameConv}}" />
+
+
                                                             </StackPanel>
 
-                                                            <Button
-                                                                Width="25"
-                                                                Height="25"
-                                                                BorderThickness="0"
-                                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CloseSFDLContainerCommand}"
-                                                                CommandParameter="{Binding Name}"
-                                                                DockPanel.Dock="Right">
-                                                                <StackPanel>
-                                                                    <Rectangle
-                                                                        Width="8"
-                                                                        Height="8"
-                                                                        Fill="{DynamicResource AccentColorBrush}">
-                                                                        <Rectangle.OpacityMask>
-                                                                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_close}" />
-                                                                        </Rectangle.OpacityMask>
-                                                                    </Rectangle>
-                                                                </StackPanel>
-                                                            </Button>
+                                                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+
+                                                                <Button
+                                                                    Width="25"
+                                                                    Height="25"
+                                                                    Margin="0,0,5,0"
+                                                                    BorderThickness="0"
+                                                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SetSessionPriorityCommand}"
+                                                                    CommandParameter="{Binding Name}">
+                                                                    <StackPanel>
+                                                                        <Rectangle
+                                                                            Width="12"
+                                                                            Height="12"
+                                                                            Fill="{DynamicResource AccentColorBrush}">
+                                                                            <Rectangle.OpacityMask>
+                                                                                <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_arrow_up}" />
+                                                                            </Rectangle.OpacityMask>
+                                                                        </Rectangle>
+                                                                    </StackPanel>
+                                                                </Button>
+
+                                                                <Button
+                                                                    Width="25"
+                                                                    Height="25"
+                                                                    BorderThickness="0"
+                                                                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.CloseSFDLContainerCommand}"
+                                                                    CommandParameter="{Binding Name}">
+                                                                    <StackPanel>
+                                                                        <Rectangle
+                                                                            Width="12"
+                                                                            Height="12"
+                                                                            Fill="{DynamicResource AccentColorBrush}">
+                                                                            <Rectangle.OpacityMask>
+                                                                                <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_close}" />
+                                                                            </Rectangle.OpacityMask>
+                                                                        </Rectangle>
+                                                                    </StackPanel>
+                                                                </Button>
+
+                                                            </StackPanel>
+
                                                         </DockPanel>
 
                                                     </Expander.Header>

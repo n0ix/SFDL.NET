@@ -8,6 +8,7 @@ Imports System.Windows.Forms
 Imports Amib.Threading
 Imports ArxOne.Ftp
 Imports MahApps.Metro.Controls.Dialogs
+Imports MoreLinq
 Imports NLog
 Imports SFDL.Container
 Imports SFDL.Container.Legacy
@@ -26,6 +27,7 @@ Public Class MainViewModel
     Private _eta_thread As IWorkItemResult(Of Boolean)
     Private _download_helper As New DownloadHelper
     Private _progress_dialog_controller As ProgressDialogController
+    Private view As CollectionView
 
     Public Sub UpdateSettings()
 
@@ -46,7 +48,7 @@ Public Class MainViewModel
         BindingOperations.EnableCollectionSynchronization(DownloadItems, _lock_download_items)
         BindingOperations.EnableCollectionSynchronization(ContainerSessions, _lock_container_sessions)
 
-        CreateView()
+        '    CreateView()
 
         LoadSavedSessions()
 
@@ -111,6 +113,7 @@ Public Class MainViewModel
                     _new_session.SessionState = ContainerSessionState.Queued
                     _new_session.SingleSessionMode = False
                     _new_session.SynLock = New Object
+                    _new_session.Priority = 0
 
                     For Each _chain In _new_session.UnRarChains
                         _chain.UnRARRunning = False
@@ -157,7 +160,7 @@ Public Class MainViewModel
 
     Private Sub CreateView()
 
-        Dim view As CollectionView = DirectCast(CollectionViewSource.GetDefaultView(DownloadItems), CollectionView)
+        view = DirectCast(CollectionViewSource.GetDefaultView(DownloadItems), CollectionView)
 
         Dim groupDescription As PropertyGroupDescription
 
@@ -288,14 +291,11 @@ Decrypt:
 
             GenerateContainerSessionChains(_mycontainer_session)
 
-            For Each _item In _mycontainer_session.DownloadItems
-                DownloadItems.Add(_item)
-            Next
+            DownloadItems.AddRange(_mycontainer_session.DownloadItems)
 
             _mycontainer_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_mycontainer_session, _settings)
 
             ContainerSessions.Add(_mycontainer_session)
-
 
             If _bulk_result = False And Not _mycontainer_session.DownloadItems.Count = 0 Then
                 _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.OpenSFDL_AppTask_Faulted_Message, Path.GetFileName(_sfdl_container_path)))
@@ -500,9 +500,85 @@ Decrypt:
 
     End Sub
 
+    Private Sub QuerySessionsItems(ByVal _session As ContainerSession)
+
+        Dim _wig As IWorkItemsGroup
+        Dim _wig_start As New WIGStartInfo
+        Dim _ssm_flag As Boolean = False
+        Dim DLItemQuery As IEnumerable(Of DownloadItem)
+        Dim _args As New DownloadContainerItemsArgs
+        Dim _log As Logger = LogManager.GetLogger("QuerySessionsItems")
+
+        SyncLock _session.SynLock
+
+            If IsNothing(_session.WIG) Then
+
+                _wig_start.CallToPostExecute = CallToPostExecute.Always
+                _wig_start.PostExecuteWorkItemCallback = AddressOf DownloadCompleteCallback
+                _wig_start.WorkItemPriority = WorkItemPriority.Normal
+
+                _wig = _stp.CreateWorkItemsGroup(_session.ContainerFile.MaxDownloadThreads, _wig_start)
+
+                _session.WIG = _wig
+
+            End If
+
+            If _session.SingleSessionMode = True Or _stp.MaxThreads - 1 = 1 Then '-1 for ETA Thread
+                _session.WIG.Concurrency = 1
+                _args.SingleSessionMode = True
+            End If
+
+
+            DLItemQuery = (From myitem In _session.DownloadItems Where (myitem.isSelected = True And IsNothing(myitem.IWorkItemResult) = True) Or myitem.DownloadStatus = DownloadItem.Status.Retry)
+
+            For Each _dlitem In DLItemQuery
+
+                Dim _prio As WorkItemPriority = WorkItemPriority.Normal
+
+                If _session.DownloadStartedTime = Date.MinValue And _session.SessionState = ContainerSessionState.Queued Then
+                    _session.DownloadStartedTime = Now
+                    _session.SessionState = ContainerSessionState.DownloadRunning
+                End If
+
+                _dlitem.SizeDownloaded = 0
+
+                _dlitem.LocalFileSize = 0
+
+                _dlitem.RetryPossible = False
+
+                With _args
+                    .ConnectionInfo = _session.ContainerFile.Connection
+                    .DownloadDirectory = _settings.DownloadDirectory
+                End With
+
+                _log.Debug(String.Format("Spooling Item {0}", _dlitem.FileName))
+
+                If _settings.InstantVideo = True And _dlitem.RequiredForInstantVideo = True Then
+                    _prio = WorkItemPriority.AboveNormal
+                End If
+
+                If _dlitem.DownloadStatus = DownloadItem.Status.Retry Then
+                    _prio = WorkItemPriority.AboveNormal
+                    _args.RetryMode = True
+                End If
+
+                _dlitem.DownloadStatus = DownloadItem.Status.Queued
+
+                _dlitem.IWorkItemResult = _session.WIG.QueueWorkItem(New Func(Of DownloadItem, DownloadContainerItemsArgs, DownloadItem)(AddressOf _download_helper.DownloadContainerItem), _dlitem, _args, _prio)
+
+            Next
+
+
+        End SyncLock
+
+
+    End Sub
+
     Friend Sub QueryDownloadItems()
 
         Dim _log As Logger = LogManager.GetLogger("QueryDownloadItems")
+        Dim SessionQuery As IEnumerable(Of ContainerSession)
+
 
 #Region "Update STP with Current Settings"
 
@@ -510,76 +586,44 @@ Decrypt:
 
 #End Region
 
-        For Each _session In ContainerSessions.Where(Function(mysession) mysession.SessionState = ContainerSessionState.Queued Or mysession.SessionState = ContainerSessionState.DownloadRunning)
+        SessionQuery = (From mysession In ContainerSessions Where (mysession.SessionState = ContainerSessionState.Queued Or mysession.SessionState = ContainerSessionState.DownloadRunning) And mysession.Priority > 0)
 
-            Dim _wig As IWorkItemsGroup
-            Dim _wig_start As New WIGStartInfo
-            Dim _ssm_flag As Boolean = False
-            Dim DLItemQuery As IEnumerable(Of DownloadItem)
-            Dim _args As New DownloadContainerItemsArgs
+        If SessionQuery.Count = 0 Then
 
-            SyncLock _session.SynLock
+            SessionQuery = (From mysession In ContainerSessions Where mysession.SessionState = ContainerSessionState.Queued Or mysession.SessionState = ContainerSessionState.DownloadRunning)
 
-                If IsNothing(_session.WIG) Then
+            For Each _session In SessionQuery
+                QuerySessionsItems(_session)
+            Next
 
-                    _wig_start.CallToPostExecute = CallToPostExecute.Always
-                    _wig_start.PostExecuteWorkItemCallback = AddressOf DownloadCompleteCallback
+        Else
 
-                    _wig = _stp.CreateWorkItemsGroup(_session.ContainerFile.MaxDownloadThreads, _wig_start)
+            For Each _session In SessionQuery.OrderBy(Function(mysession) mysession.Priority, OrderByDirection.Descending)
 
-                    _session.WIG = _wig
+                Dim DLItemQuery As New List(Of DownloadItem)
 
+                SyncLock _session.SynLock
+
+                    DLItemQuery.AddRange(_session.DownloadItems.Where(Function(myitem) (myitem.isSelected = True And myitem.DownloadStatus = DownloadItem.Status.None)))
+                    DLItemQuery.AddRange(_session.DownloadItems.Where(Function(myitem) (myitem.DownloadStatus = DownloadItem.Status.Queued)))
+                    DLItemQuery.AddRange(_session.DownloadItems.Where(Function(myitem) (myitem.DownloadStatus = DownloadItem.Status.Retry)))
+                    DLItemQuery.AddRange(_session.DownloadItems.Where(Function(myitem) (myitem.DownloadStatus = DownloadItem.Status.RetryWait)))
+
+                End SyncLock
+
+
+                If Not DLItemQuery.Count = 0 Then
+                    QuerySessionsItems(_session)
+                    'Exit cause we only want to query one High prio Session
+                    Exit For
+                Else
+                    'Exit cause we only want to query one High prio Session
+                    Exit For
                 End If
 
-                If _session.SingleSessionMode = True Or _stp.MaxThreads - 1 = 1 Then '-1 for ETA Thread
-                    _session.WIG.Concurrency = 1
-                    _args.SingleSessionMode = True
-                End If
+            Next
 
-
-                DLItemQuery = (From myitem In DownloadItems Where myitem.ParentContainerID.Equals(_session.ID) And (myitem.isSelected = True And IsNothing(myitem.IWorkItemResult) = True) Or myitem.DownloadStatus = DownloadItem.Status.Retry)
-
-                For Each _dlitem In DLItemQuery
-
-                    Dim _prio As WorkItemPriority = WorkItemPriority.Normal
-
-                    If _session.DownloadStartedTime = Date.MinValue And _session.SessionState = ContainerSessionState.Queued Then
-                        _session.DownloadStartedTime = Now
-                        _session.SessionState = ContainerSessionState.DownloadRunning
-                    End If
-
-                    _dlitem.SizeDownloaded = 0
-
-                    _dlitem.LocalFileSize = 0
-
-                    _dlitem.RetryPossible = False
-
-                    With _args
-                        .ConnectionInfo = _session.ContainerFile.Connection
-                        .DownloadDirectory = _settings.DownloadDirectory
-                    End With
-
-                    _log.Debug(String.Format("Spooling Item {0}", _dlitem.FileName))
-
-                    If _settings.InstantVideo = True And _dlitem.RequiredForInstantVideo = True Then
-                        _prio = WorkItemPriority.AboveNormal
-                    End If
-
-                    If _dlitem.DownloadStatus = DownloadItem.Status.Retry Then
-                        _prio = WorkItemPriority.Highest
-                        _args.RetryMode = True
-                    End If
-
-                    _dlitem.DownloadStatus = DownloadItem.Status.Queued
-
-                    _dlitem.IWorkItemResult = _session.WIG.QueueWorkItem(New Func(Of DownloadItem, DownloadContainerItemsArgs, DownloadItem)(AddressOf _download_helper.DownloadContainerItem), _dlitem, _args, _prio)
-
-                Next
-
-
-            End SyncLock
-
-        Next
+        End If
 
     End Sub
 
@@ -692,7 +736,7 @@ Decrypt:
                                                            WindowInstance.TaskbarItemInfo.ProgressState = Shell.TaskbarItemProgressState.Normal
                                                        End Sub)
 
-                _eta_thread = _stp.QueueWorkItem(New Func(Of AppTask, Boolean)(AddressOf CalculateETA), _mytask)
+                _eta_thread = _stp.QueueWorkItem(New Func(Of AppTask, Boolean)(AddressOf CalculateETA), _mytask, WorkItemPriority.Highest)
 
                 QueryDownloadItems()
 
@@ -1511,6 +1555,112 @@ Decrypt:
 
     End Sub
 
+    Public ReadOnly Property SetSessionPriorityCommand() As ICommand
+        Get
+            Return New DelegateCommand(AddressOf SetSessionPriority)
+        End Get
+    End Property
+
+    Private Sub SetSessionPriority(ByVal parameter As Object, Optional _decrease As Boolean = False)
+
+        If Not IsNothing(parameter) Then
+
+            Dim _container_session As ContainerSession = Nothing
+            Dim _tmp_list As New List(Of DownloadItem)
+
+            'AddHandler _mytask.TaskDone, AddressOf TaskDoneEvent
+            'ActiveTasks.Add(_mytask)
+
+            If parameter.GetType Is GetType(String) Then
+
+                If Not String.IsNullOrWhiteSpace(CType(parameter, String)) Then
+
+                    Dim _container_sessionid As Guid = Guid.Parse(CType(parameter, String))
+
+                    _container_session = ContainerSessions.Where(Function(mysession) mysession.ID.Equals(_container_sessionid)).FirstOrDefault
+
+                End If
+
+            End If
+
+            If parameter.GetType Is GetType(DownloadItem) Then
+
+                Dim _dlitem As DownloadItem = TryCast(parameter, DownloadItem)
+
+                _container_session = ContainerSessions.Where(Function(mysession) mysession.ID.Equals(_dlitem.ParentContainerID)).FirstOrDefault
+
+            End If
+
+
+            If Not IsNothing(_container_session) Then
+
+
+                Task.Run(Sub()
+
+                             SyncLock _container_session.SynLock
+
+                                 If ContainerSessions.Any(Function(i) Not i.ID.Equals(_container_session.ID) AndAlso i.Priority >= _container_session.Priority) = True Then
+
+                                     _container_session.Priority += 1
+
+                                     If ContainerSessions.Any(Function(i) Not i.ID.Equals(_container_session.ID) AndAlso i.Priority = _container_session.Priority) Then
+
+                                         'bump all up
+                                         For Each _session In ContainerSessions.Where(Function(mysession) mysession.Priority > 0 And Not mysession.ID.Equals(_container_session.ID))
+                                             _session.Priority += 1
+                                         Next
+
+                                     End If
+
+                                     If IsDownloadStopped() = False Then 'Download is Running - so we to cancel all queued items except these are currently running
+
+                                         For Each _session In ContainerSessions.Where(Function(mysession) mysession.ID.Equals(_container_session.ID) = False)
+
+                                             For Each _item In _session.DownloadItems.Where(Function(myitem) IsNothing(myitem.IWorkItemResult) = False)
+
+                                                 Select Case _item.DownloadStatus
+
+
+                                                     Case DownloadItem.Status.Running
+                                    'don't touch
+
+                                                     Case DownloadItem.Status.Retry
+                                    'don't touch
+
+                                                     Case DownloadItem.Status.RetryWait
+
+                                                         'don't touch
+
+                                                     Case Else
+
+                                                         _item.IWorkItemResult.Cancel()
+
+                                                 End Select
+
+
+                                             Next
+
+                                         Next
+
+                                     End If
+
+                                 Else
+                                     Debug.WriteLine("no session has a higher prio than me bitches!")
+                                 End If
+
+                             End SyncLock
+
+                         End Sub)
+
+            End If
+
+        End If
+
+        view.Refresh()
+
+
+    End Sub
+
 #End Region
 
 #Region "Allgemeine Properties"
@@ -1671,10 +1821,10 @@ Decrypt:
         End Get
     End Property
 
-    Private _download_items As New ObservableCollection(Of DownloadItem)
+    Private _download_items As New ObservableCollectionEx(Of DownloadItem)
 
-    Public Property DownloadItems As ObservableCollection(Of DownloadItem)
-        Set(value As ObservableCollection(Of DownloadItem))
+    Public Property DownloadItems As ObservableCollectionEx(Of DownloadItem)
+        Set(value As ObservableCollectionEx(Of DownloadItem))
             _download_items = value
             RaisePropertyChanged("DownloadItems")
         End Set

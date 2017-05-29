@@ -70,6 +70,10 @@
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MoreLinq, Version=2.4.20801.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.2.4.1\lib\net40\MoreLinq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.9\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
@@ -82,6 +86,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -104,6 +112,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\ObservableCollectionEx.vb" />
     <Compile Include="Classes\Models\WhoIsResult.vb" />
     <Compile Include="Classes\NotifyTaskCompletion.vb" />
     <Compile Include="Classes\Exceptions\BasicAvailabilityTestFailedException.vb" />
@@ -127,8 +136,6 @@
     <Compile Include="Classes\Models\UnRARChain.vb" />
     <Compile Include="Classes\SingleInstance\SingleInstance.vb" />
     <Compile Include="Classes\ViewModels\MainViewModel.vb" />
-    <Compile Include="Classes\Interfaces\IDownloadStatusImage.vb" />
-    <Compile Include="Classes\XAML Converter\CollectioViewStatusImageConverter.vb" />
     <Compile Include="Classes\XAML Converter\FileSizeConverter.vb" />
     <Compile Include="Classes\XAML Converter\CollectionViewNameConverter.vb" />
     <Compile Include="Classes\XAML Converter\ExistingFileHandlingConverter.vb" />
@@ -143,6 +150,7 @@
     <Compile Include="Classes\ViewModels\SettingsViewModel.vb" />
     <Compile Include="Classes\ViewModels\ViewModelBase.vb" />
     <Compile Include="Classes\XAML Converter\LangauageConverter.vb" />
+    <Compile Include="Classes\XAML Converter\testconverter.vb" />
     <Compile Include="MainWindow.xaml.vb">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
