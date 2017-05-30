@@ -384,28 +384,35 @@ Module SFDLFileHelper
         Dim _flag As Boolean = False
         Dim _app_download_path As String = _settings.DownloadDirectory
 
-        If _app_download_path.EndsWith("\") Then
-            _app_download_path = _app_download_path.Remove(_app_download_path.Length - 1)
-        End If
+        Try
 
-        For Each _item In IO.Path.GetDirectoryName(_download_item.LocalFile).Split("\")
-
-            If IO.Path.IsPathRooted(_item) AndAlso _item.EndsWith("\") = False Then
-                _item = _item & "\"
+            If _app_download_path.EndsWith("\") Then
+                _app_download_path = _app_download_path.Remove(_app_download_path.Length - 1)
             End If
 
-            _test_path = IO.Path.Combine(_test_path, _item)
 
-            If _flag = True Then
-                'Pfad ermittelt
-                Return _test_path
-            End If
+            For Each _item In IO.Path.GetDirectoryName(_download_item.LocalFile).Split("\")
 
-            If IO.Path.Equals(_test_path, _settings.DownloadDirectory) Then
-                _flag = True
-            End If
+                If IO.Path.IsPathRooted(_item) AndAlso _item.EndsWith("\") = False Then
+                    _item = _item & "\"
+                End If
 
-        Next
+                _test_path = IO.Path.Combine(_test_path, _item)
+
+                If _flag = True Then
+                    'Pfad ermittelt
+                    Return _test_path
+                End If
+
+                If IO.Path.Equals(_test_path, _settings.DownloadDirectory) Then
+                    _flag = True
+                End If
+
+            Next
+
+        Catch ex As Exception
+            _log.Error(ex, ex.Message)
+        End Try
 
         Return _test_path
 
@@ -437,12 +444,12 @@ Module SFDLFileHelper
 
             _dowload_local_filename = IO.Path.Combine(_download_dir, _tmp_last_sub_dir, _item.FileName)
 
+            _dowload_local_filename = CleanDownloadPathInput(_dowload_local_filename)
 
         Catch ex As Exception
             _log.Error(ex, ex.Message)
         End Try
 
-        _dowload_local_filename = CleanDownloadPathInput(_dowload_local_filename)
 
         Return _dowload_local_filename
 

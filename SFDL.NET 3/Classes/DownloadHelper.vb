@@ -414,14 +414,14 @@
                 Throw New Exception("Filepath is empty!")
             End If
 
+            If _item.LocalFile.Length >= 255 Then
+                Throw New FileNameTooLongException("File path is too long! - Can't write file!")
+            End If
+
             If IO.Directory.Exists(IO.Path.GetDirectoryName(_item.LocalFile)) = False Then
 
                 _log.Warn("Target directory not exists --> creating")
                 IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(_item.LocalFile))
-            End If
-
-            If _item.LocalFile.Length >= 255 Then
-                Throw New FileNameTooLongException("File path is too long! - Can't write file!")
             End If
 
             If _item.FileSize = 0 Then

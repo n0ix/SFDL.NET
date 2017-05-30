@@ -723,7 +723,7 @@
                     x:Name="ListView_DownloadItems"
                     MinHeight="250"
                     dng:DropBehavior.PreviewDropCommand="{Binding PreviewDropCommand}"
-                    ItemsSource="{Binding DownloadItems, IsAsync=True}"
+                    ItemsSource="{Binding DownloadItems}"
                     PreviewKeyUp="OnGridKeyUp"
                     SelectionMode="Extended">
 

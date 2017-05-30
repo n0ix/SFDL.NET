@@ -48,7 +48,7 @@ Public Class MainViewModel
         BindingOperations.EnableCollectionSynchronization(DownloadItems, _lock_download_items)
         BindingOperations.EnableCollectionSynchronization(ContainerSessions, _lock_container_sessions)
 
-        '    CreateView()
+        CreateView()
 
         LoadSavedSessions()
 
@@ -291,9 +291,9 @@ Decrypt:
 
             GenerateContainerSessionChains(_mycontainer_session)
 
-            DownloadItems.AddRange(_mycontainer_session.DownloadItems)
-
             _mycontainer_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_mycontainer_session, _settings)
+
+            DownloadItems.AddRange(_mycontainer_session.DownloadItems)
 
             ContainerSessions.Add(_mycontainer_session)
 
@@ -313,6 +313,9 @@ Decrypt:
             If GeneralHelper.IsDownloadStopped = False And Not _mycontainer_session.DownloadItems.Where(Function(myitem) myitem.isSelected = True).Count = 0 Then
                 CheckAndEnqueueSession(_mycontainer_session)
             End If
+
+        Catch ex As PathTooLongException
+            _mytask.SetTaskStatus(TaskStatus.Faulted, ex.Message)
 
         Catch ex As Exception
             _mytask.SetTaskStatus(TaskStatus.Faulted, ex.Message)
