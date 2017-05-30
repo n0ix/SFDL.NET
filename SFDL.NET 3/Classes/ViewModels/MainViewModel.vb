@@ -293,9 +293,13 @@ Decrypt:
 
             _mycontainer_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_mycontainer_session, _settings)
 
-            DownloadItems.AddRange(_mycontainer_session.DownloadItems)
+            For Each _item In _mycontainer_session.DownloadItems
+                DownloadItems.Add(_item)
+            Next
 
-            ContainerSessions.Add(_mycontainer_session)
+            ' DownloadItems.AddRange(_mycontainer_session.DownloadItems)
+
+            ' ContainerSessions.Add(_mycontainer_session)
 
             If _bulk_result = False And Not _mycontainer_session.DownloadItems.Count = 0 Then
                 _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.OpenSFDL_AppTask_Faulted_Message, Path.GetFileName(_sfdl_container_path)))

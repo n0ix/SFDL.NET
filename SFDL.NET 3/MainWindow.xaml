@@ -34,6 +34,7 @@
             <local:TestConverter x:Key="TestConv" />
             <local:FileSizeConverter x:Key="FileSizeConv" />
 
+
             <VisualBrush
                 x:Key="DownloadStatusNone"
                 Stretch="Uniform"
@@ -725,7 +726,8 @@
                     dng:DropBehavior.PreviewDropCommand="{Binding PreviewDropCommand}"
                     ItemsSource="{Binding DownloadItems}"
                     PreviewKeyUp="OnGridKeyUp"
-                    SelectionMode="Extended">
+                    SelectionMode="Extended"
+                    Style="{StaticResource VirtualisedMetroListView}">
 
                     <ListView.View>
                         <GridView>
@@ -1049,7 +1051,8 @@
                             <ListView
                                 x:Name="ListViewActiveTasks"
                                 ItemsSource="{Binding ActiveTasks}"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                Style="{StaticResource VirtualisedMetroListView}">
                                 <ListView.View>
                                     <GridView AllowsColumnReorder="False">
                                         <GridView.ColumnHeaderContainerStyle>
