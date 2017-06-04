@@ -90,7 +90,7 @@ Public Class MainViewModel
 
 #Region "Private Subs"
 
-    Private Sub LoadSavedSessions()
+    Private Async Sub LoadSavedSessions()
 
         Dim _path As String = Path.Combine(Environment.GetEnvironmentVariable("appdata"), "SFDL.NET 3", "Sessions")
         Dim _log As Logger = LogManager.GetLogger("LoadSavedSessions")
@@ -123,22 +123,26 @@ Public Class MainViewModel
 
                     'GenerateContainerSessionChains(_new_session)
 
-                    For Each _item In _new_session.DownloadItems
+                    Await Task.Run(Sub()
 
-                        'Update DownloadPath cause it could have changed
-                        _item.LocalFile = GetDownloadFilePath(CType(Application.Current.Resources("Settings"), Settings), _new_session, _item)
-                        '_item.DownloadStatus = DownloadItem.Status.None
-                        _item.DownloadProgress = 0
-                        _item.DownloadSpeed = String.Empty
-                        _item.SingleSessionMode = False
-                        _item.RetryCount = 0
-                        _item.RetryPossible = False
-                        _item.LocalFileSize = 0
-                        _item.SizeDownloaded = 0
+                                       For Each _item In _new_session.DownloadItems
 
-                        DownloadItems.Add(_item)
+                                           'Update DownloadPath cause it could have changed
+                                           _item.LocalFile = GetDownloadFilePath(CType(Application.Current.Resources("Settings"), Settings), _new_session, _item)
+                                           '_item.DownloadStatus = DownloadItem.Status.None
+                                           _item.DownloadProgress = 0
+                                           _item.DownloadSpeed = String.Empty
+                                           _item.SingleSessionMode = False
+                                           _item.RetryCount = 0
+                                           _item.RetryPossible = False
+                                           _item.LocalFileSize = 0
+                                           _item.SizeDownloaded = 0
 
-                    Next
+                                       Next
+
+                                       DownloadItems.AddRange(_new_session.DownloadItems)
+
+                                   End Sub)
 
                     _new_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_new_session, _settings)
 
