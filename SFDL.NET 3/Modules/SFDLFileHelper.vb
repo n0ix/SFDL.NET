@@ -288,18 +288,59 @@ Module SFDLFileHelper
         Dim _rt_list As New List(Of SFDL.Container.FileItem)
         Dim _mylog As NLog.Logger = NLog.LogManager.GetLogger("BulkRecursiveListing")
         Dim _ftp_unix_platform As New ArxOne.Ftp.Platform.UnixFtpPlatform
+        Dim _ftp_entries As New List(Of ArxOne.Ftp.FtpEntry)
 
         Try
 
-
-            For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path)
+            If _ftp.ServerFeatures.HasFeature("MLSD") = True Then
 
                 Try
 
+                    _mylog.Info("Server support MLSD Listing - Trying to get Item list via MLSD Command...")
+                    _ftp_entries = ArxOne.Ftp.FtpClientUtility.MlsdEntries(_ftp, _ftp_path).ToList()
+
+                Catch ex As Exception
+                    _mylog.Error("MLSD Command failed!")
+                End Try
+
+                If _ftp_entries.Count = 0 Then
+
+                    _mylog.Warn("MLSD Command does not return any Items - Trying LIST Command...")
+
+                    For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path)
+
+                        Dim _entry As ArxOne.Ftp.FtpEntry
+
+                        _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+
+                        _ftp_entries.Add(_entry)
+
+                    Next
+
+                End If
+
+            Else
+
+                _mylog.Info("Server does not support MLSD Listing - Using default LIST Command")
+
+                For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path)
+
                     Dim _entry As ArxOne.Ftp.FtpEntry
-                    Dim _path_seperator As String = "/" 'Assume Unix Path Seperator
 
                     _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+
+                    _ftp_entries.Add(_entry)
+
+                Next
+
+            End If
+
+
+            For Each _entry In _ftp_entries
+
+                Try
+
+                    Dim _path_seperator As String = "/" 'Assume Unix Path Seperator
 
                     If Not IsNothing(_entry) Then
 
