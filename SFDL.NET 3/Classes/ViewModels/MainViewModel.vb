@@ -293,7 +293,15 @@ Decrypt:
 
             _mycontainer_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_mycontainer_session, _settings)
 
-            DownloadItems.AddRange(_mycontainer_session.DownloadItems)
+            Await Task.Run(Sub()
+
+                               'For Each _item In _mycontainer_session.DownloadItems
+                               '    DownloadItems.Add(_item)
+                               'Next
+
+                               DownloadItems.AddRange(_mycontainer_session.DownloadItems)
+
+                           End Sub)
 
             ContainerSessions.Add(_mycontainer_session)
 

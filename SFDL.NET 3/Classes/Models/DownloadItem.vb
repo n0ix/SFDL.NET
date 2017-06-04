@@ -10,7 +10,7 @@ Public Class DownloadItem
 
     Public Event PropertyChanged As PropertyChangedEventHandler Implements INotifyPropertyChanged.PropertyChanged
     Public Sub RaisePropertyChanged(ByVal propertyName As String)
-        'RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(propertyName))
+        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(propertyName))
     End Sub
 
     Private _download_speed As String = String.Empty

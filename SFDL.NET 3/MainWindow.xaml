@@ -726,8 +726,10 @@
                     dng:DropBehavior.PreviewDropCommand="{Binding PreviewDropCommand}"
                     ItemsSource="{Binding DownloadItems}"
                     PreviewKeyUp="OnGridKeyUp"
+                    ScrollViewer.CanContentScroll="True"
                     SelectionMode="Extended"
-                    Style="{StaticResource VirtualisedMetroListView}">
+                    Style="{StaticResource VirtualisedMetroListView}"
+                    VirtualizingPanel.IsVirtualizingWhenGrouping="True">
 
                     <ListView.View>
                         <GridView>
@@ -855,6 +857,7 @@
                     </ListView.View>
 
                     <ListView.GroupStyle>
+
                         <GroupStyle>
                             <GroupStyle.ContainerStyle>
                                 <Style TargetType="{x:Type GroupItem}">
@@ -960,6 +963,8 @@
                                 </Style>
                             </GroupStyle.ContainerStyle>
                         </GroupStyle>
+
+
                     </ListView.GroupStyle>
 
                     <ListView.ContextMenu>
