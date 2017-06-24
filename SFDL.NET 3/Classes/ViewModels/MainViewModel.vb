@@ -1621,9 +1621,9 @@ Decrypt:
                                      If ContainerSessions.Any(Function(i) Not i.ID.Equals(_container_session.ID) AndAlso i.Priority = _container_session.Priority) Then
 
                                          'bump all up
-                                         For Each _session In ContainerSessions.Where(Function(mysession) mysession.Priority > 0 And Not mysession.ID.Equals(_container_session.ID))
-                                             _session.Priority += 1
-                                         Next
+                                         'For Each _session In ContainerSessions.Where(Function(mysession) mysession.Priority > 0 And Not mysession.ID.Equals(_container_session.ID))
+                                         _container_session.Priority += 1
+                                         'Next
 
                                      End If
 
