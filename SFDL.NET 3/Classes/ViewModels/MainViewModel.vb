@@ -186,7 +186,8 @@ Public Class MainViewModel
         Dim _mycontainer As New Container.Container
         Dim _mylegacycontainer As New SFDLFile
         Dim _mycontainer_session As ContainerSession
-        Dim _decrypt_password As String
+        Dim _decrypt_password As String = String.Empty
+        Dim _container_password_already_found As Boolean = False
         Dim _decrypt As New Decrypt
         Dim _exclude_blacklist As New List(Of String)
 
@@ -233,18 +234,50 @@ Public Class MainViewModel
             If _mycontainer.Encrypted = True Then
 
                 Try
-Decrypt:
-                    _decrypt_password = Await DialogCoordinator.Instance.ShowInputAsync(Me, My.Resources.Strings.OpenSFDL_Prompt_Decrypt_Title, String.Format(My.Resources.Strings.OpenSFDL_Prompt_Decrypt_Message, Path.GetFileName(_sfdl_container_path)))
 
-                    If String.IsNullOrWhiteSpace(_decrypt_password) Then
-                        Throw New Exception(String.Format(My.Resources.Strings.OpenSFDL_Decrypt_Aborted_Message, Path.GetFileName(_sfdl_container_path)))
+#Region "AutoContainer Decrypt"
+
+
+                    If _settings.AutoPasswordContainer = True And Not _settings.AutoPasswordContainerList.Count = 0 Then
+
+                        For Each _pw In _settings.AutoPasswordContainerList
+
+                            Try
+                                _decrypt.DecryptString(_mycontainer.Connection.Host, _pw)
+                                _container_password_already_found = True
+                                _decrypt_password = _pw
+                            Catch ex As FalsePasswordException
+
+                            End Try
+
+                        Next
+
                     End If
 
-                    _decrypt.DecryptString(_mycontainer.Connection.Host, _decrypt_password)
+#End Region
+
+Decrypt:
+
+                    If _container_password_already_found = False Then
+
+                        _decrypt_password = Await DialogCoordinator.Instance.ShowInputAsync(Me, My.Resources.Strings.OpenSFDL_Prompt_Decrypt_Title, String.Format(My.Resources.Strings.OpenSFDL_Prompt_Decrypt_Message, Path.GetFileName(_sfdl_container_path)))
+
+                        If String.IsNullOrWhiteSpace(_decrypt_password) Then
+                            Throw New Exception(String.Format(My.Resources.Strings.OpenSFDL_Decrypt_Aborted_Message, Path.GetFileName(_sfdl_container_path)))
+                        End If
+
+                        _decrypt.DecryptString(_mycontainer.Connection.Host, _decrypt_password)
+
+                    End If
 
                 Catch ex As FalsePasswordException
                     GoTo Decrypt
                 End Try
+
+                If _container_password_already_found = False AndAlso _settings.AutoPasswordContainerList.Where(Function(mypw) mypw.Equals(_decrypt_password)).Count = 0 Then
+                    _settings.AutoPasswordContainerList.Add(_decrypt_password)
+                    Settings.SaveSettings(_settings)
+                End If
 
                 DecryptSFDLContainer(_mycontainer, _decrypt_password)
 
@@ -298,13 +331,7 @@ Decrypt:
             _mycontainer_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_mycontainer_session, _settings)
 
             Await Task.Run(Sub()
-
-                               'For Each _item In _mycontainer_session.DownloadItems
-                               '    DownloadItems.Add(_item)
-                               'Next
-
                                DownloadItems.AddRange(_mycontainer_session.DownloadItems)
-
                            End Sub)
 
             ContainerSessions.Add(_mycontainer_session)
@@ -314,10 +341,24 @@ Decrypt:
             Else
 
                 If _settings.DeleteSFDLAfterOpen = True Then
+
                     File.Delete(_sfdl_container_path)
-                    _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.OpenSFDL_AppTask_Completed_1_Message, Path.GetFileName(_sfdl_container_path)))
+
+                    If _settings.AutoPasswordContainer = True And _container_password_already_found Then
+                        _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.OpenSFDL_AppTask_Completed_4_Message, Path.GetFileName(_sfdl_container_path), _decrypt_password))
+                    Else
+                        _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.OpenSFDL_AppTask_Completed_1_Message, Path.GetFileName(_sfdl_container_path)))
+                    End If
+
                 Else
-                    _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.OpenSFDL_AppTask_Completed_2_Message, Path.GetFileName(_sfdl_container_path)))
+
+                    If _settings.AutoPasswordContainer = True And _container_password_already_found Then
+                        _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.OpenSFDL_AppTask_Completed_3_Message, Path.GetFileName(_sfdl_container_path), _decrypt_password))
+                    Else
+                        _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.OpenSFDL_AppTask_Completed_2_Message, Path.GetFileName(_sfdl_container_path)))
+                    End If
+
+
                 End If
 
             End If

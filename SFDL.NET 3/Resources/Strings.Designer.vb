@@ -798,6 +798,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die SFDL &apos;{0}&apos; geöffnet und automatisch mit Passwort &apos;{1}&apos; entschlüsselt ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property OpenSFDL_AppTask_Completed_3_Message() As String
+            Get
+                Return ResourceManager.GetString("OpenSFDL_AppTask_Completed_3_Message", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die SFDL &apos;{0}&apos; geöffnet,  automatisch mit Passwort &apos;{1}&apos; entschlüsselt und anschließend gelöscht ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property OpenSFDL_AppTask_Completed_4_Message() As String
+            Get
+                Return ResourceManager.GetString("OpenSFDL_AppTask_Completed_4_Message", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die SFDL &apos;{0}&apos; teilweise geöffnet - Einer oder mehrere Container konnten nicht gelesen werden. ähnelt.
         '''</summary>
         Public Shared ReadOnly Property OpenSFDL_AppTask_Faulted_Message() As String
@@ -1001,6 +1019,15 @@ Namespace My.Resources
         Public Shared ReadOnly Property Settings_AutomaticUnRAR() As String
             Get
                 Return ResourceManager.GetString("Settings_AutomaticUnRAR", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Container Passwörter automatisch verwalten ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_AutoPasswordContainer() As String
+            Get
+                Return ResourceManager.GetString("Settings_AutoPasswordContainer", resourceCulture)
             End Get
         End Property
         

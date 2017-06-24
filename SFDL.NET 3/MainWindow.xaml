@@ -1065,7 +1065,7 @@
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                             </Style>
                                         </GridView.ColumnHeaderContainerStyle>
-                                        <GridViewColumn Width="800">
+                                        <GridViewColumn Width="900">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">

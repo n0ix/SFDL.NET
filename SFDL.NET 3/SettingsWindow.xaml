@@ -358,6 +358,11 @@
                                                 Margin="5,5,5,0"
                                                 Content="{x:Static p:Strings.Settings_RemoveSFDL}"
                                                 IsChecked="{Binding DeleteSFDLAfterOpen}" />
+                                            <CheckBox
+                                                x:Name="ChkAutoPasswordContainer"
+                                                Margin="5,5,5,0"
+                                                Content="{x:Static p:Strings.Settings_AutoPasswordContainer}"
+                                                IsChecked="{Binding AutoPasswordContainer}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Grid>

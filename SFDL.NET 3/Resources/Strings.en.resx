@@ -728,4 +728,13 @@ Restart the download to apply these settings.</value>
 The following file extensions are blocked:
 - *.scr</value>
   </data>
+  <data name="OpenSFDL_AppTask_Completed_3_Message" xml:space="preserve">
+    <value>SFDL '{0}' opened and automatically decrypted with password '{1}'</value>
+  </data>
+  <data name="OpenSFDL_AppTask_Completed_4_Message" xml:space="preserve">
+    <value>SFDL '{0}' opened, automatically decrypted with password '{1}' and deleted</value>
+  </data>
+  <data name="Settings_AutoPasswordContainer" xml:space="preserve">
+    <value>Automatically manage Container Passwords</value>
+  </data>
 </root>

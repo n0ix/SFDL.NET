@@ -734,4 +734,13 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
 Folgende Dateiendungen werden blockiert:
 - *.scr</value>
   </data>
+  <data name="OpenSFDL_AppTask_Completed_3_Message" xml:space="preserve">
+    <value>SFDL '{0}' geöffnet und automatisch mit Passwort '{1}' entschlüsselt</value>
+  </data>
+  <data name="OpenSFDL_AppTask_Completed_4_Message" xml:space="preserve">
+    <value>SFDL '{0}' geöffnet,  automatisch mit Passwort '{1}' entschlüsselt und anschließend gelöscht</value>
+  </data>
+  <data name="Settings_AutoPasswordContainer" xml:space="preserve">
+    <value>Container Passwörter automatisch verwalten</value>
+  </data>
 </root>

@@ -136,6 +136,16 @@ Public Class SettingsViewModel
         End Get
     End Property
 
+    Public Property AutoPasswordContainer As Boolean
+        Set(value As Boolean)
+            _settings.AutoPasswordContainer = value
+            RaisePropertyChanged("AutoPasswordContainer")
+        End Set
+        Get
+            Return _settings.AutoPasswordContainer
+        End Get
+    End Property
+
     Public Property AppAccent As MahApps.Metro.Accent
         Set(value As MahApps.Metro.Accent)
             _settings.AppAccent = value.Name
@@ -308,30 +318,10 @@ Public Class SettingsViewModel
     Private Async Sub SaveSettings()
 
         Dim _error As Boolean = False
-        Dim _password_def As New Text.StringBuilder
-        Dim _password_def_file As String = IO.Path.Combine(Environment.GetEnvironmentVariable("appdata"), "SFDL.NET 3", "sfdl_passwords.def")
 
         Try
 
-            Application.Current.Resources("Settings") = _settings
-
-            MainViewModel.ThisInstance.UpdateSettings()
-
-            XMLHelper.XMLSerialize(_settings, IO.Path.Combine(Environment.GetEnvironmentVariable("appdata"), "SFDL.NET 3\settings.xml"))
-
-            If IO.File.Exists(_password_def_file) Then
-                IO.File.Delete(_password_def_file)
-            End If
-
-
-            _password_def.AppendLine("")
-            _password_def.AppendLine("##")
-
-            For Each _item In _settings.UnRARSettings.UnRARPasswordList
-                _password_def.AppendLine(_item)
-            Next
-
-            My.Computer.FileSystem.WriteAllText(_password_def_file, _password_def.ToString, False, System.Text.Encoding.Default)
+            _error = Settings.SaveSettings(_settings)
 
             If GeneralHelper.IsDownloadStopped = False Then
                 Await MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance.ShowMessageAsync(Me, My.Resources.Strings.VariousStrings_Warning, My.Resources.Strings.Settings_SaveSettings_DownloadActive_Message)
