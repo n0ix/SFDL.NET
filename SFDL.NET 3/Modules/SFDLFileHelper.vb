@@ -299,8 +299,13 @@ Module SFDLFileHelper
                     _mylog.Info("Server support MLSD Listing - Trying to get Item list via MLSD Command...")
                     _ftp_entries = ArxOne.Ftp.FtpClientUtility.MlsdEntries(_ftp, _ftp_path).ToList()
 
+                    If _ftp_entries.FirstOrDefault.Name.ToLower.Contains("no such file or directory") Or _ftp_entries.FirstOrDefault.Path.ToString.ToLower.Contains("no such file or directory") Then
+                        Throw New Exception("MLSD Command failed")
+                    End If
+
                 Catch ex As Exception
                     _mylog.Error("MLSD Command failed!")
+                    _ftp_entries.Clear()
                 End Try
 
                 If _ftp_entries.Count = 0 Then
