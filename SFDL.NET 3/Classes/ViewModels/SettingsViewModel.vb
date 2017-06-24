@@ -321,7 +321,9 @@ Public Class SettingsViewModel
 
         Try
 
-            _error = Settings.SaveSettings(_settings)
+            If Settings.SaveSettings(_settings) = False Then
+                _error = True
+            End If
 
             If GeneralHelper.IsDownloadStopped = False Then
                 Await MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance.ShowMessageAsync(Me, My.Resources.Strings.VariousStrings_Warning, My.Resources.Strings.Settings_SaveSettings_DownloadActive_Message)
