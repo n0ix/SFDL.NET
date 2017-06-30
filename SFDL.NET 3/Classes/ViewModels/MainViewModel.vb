@@ -1623,6 +1623,7 @@ Decrypt:
 
             Dim _container_session As ContainerSession = Nothing
             Dim _tmp_list As New List(Of DownloadItem)
+            Dim _old_prio As Integer = 0
 
             'AddHandler _mytask.TaskDone, AddressOf TaskDoneEvent
             'ActiveTasks.Add(_mytask)
@@ -1655,18 +1656,13 @@ Decrypt:
 
                              SyncLock _container_session.SynLock
 
-                                 If ContainerSessions.Any(Function(i) Not i.ID.Equals(_container_session.ID) AndAlso i.Priority >= _container_session.Priority) = True Then
+                                 _old_prio = _container_session.Priority
 
+                                 While ContainerSessions.Any(Function(i) Not i.ID.Equals(_container_session.ID) AndAlso i.Priority >= _container_session.Priority) = True
                                      _container_session.Priority += 1
+                                 End While
 
-                                     If ContainerSessions.Any(Function(i) Not i.ID.Equals(_container_session.ID) AndAlso i.Priority = _container_session.Priority) Then
-
-                                         'bump all up
-                                         'For Each _session In ContainerSessions.Where(Function(mysession) mysession.Priority > 0 And Not mysession.ID.Equals(_container_session.ID))
-                                         _container_session.Priority += 1
-                                         'Next
-
-                                     End If
+                                 If _old_prio <> _container_session.Priority Then
 
                                      If IsDownloadStopped() = False Then 'Download is Running - so we to cancel all queued items except these are currently running
 
@@ -1701,7 +1697,7 @@ Decrypt:
                                      End If
 
                                  Else
-                                     Debug.WriteLine("no session has a higher prio than me bitches!")
+                                     Debug.WriteLine("Prio has not changed")
                                  End If
 
                              End SyncLock
