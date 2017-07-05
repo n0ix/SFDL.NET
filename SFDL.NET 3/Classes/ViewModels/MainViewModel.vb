@@ -1617,13 +1617,83 @@ Decrypt:
         End Get
     End Property
 
+    Private Sub CheckAndSetPrio(ByVal _container_session As ContainerSession, ByVal _new_prio As Integer, ByVal _old_prio As Integer)
+
+        Dim _max_prio As Integer = 0
+
+        _max_prio = ContainerSessions.Count - 1
+
+        'Is there any container which is not me and has the same Prio as my new Prio?
+        While ContainerSessions.Any(Function(i) Not i.ID.Equals(_container_session.ID) AndAlso i.Priority = _new_prio) = True
+
+            'Pump those Sessions Up which have the same Prio as my new Prio
+            For Each _session In ContainerSessions.Where(Function(i) Not i.ID.Equals(_container_session.ID) AndAlso i.Priority = _new_prio)
+
+                'Can i pump this up or would the priority be higher than max?
+                If _session.Priority + 1 > _max_prio Then
+                    'Swap Positions
+                    ContainerSessions.Where(Function(i) Not i.ID.Equals(_session.ID) AndAlso i.Priority = _max_prio - 1).First.Priority = _session.Priority
+                    _session.Priority = _max_prio - 1
+                Else
+
+                    'Can i pump this up or would the priority be equal to max?
+                    If _session.Priority + 1 = _max_prio Then
+
+                        'Is there already a conmtainer with Max Priority?
+                        If ContainerSessions.Where(Function(i) Not i.ID.Equals(_session.ID) AndAlso i.Priority = _max_prio).Count > 0 Then
+                            'Crap - there is already a Container with the Max Prio. So we have to swap with the Container which wants a higher prio
+                            _container_session.Priority = _session.Priority
+                            _session.Priority = _old_prio
+                        Else
+                            'No Container with max Prio present so we're taking it
+                            _session.Priority = _max_prio
+                            _container_session.Priority = _new_prio
+                        End If
+
+                    Else
+                        'Prio does not equal Max safely set the new Prio's
+                        If ContainerSessions.Where(Function(i) Not i.ID.Equals(_session.ID) AndAlso i.Priority = _session.Priority + 1).Count > 0 Then 'Damn this Prio is already present
+                            'swap
+                            _session.Priority = _old_prio
+                            _container_session.Priority = _new_prio
+                        Else
+                            _session.Priority += 1
+                            _container_session.Priority = _new_prio
+                        End If
+
+                    End If
+
+                End If
+
+            Next
+
+        End While
+
+        If _container_session.Priority = 0 And Not _new_prio >= _max_prio Then
+            _container_session.Priority = _new_prio
+        End If
+
+        For Each _session In ContainerSessions
+
+            If Not _session.Priority = 0 Then
+
+                If ContainerSessions.Any(Function(i) Not i.ID.Equals(_session.ID) AndAlso i.Priority = _session.Priority) Then
+
+                    Debug.WriteLine("!!!!!!!!!!")
+                    CheckAndSetPrio(_session, _session.Priority, _session.Priority - 1)
+                End If
+
+            End If
+
+        Next
+
+    End Sub
+
     Private Sub SetSessionPriority(ByVal parameter As Object, Optional _decrease As Boolean = False)
 
         If Not IsNothing(parameter) Then
 
             Dim _container_session As ContainerSession = Nothing
-            Dim _tmp_list As New List(Of DownloadItem)
-            Dim _old_prio As Integer = 0
 
             'AddHandler _mytask.TaskDone, AddressOf TaskDoneEvent
             'ActiveTasks.Add(_mytask)
@@ -1654,15 +1724,11 @@ Decrypt:
 
                 Task.Run(Sub()
 
-                             SyncLock _container_session.SynLock
+                             CheckAndSetPrio(_container_session, _container_session.Priority + 1, _container_session.Priority)
 
-                                 _old_prio = _container_session.Priority
+                             If _container_session.Priority <> _container_session.Priority Then
 
-                                 While ContainerSessions.Any(Function(i) Not i.ID.Equals(_container_session.ID) AndAlso i.Priority >= _container_session.Priority) = True
-                                     _container_session.Priority += 1
-                                 End While
-
-                                 If _old_prio <> _container_session.Priority Then
+                                 SyncLock _container_session.SynLock
 
                                      If IsDownloadStopped() = False Then 'Download is Running - so we to cancel all queued items except these are currently running
 
@@ -1696,11 +1762,11 @@ Decrypt:
 
                                      End If
 
-                                 Else
-                                     Debug.WriteLine("Prio has not changed")
-                                 End If
+                                 End SyncLock
 
-                             End SyncLock
+                             Else
+                                 Debug.WriteLine("Prio has not changed")
+                             End If
 
                          End Sub)
 
