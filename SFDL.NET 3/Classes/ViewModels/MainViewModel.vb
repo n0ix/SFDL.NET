@@ -1669,7 +1669,7 @@ Decrypt:
 
         End While
 
-        If _container_session.Priority = 0 And Not _new_prio >= _max_prio Then
+        If _container_session.Priority = 0 And Not _new_prio > _max_prio Then
             _container_session.Priority = _new_prio
         End If
 
