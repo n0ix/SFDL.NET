@@ -659,7 +659,7 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="UnRAR_Exception_NoValidPasswordFound" xml:space="preserve">
     <value>Kein passendes Passwort gefunden!</value>
   </data>
-  <data name="VariousStrings_AffirmativeButton" xml:space="preserve">
+  <data name="VariousStrings_AffirmativeButton_Yes" xml:space="preserve">
     <value>Ja</value>
   </data>
   <data name="VariousStrings_Copy" xml:space="preserve">
@@ -742,5 +742,11 @@ Folgende Dateiendungen werden blockiert:
   </data>
   <data name="Settings_AutoPasswordContainer" xml:space="preserve">
     <value>Container Passwörter automatisch verwalten</value>
+  </data>
+  <data name="FailedToLoadSettings" xml:space="preserve">
+    <value>Beim laden der Einstellungen ist ein Fehler aufgetreten. Bitte überprüfe deine Einstellungen bevor dur fortfährst.</value>
+  </data>
+  <data name="VariousStrings_AffirmativeButton_OK" xml:space="preserve">
+    <value>OK</value>
   </data>
 </root>

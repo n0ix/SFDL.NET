@@ -614,7 +614,7 @@ Restart the download to apply these settings.</value>
   <data name="UnRAR_Exception_NoValidPasswordFound" xml:space="preserve">
     <value>Password cracking: Correct password not found!</value>
   </data>
-  <data name="VariousStrings_AffirmativeButton" xml:space="preserve">
+  <data name="VariousStrings_AffirmativeButton_Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
   <data name="VariousStrings_Copy" xml:space="preserve">
@@ -736,5 +736,11 @@ The following file extensions are blocked:
   </data>
   <data name="Settings_AutoPasswordContainer" xml:space="preserve">
     <value>Automatically manage Container Passwords</value>
+  </data>
+  <data name="FailedToLoadSettings" xml:space="preserve">
+    <value>An error occured while loading your settings. Please check your settings before you continue.</value>
+  </data>
+  <data name="VariousStrings_AffirmativeButton_OK" xml:space="preserve">
+    <value>OK</value>
   </data>
 </root>

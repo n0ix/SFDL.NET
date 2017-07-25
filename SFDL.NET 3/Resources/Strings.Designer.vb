@@ -497,6 +497,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Beim laden der Einstellungen ist ein Fehler aufgetreten. Bitte überprüfe deine Einstellungen bevor dur fortfährst. ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property FailedToLoadSettings() As String
+            Get
+                Return ResourceManager.GetString("FailedToLoadSettings", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die {0} in {1} heruntergeladen @ ~ {2} ähnelt.
         '''</summary>
         Public Shared ReadOnly Property GenerateSimpleSpeedreport_AppTask_Completed_Message() As String
@@ -1702,11 +1711,20 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die OK ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property VariousStrings_AffirmativeButton_OK() As String
+            Get
+                Return ResourceManager.GetString("VariousStrings_AffirmativeButton_OK", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Ja ähnelt.
         '''</summary>
-        Public Shared ReadOnly Property VariousStrings_AffirmativeButton() As String
+        Public Shared ReadOnly Property VariousStrings_AffirmativeButton_Yes() As String
             Get
-                Return ResourceManager.GetString("VariousStrings_AffirmativeButton", resourceCulture)
+                Return ResourceManager.GetString("VariousStrings_AffirmativeButton_Yes", resourceCulture)
             End Get
         End Property
         

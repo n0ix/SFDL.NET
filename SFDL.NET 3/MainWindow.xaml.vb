@@ -87,6 +87,15 @@ Public Class MainWindow
 
         End If
 
+        If IsNothing(Application.Current.Resources("FaultedSettings")) = False AndAlso Application.Current.Resources("FaultedSettings") = True Then
+
+            Dim _dialog_settings As New MetroDialogSettings
+
+            _dialog_settings.AffirmativeButtonText = My.Resources.Strings.VariousStrings_AffirmativeButton_OK
+
+            Await ShowMessageAsync(My.Resources.Strings.VariousStrings_Warning, My.Resources.Strings.FailedToLoadSettings, MessageDialogStyle.Affirmative, _dialog_settings)
+
+        End If
 
 #Region "Check and Update InstallState and File Registration"
 
@@ -123,7 +132,7 @@ Public Class MainWindow
             Dim _result As MessageDialogResult
             Dim _dialog_settings As New MetroDialogSettings
 
-            _dialog_settings.AffirmativeButtonText = My.Resources.Strings.VariousStrings_AffirmativeButton
+            _dialog_settings.AffirmativeButtonText = My.Resources.Strings.VariousStrings_AffirmativeButton_Yes
             _dialog_settings.NegativeButtonText = My.Resources.Strings.VariousStrings_NegativeButton
 
             _result = Await ShowMessageAsync(My.Resources.Strings.VariousStrings_Warning, My.Resources.Strings.InstallPathChangedPrompt, MessageDialogStyle.AffirmativeAndNegative, _dialog_settings)
@@ -182,7 +191,7 @@ Public Class MainWindow
                     Dim _result As MessageDialogResult
                     Dim _dialog_settings As New MetroDialogSettings
 
-                    _dialog_settings.AffirmativeButtonText = My.Resources.Strings.VariousStrings_AffirmativeButton
+                    _dialog_settings.AffirmativeButtonText = My.Resources.Strings.VariousStrings_AffirmativeButton_Yes
                     _dialog_settings.NegativeButtonText = My.Resources.Strings.VariousStrings_NegativeButton
 
                     e.Cancel = True

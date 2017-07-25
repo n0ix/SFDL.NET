@@ -23,26 +23,44 @@ Class Application
                 End If
 
 
+                Try
 
-                My.Settings.Upgrade()
+                    My.Settings.Upgrade()
 
-                _log = NLog.LogManager.GetLogger("Startup")
+                    _log = NLog.LogManager.GetLogger("Startup")
 
-                _settings_xml_path = IO.Path.Combine(Environment.GetEnvironmentVariable("appdata"), "SFDL.NET 3\settings.xml")
+                    _settings_xml_path = IO.Path.Combine(Environment.GetEnvironmentVariable("appdata"), "SFDL.NET 3\settings.xml")
 
-                If IO.Directory.Exists(IO.Path.GetDirectoryName(_settings_xml_path)) = False Then
-                    IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(_settings_xml_path))
-                End If
+                    If IO.Directory.Exists(IO.Path.GetDirectoryName(_settings_xml_path)) = False Then
+                        IO.Directory.CreateDirectory(IO.Path.GetDirectoryName(_settings_xml_path))
+                    End If
 
-                If IO.File.Exists(_settings_xml_path) Then
-                    _settings = CType(XMLHelper.XMLDeSerialize(_settings, _settings_xml_path), Settings)
-                Else
+                    If IO.File.Exists(_settings_xml_path) Then
+                        _settings = CType(XMLHelper.XMLDeSerialize(_settings, _settings_xml_path), Settings)
+                    Else
+                        _settings = Settings.InitNewSettings
+                        XMLHelper.XMLSerialize(_settings, _settings_xml_path)
+                    End If
+
+                Catch ex As Exception
+
+                    If Not IsNothing(_log) Then
+                        _log.Fatal(ex, "Failed to load Settings!")
+                        _log.Warn("Starting up with default Settings")
+                    Else
+                        Console.WriteLine("Failed to load Settings!")
+                        Console.WriteLine("Starting up with default Settings")
+                    End If
+
                     _settings = Settings.InitNewSettings
-                    XMLHelper.XMLSerialize(_settings, _settings_xml_path)
-                End If
+                    Application.Current.Resources.Add("FaultedSettings", True)
 
-                Application.Current.Resources.Add("Settings", _settings)
-                Application.Current.Resources.Add("DownloadStopped", False)
+                Finally
+
+                    Application.Current.Resources.Add("Settings", _settings)
+                    Application.Current.Resources.Add("DownloadStopped", False)
+
+                End Try
 
 
                 System.Threading.Thread.CurrentThread.CurrentUICulture = Globalization.CultureInfo.GetCultureInfoByIetfLanguageTag(_settings.Language)
