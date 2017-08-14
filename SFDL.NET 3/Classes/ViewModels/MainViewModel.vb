@@ -102,42 +102,49 @@ Public Class MainViewModel
             Dim _local_malicious_file_blacklist As String = String.Empty
             Dim _mytask As New AppTask("Downloading Blacklist...")
 
-            AddHandler _mytask.TaskDone, AddressOf TaskDoneEvent
+            Try
 
-            ActiveTasks.Add(_mytask)
+                AddHandler _mytask.TaskDone, AddressOf TaskDoneEvent
 
-            _local_malicious_file_blacklist = Await HttpHelper.DownloadFile2Temp("https://raw.githubusercontent.com/n0ix/SFDL.NET/master/SFDL.NET%203/Blacklist/Blacklist.lst")
+                ActiveTasks.Add(_mytask)
 
-            If Not IsNothing(_local_malicious_file_blacklist) And System.IO.File.Exists(_local_malicious_file_blacklist) Then
+                _local_malicious_file_blacklist = Await HttpHelper.DownloadFile2Temp("https://raw.githubusercontent.com/n0ix/SFDL.NET/master/SFDL.NET%203/Blacklist/Blacklist.lst")
 
-                Using _Sr As New StreamReader(_local_malicious_file_blacklist, System.Text.Encoding.Default)
+                If Not IsNothing(_local_malicious_file_blacklist) And System.IO.File.Exists(_local_malicious_file_blacklist) Then
 
-                    While _Sr.EndOfStream = False
+                    Using _Sr As New StreamReader(_local_malicious_file_blacklist, System.Text.Encoding.Default)
 
-                        Dim _line As String = String.Empty
-                        Dim _regex_test As Text.RegularExpressions.Regex
+                        While _Sr.EndOfStream = False
 
-                        Try
+                            Dim _line As String = String.Empty
+                            Dim _regex_test As Text.RegularExpressions.Regex
 
-                            _line = _Sr.ReadLine()
+                            Try
 
-                            _regex_test = New Text.RegularExpressions.Regex(_line)
+                                _line = _Sr.ReadLine()
 
-                            If String.IsNullOrWhiteSpace(_line) = False Then
-                                _file_blacklist.Add(New BlacklistItem(BlacklistItem.Type.Malicious, _line))
-                            End If
+                                _regex_test = New Text.RegularExpressions.Regex(_line)
 
-                        Catch ex As Exception
-                            _log.Error(ex, ex.Message)
-                        End Try
+                                If String.IsNullOrWhiteSpace(_line) = False Then
+                                    _file_blacklist.Add(New BlacklistItem(BlacklistItem.Type.Malicious, _line))
+                                End If
 
-                    End While
+                            Catch ex As Exception
+                                _log.Error(ex, ex.Message)
+                            End Try
 
-                End Using
+                        End While
 
-            End If
+                    End Using
 
-            _mytask.SetTaskStatus(TaskStatus.RanToCompletion, "Blacklist processed")
+                End If
+
+
+            Catch ex As Exception
+                _log.Error(ex, ex.Message)
+            Finally
+                _mytask.SetTaskStatus(TaskStatus.RanToCompletion, "Blacklist processed")
+            End Try
 
         End If
 
