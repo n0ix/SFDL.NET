@@ -725,14 +725,11 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="MainMenu_Help_Wiki" xml:space="preserve">
     <value>SFDL.NET Wiki</value>
   </data>
-  <data name="Settings_ExcludeMalicious_FileExtensions" xml:space="preserve">
-    <value>Automatisch schädliche Dateierweiterungen ausschließen</value>
+  <data name="Settings_ExcludeMaliciousFiles" xml:space="preserve">
+    <value>Automatisch bekannte schädliche Dateien ausschließen</value>
   </data>
-  <data name="Settings_ExcludeMalicious_FileExtensions_ToolTip" xml:space="preserve">
-    <value>Mit dieser Einstellung werden bekannte bösartige Dateiendungen blockiert.
-
-Folgende Dateiendungen werden blockiert:
-- *.scr</value>
+  <data name="Settings_ExcludeMaliciousFiles_Tooltip" xml:space="preserve">
+    <value>Mit dieser Einstellung werden bekannte bösartige Dateien blockiert</value>
   </data>
   <data name="OpenSFDL_AppTask_Completed_3_Message" xml:space="preserve">
     <value>SFDL '{0}' geöffnet und automatisch mit Passwort '{1}' entschlüsselt</value>

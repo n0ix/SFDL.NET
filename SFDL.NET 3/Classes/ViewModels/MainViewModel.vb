@@ -28,6 +28,7 @@ Public Class MainViewModel
     Private _download_helper As New DownloadHelper
     Private _progress_dialog_controller As ProgressDialogController
     Private view As CollectionView
+    Private _file_blacklist As New List(Of BlacklistItem)
 
     Public Sub UpdateSettings()
 
@@ -53,6 +54,8 @@ Public Class MainViewModel
         LoadSavedSessions()
 
         NewUpdateAvailableVisibility = New NotifyTaskCompletion(Of Visibility)(IsNewUpdateAvailible(_settings))
+
+        DownloadBlacklist()
 
 
     End Sub
@@ -89,6 +92,56 @@ Public Class MainViewModel
 #End Region
 
 #Region "Private Subs"
+
+    Private Async Sub DownloadBlacklist()
+
+        Dim _log As Logger = LogManager.GetLogger("BlacklistDownloader")
+
+        If _settings.ExcludeMaliciousFiles = True Then
+
+            Dim _local_malicious_file_blacklist As String = String.Empty
+            Dim _mytask As New AppTask("Downloading Blacklist...")
+
+            AddHandler _mytask.TaskDone, AddressOf TaskDoneEvent
+
+            ActiveTasks.Add(_mytask)
+
+            _local_malicious_file_blacklist = Await HttpHelper.DownloadFile2Temp("https://raw.githubusercontent.com/n0ix/SFDL.NET/master/SFDL.NET%203/Blacklist/Blacklist.lst")
+
+            If Not IsNothing(_local_malicious_file_blacklist) And System.IO.File.Exists(_local_malicious_file_blacklist) Then
+
+                Using _Sr As New StreamReader(_local_malicious_file_blacklist, System.Text.Encoding.Default)
+
+                    While _Sr.EndOfStream = False
+
+                        Dim _line As String = String.Empty
+                        Dim _regex_test As Text.RegularExpressions.Regex
+
+                        Try
+
+                            _line = _Sr.ReadLine()
+
+                            _regex_test = New Text.RegularExpressions.Regex(_line)
+
+                            If String.IsNullOrWhiteSpace(_line) = False Then
+                                _file_blacklist.Add(New BlacklistItem(BlacklistItem.Type.Malicious, _line))
+                            End If
+
+                        Catch ex As Exception
+                            _log.Error(ex, ex.Message)
+                        End Try
+
+                    End While
+
+                End Using
+
+            End If
+
+            _mytask.SetTaskStatus(TaskStatus.RanToCompletion, "Blacklist processed")
+
+        End If
+
+    End Sub
 
     Private Async Sub LoadSavedSessions()
 
@@ -189,7 +242,6 @@ Public Class MainViewModel
         Dim _decrypt_password As String = String.Empty
         Dim _container_password_already_found As Boolean = False
         Dim _decrypt As New Decrypt
-        Dim _exclude_blacklist As New List(Of String)
 
         AddHandler _mytask.TaskDone, AddressOf TaskDoneEvent
 
@@ -308,19 +360,11 @@ Decrypt:
                 _bulk_result = True
             End If
 
-            If _settings.ExcludeMaliciousFileExtensions = True Then
+            For Each _item In _settings.DownloadItemBlacklist.ToList
+                _file_blacklist.Add(New BlacklistItem(BlacklistItem.Type.User, _item))
+            Next
 
-                _exclude_blacklist.AddRange(_settings.DownloadItemBlacklist.ToList)
-
-                For Each _item In My.Settings.MaliciousFileBlockList
-                    _exclude_blacklist.Add(_item)
-                Next
-
-            Else
-                _exclude_blacklist.AddRange(_settings.DownloadItemBlacklist.ToList)
-            End If
-
-            GenerateContainerSessionDownloadItems(_mycontainer_session, _settings.NotMarkAllContainerFiles, _exclude_blacklist)
+            GenerateContainerSessionDownloadItems(_mycontainer_session, _settings.NotMarkAllContainerFiles, _file_blacklist)
 
             If _bulk_result = False Or _mycontainer_session.DownloadItems.Count = 0 Then
                 Throw New Exception(String.Format(My.Resources.Strings.OpenSFDL_Exception_FTPDown, Path.GetFileName(_sfdl_container_path)))

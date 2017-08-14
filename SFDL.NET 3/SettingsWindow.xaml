@@ -332,9 +332,9 @@
 
                                             <CheckBox
                                                 Margin="0,5,0,0"
-                                                Content="{x:Static p:Strings.Settings_ExcludeMalicious_FileExtensions}"
-                                                IsChecked="{Binding ExcludeMaliciousFileExtensions}"
-                                                ToolTip="{x:Static p:Strings.Settings_ExcludeMalicious_FileExtensions_ToolTip}" />
+                                                Content="{x:Static p:Strings.Settings_ExcludeMaliciousFiles}"
+                                                IsChecked="{Binding ExcludeMaliciousFiles}"
+                                                ToolTip="{x:Static p:Strings.Settings_ExcludeMaliciousFiles_Tooltip}" />
 
                                         </StackPanel>
 

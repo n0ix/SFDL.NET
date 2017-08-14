@@ -1122,23 +1122,20 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Automatisch schädliche Dateierweiterungen ausschließen ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Automatisch bekannte schädliche Dateien ausschließen ähnelt.
         '''</summary>
-        Public Shared ReadOnly Property Settings_ExcludeMalicious_FileExtensions() As String
+        Public Shared ReadOnly Property Settings_ExcludeMaliciousFiles() As String
             Get
-                Return ResourceManager.GetString("Settings_ExcludeMalicious_FileExtensions", resourceCulture)
+                Return ResourceManager.GetString("Settings_ExcludeMaliciousFiles", resourceCulture)
             End Get
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Mit dieser Einstellung werden bekannte bösartige Dateiendungen blockiert.
-        '''
-        '''Folgende Dateiendungen werden blockiert:
-        '''- *.scr ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Mit dieser Einstellung werden bekannte bösartige Dateien blockiert ähnelt.
         '''</summary>
-        Public Shared ReadOnly Property Settings_ExcludeMalicious_FileExtensions_ToolTip() As String
+        Public Shared ReadOnly Property Settings_ExcludeMaliciousFiles_Tooltip() As String
             Get
-                Return ResourceManager.GetString("Settings_ExcludeMalicious_FileExtensions_ToolTip", resourceCulture)
+                Return ResourceManager.GetString("Settings_ExcludeMaliciousFiles_Tooltip", resourceCulture)
             End Get
         End Property
         

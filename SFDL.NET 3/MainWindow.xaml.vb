@@ -145,6 +145,7 @@ Public Class MainWindow
 
 #End Region
 
+
     End Sub
 
     Private Sub OnGridKeyUp(sender As Object, e As KeyEventArgs)

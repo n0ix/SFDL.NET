@@ -719,14 +719,11 @@ Restart the download to apply these settings.</value>
   <data name="MainMenu_Help_Wiki" xml:space="preserve">
     <value>SFDL.NET Wiki</value>
   </data>
-  <data name="Settings_ExcludeMalicious_FileExtensions" xml:space="preserve">
-    <value>Automatically exclude malicious file extensions</value>
+  <data name="Settings_ExcludeMaliciousFiles" xml:space="preserve">
+    <value>Automatically exclude known malicious files</value>
   </data>
-  <data name="Settings_ExcludeMalicious_FileExtensions_ToolTip" xml:space="preserve">
-    <value>This setting blocks known malicious files.
-
-The following file extensions are blocked:
-- *.scr</value>
+  <data name="Settings_ExcludeMaliciousFiles_ToolTip" xml:space="preserve">
+    <value>This setting blocks known malicious files.</value>
   </data>
   <data name="OpenSFDL_AppTask_Completed_3_Message" xml:space="preserve">
     <value>SFDL '{0}' opened and automatically decrypted with password '{1}'</value>

@@ -187,7 +187,7 @@ Module SFDLFileHelper
 
     End Sub
 
-    Sub GenerateContainerSessionDownloadItems(ByVal _containersession As ContainerSession, ByVal _mark_files As Boolean, ByVal _blacklist As List(Of String))
+    Sub GenerateContainerSessionDownloadItems(ByVal _containersession As ContainerSession, ByVal _mark_files As Boolean, ByVal _blacklist As List(Of BlacklistItem))
 
         Dim _tmp_list As New List(Of DownloadItem)
 
@@ -210,12 +210,26 @@ Module SFDLFileHelper
 
 #Region "Blacklist Check"
 
-                    For Each _blacklist_pattern In _blacklist
+                    For Each _blacklist_item As BlacklistItem In _blacklist
 
-                        Dim _blacklistpattern As Regex = New Regex(_blacklist_pattern)
+                        Dim _blacklistpattern As Regex = New Regex(_blacklist_item.FileNameRegex)
 
                         If _blacklistpattern.IsMatch(.FileName) Then
                             _blacklist_match = True
+
+                            Select Case _blacklist_item.ItemType
+
+                                Case BlacklistItem.Type.Malicious
+                                    .ExcludedType = DownloadItem.ExcludeType.Malicious
+
+                                Case BlacklistItem.Type.User
+                                    .ExcludedType = DownloadItem.ExcludeType.User
+
+                                Case Else
+                                    .ExcludedType = DownloadItem.ExcludeType.None
+
+                            End Select
+
                         End If
 
                     Next

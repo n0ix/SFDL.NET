@@ -365,6 +365,17 @@ Public Class DownloadItem
         End Get
     End Property
 
+    Private m_exclude_type As ExcludeType = ExcludeType.None
+    Public Property ExcludedType As ExcludeType
+        Set(value As ExcludeType)
+            m_exclude_type = value
+            RaisePropertyChanged("ExcludedType")
+        End Set
+        Get
+            Return m_exclude_type
+        End Get
+    End Property
+
 
     Public Enum Status
         None
@@ -390,6 +401,12 @@ Public Class DownloadItem
         Completed_HashInvalid
         AlreadyDownloaded
 
+    End Enum
+
+    Public Enum ExcludeType
+        None
+        User
+        Malicious
     End Enum
 
 

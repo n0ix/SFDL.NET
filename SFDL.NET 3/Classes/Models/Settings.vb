@@ -17,10 +17,10 @@
     Public Property RemoteControlSettings As New RemoteControlSettings
     Public Property AppAccent As String = "Blue"
     Public Property AppTheme As String = "BaseLight"
-    Public Property DownloadItemBlacklist As New ObjectModel.ObservableCollection(Of String)
-    Public Property ExcludeMaliciousFileExtensions As Boolean = True
+    Public Property ExcludeMaliciousFiles As Boolean = True
     Public Property AutoPasswordContainer As Boolean = False
     Public Property AutoPasswordContainerList As New List(Of String)
+    Public Property DownloadItemBlacklist As New ObjectModel.ObservableCollection(Of String)
 
     Public Shared Function SaveSettings(ByVal _settings As Settings) As Boolean
 
@@ -79,7 +79,7 @@
             .MaxRetry = 3
             .PreventStandby = True
             .UnRARSettings = New UnRARSettings
-            .ExcludeMaliciousFileExtensions = True
+            .ExcludeMaliciousFiles = True
             .SpeedReportSettings = New SpeedreportSettings
 
         End With

@@ -187,12 +187,12 @@ Public Class SettingsViewModel
         End Get
     End Property
 
-    Public Property ExcludeMaliciousFileExtensions As Boolean
+    Public Property ExcludeMaliciousFiles As Boolean
         Set(value As Boolean)
-            _settings.ExcludeMaliciousFileExtensions = value
+            _settings.ExcludeMaliciousFiles = value
         End Set
         Get
-            Return _settings.ExcludeMaliciousFileExtensions
+            Return _settings.ExcludeMaliciousFiles
         End Get
     End Property
 

@@ -3,42 +3,8 @@ Imports System.Net.Http
 
 Module WhoisHelper
 
+
     Private _log As NLog.Logger = NLog.LogManager.GetLogger("WhoisHelper")
-    Private Async Function DownloadFile(ByVal _url As String) As Task(Of String)
-
-        Dim _http_client As HttpClient = New HttpClient
-        Dim _http_response As HttpResponseMessage
-        Dim _content As HttpContent
-        Dim _local_tmp_filepath As String = String.Empty
-
-        Try
-
-            _http_client.BaseAddress = New Uri(_url)
-            ' _http_client.Timeout = TimeSpan.FromSeconds(_timeout)
-
-            _http_response = Await _http_client.GetAsync(_url)
-
-            _http_response.EnsureSuccessStatusCode()
-
-            Await _http_response.Content.LoadIntoBufferAsync()
-
-            _content = _http_response.Content
-
-            _local_tmp_filepath = IO.Path.Combine(My.Computer.FileSystem.SpecialDirectories.Temp, IO.Path.GetRandomFileName)
-
-            Using _filestream As New IO.FileStream(_local_tmp_filepath, IO.FileMode.Create, IO.FileAccess.Write)
-
-                Await _content.CopyToAsync(_filestream)
-
-            End Using
-
-        Catch ex As Exception
-
-        End Try
-
-        Return _local_tmp_filepath
-
-    End Function
 
     ''' <summary>
     ''' Funktion zum umsetzten der IP-Addresse in einen Ländercode
@@ -55,7 +21,7 @@ Module WhoisHelper
 
         _country_code = "N/A"
 
-        _local_xml = Await DownloadFile("http://xml.utrace.de/?query=" & _ip)
+        _local_xml = Await HttpHelper.DownloadFile2Temp("http://xml.utrace.de/?query=" & _ip)
 
         XMLReader.Load(_local_xml)
 
@@ -92,7 +58,7 @@ Module WhoisHelper
         Dim _local_flag As String
         Dim _memory_stream As MemoryStream
 
-        _local_flag = Await DownloadFile("http://n1.dlcache.com/flags/" & _countrycode.ToLower & ".gif")
+        _local_flag = Await DownloadFile2Temp("http://n1.dlcache.com/flags/" & _countrycode.ToLower & ".gif")
 
         _flag = System.Drawing.Image.FromFile(_local_flag)
 

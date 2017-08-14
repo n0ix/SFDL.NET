@@ -112,6 +112,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Models\Blacklist.vb" />
+    <Compile Include="Classes\Models\BlacklistItem.vb" />
     <Compile Include="Classes\ObservableCollectionEx.vb" />
     <Compile Include="Classes\Models\WhoIsResult.vb" />
     <Compile Include="Classes\NotifyTaskCompletion.vb" />
@@ -158,6 +160,7 @@
     <Compile Include="Modules\FTPHelper.vb" />
     <Compile Include="Modules\FileRegisterHelper.vb" />
     <Compile Include="Modules\GeneralHelper.vb" />
+    <Compile Include="Modules\HttpHelper.vb" />
     <Compile Include="Modules\InstantVideoHelper.vb" />
     <Compile Include="Modules\LogHelper.vb" />
     <Compile Include="Modules\SFDLFileHelper.vb" />
@@ -252,6 +255,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.vb</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Blacklist\Blacklist.lst" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
@@ -304,5 +308,6 @@
   <ItemGroup>
     <Resource Include="UpdateCheck\Version.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

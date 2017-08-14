@@ -732,6 +732,7 @@
                     VirtualizingPanel.IsVirtualizingWhenGrouping="True">
 
                     <ListView.View>
+
                         <GridView>
 
                             <local:FixedWidthColumn FixedWidth="30">
@@ -749,11 +750,15 @@
                                 Width="100"
                                 DisplayMemberBinding="{Binding FileSize, Converter={StaticResource FileSizeConv}}"
                                 Header="{x:Static p:Strings.ListView_DownloadItems_Header_Filesize}" />
+
                             <GridViewColumn Width="100" Header="{x:Static p:Strings.ListView_DownloadItems_Header_Progress}">
 
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ProgressBar Maximum="100" Value="{Binding DownloadProgress}" />
+                                        <ProgressBar
+                                            MaxWidth="100"
+                                            Maximum="100"
+                                            Value="{Binding DownloadProgress}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
 
@@ -1039,6 +1044,21 @@
 
                         </ContextMenu>
                     </ListView.ContextMenu>
+
+
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ExcludedType}" Value="User">
+                                    <Setter Property="Background" Value="LightGray" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
+                                    <Setter Property="Background" Value="LightCoral" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Resources>
+
                 </ListView>
 
                 <GridSplitter
