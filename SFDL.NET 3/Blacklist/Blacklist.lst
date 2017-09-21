@@ -1,1 +1,2 @@
-.*nfo.*
+^.*\.(SCR|scr)$
+IMG001.exe

@@ -88,17 +88,6 @@ Partial Friend NotInheritable Class MySettings
             Me("UserWindowState") = value
         End Set
     End Property
-    
-    <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-     Global.System.Configuration.DefaultSettingValueAttribute("<?xml version=""1.0"" encoding=""utf-16""?>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"<ArrayOfString xmlns:xsi=""http://www.w3."& _ 
-        "org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"  <s"& _ 
-        "tring>^.*\.(SCR|scr)$</string>"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"</ArrayOfString>")>  _
-    Public ReadOnly Property MaliciousFileBlockList() As Global.System.Collections.Specialized.StringCollection
-        Get
-            Return CType(Me("MaliciousFileBlockList"),Global.System.Collections.Specialized.StringCollection)
-        End Get
-    End Property
 End Class
 
 Namespace My
