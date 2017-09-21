@@ -8,6 +8,7 @@ Module FTPHelper
 
         Dim _creds As Net.NetworkCredential
         Dim _ftp_client_param As New ArxOne.Ftp.FtpClientParameters
+        Dim _log As NLog.Logger = NLog.LogManager.GetLogger("SetupFTPClient")
 
         With _connection_info
 
@@ -19,7 +20,15 @@ Module FTPHelper
 
             With _ftp_client_param
 
-                .ActiveTransferHost = Net.IPAddress.Parse(_connection_info.Host)
+
+                If Net.IPAddress.TryParse(_connection_info.Host, Net.IPAddress.Parse("127.0.0.10")) = True Then
+                    .ActiveTransferHost = Net.IPAddress.Parse(_connection_info.Host)
+                Else
+                    _log.Warn("SFDL does not contain a valid IP Adress - assuming it as a DNS Name and will try to resolv it")
+                    .ActiveTransferHost = Net.Dns.GetHostEntry(_connection_info.Host).AddressList.First
+                    _log.Warn(String.Format("Resoved IP Adress:{0}", .ActiveTransferHost.ToString))
+                End If
+
                 .AnonymousPassword = "sfdl@anon.net"
 
                 If _connection_info.DataConnectionType = Container.FTPDataConnectionType.Passive Then

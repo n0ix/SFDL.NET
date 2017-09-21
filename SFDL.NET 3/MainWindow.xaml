@@ -756,7 +756,7 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <ProgressBar
-                                            MaxWidth="100"
+                                            MinWidth="100"
                                             Maximum="100"
                                             Value="{Binding DownloadProgress}" />
                                     </DataTemplate>
