@@ -1,0 +1,4 @@
+Publish at Github:
+  stage: deploy
+  script:
+  - git push -q --mirror https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/n0ix/SFDL.NET.git
