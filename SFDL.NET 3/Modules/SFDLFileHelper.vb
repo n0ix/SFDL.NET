@@ -537,7 +537,7 @@ Module SFDLFileHelper
 
                 _log.Debug("First UnRar File: {0}", _item.FileName)
 
-                _searchpattern = New Regex("filename\.r[0-9]{1,2}".Replace("filename", IO.Path.GetFileNameWithoutExtension(_item.FileName)))
+                _searchpattern = New Regex(Regex.Escape(IO.Path.GetFileNameWithoutExtension(_item.FileName)) & "\.r[0-9]{1,2}")
 
                 For Each _chainitem As DownloadItem In _mycontainer_session.DownloadItems.Where(Function(_my_item As DownloadItem) _searchpattern.IsMatch(_my_item.FileName) And _my_item.PackageName.Equals(_item.PackageName))
 
@@ -572,7 +572,7 @@ Module SFDLFileHelper
 
                     _tmp_filename_replace = _item.FileName.Remove(_item.FileName.IndexOf(".part", StringComparison.Ordinal))
 
-                    _searchpattern = New Regex("filename\.part[0-9]{1,3}.rar".Replace("filename", _tmp_filename_replace))
+                    _searchpattern = New Regex(Regex.Escape(_tmp_filename_replace) & "\.part[0-9]{1,3}.rar")
 
                     For Each _chainitem As DownloadItem In _mycontainer_session.DownloadItems.Where(Function(_my_item As DownloadItem) (_searchpattern.IsMatch(_my_item.FileName) And Not _my_item.FileName.Equals(_unrarchain.MasterUnRarChainFile.FileName)) And _my_item.PackageName.Equals(_item.PackageName))
 
