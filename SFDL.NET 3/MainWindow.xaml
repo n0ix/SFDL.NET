@@ -31,7 +31,6 @@
         <ResourceDictionary>
             <local:InvertBooleanConverter x:Key="boolConvert" />
             <local:CollectionViewNameConverter x:Key="CollectionViewNameConv" />
-            <local:TestConverter x:Key="TestConv" />
             <local:FileSizeConverter x:Key="FileSizeConv" />
 
 
