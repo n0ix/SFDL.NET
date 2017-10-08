@@ -746,4 +746,7 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="VariousStrings_AffirmativeButton_OK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="Settings_DownloadDirectory_DirectoryNotWriteable" xml:space="preserve">
+    <value>Das Verzeichnis ist nicht beschreibar!</value>
+  </data>
 </root>

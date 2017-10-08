@@ -19,5 +19,15 @@
 
     End Sub
 
+    Public Function IsDirectoryWritable(dirPath As String) As Boolean
+        Try
+            Using fs As IO.FileStream = IO.File.Create(IO.Path.Combine(dirPath, IO.Path.GetRandomFileName()), 1, IO.FileOptions.DeleteOnClose)
+            End Using
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
 
 End Module

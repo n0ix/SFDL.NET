@@ -520,6 +520,11 @@ Public Class SettingsViewModel
                 End If
                 If Not IO.Directory.Exists(Me.DownloadDirectory) Then
                     Return My.Resources.Strings.Settings_DownloadDirectory_DirectoryNotFalid
+                Else
+                    'Check if Directory is writeable
+                    If GeneralHelper.IsDirectoryWritable(Me.DownloadDirectory) = False Then
+                        Return My.Resources.Strings.Settings_DownloadDirectory_DirectoryNotWriteable
+                    End If
                 End If
             End If
             Return String.Empty

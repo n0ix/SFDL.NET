@@ -740,4 +740,7 @@ Restart the download to apply these settings.</value>
   <data name="VariousStrings_AffirmativeButton_OK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="Settings_DownloadDirectory_DirectoryNotWriteable" xml:space="preserve">
+    <value>The directory is not writable!</value>
+  </data>
 </root>

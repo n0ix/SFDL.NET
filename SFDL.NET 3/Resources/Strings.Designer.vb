@@ -1104,6 +1104,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Das Verzeichnis ist nicht beschreibar! ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_DownloadDirectory_DirectoryNotWriteable() As String
+            Get
+                Return ResourceManager.GetString("Settings_DownloadDirectory_DirectoryNotWriteable", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Download Einstellungen ähnelt.
         '''</summary>
         Public Shared ReadOnly Property Settings_DownloadSettings() As String
