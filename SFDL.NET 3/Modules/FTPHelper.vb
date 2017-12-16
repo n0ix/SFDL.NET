@@ -72,7 +72,6 @@ Module FTPHelper
             AddHandler _ftp_client.Request, AddressOf _log_ftp
             AddHandler _ftp_client.IOError, AddressOf _log_ftp
 
-            _ftp_client.SendSingleCommand("NOOP")
 
             If _ftp_client.ServerFeatures.HasFeature("UTF8") And _connection_info.CharacterEncoding = Container.CharacterEncoding.UTF8 Then
                 _ftp_client.SendSingleCommand("OPTS", "UTF8 ON")

@@ -303,28 +303,65 @@ Module SFDLFileHelper
         Dim _mylog As NLog.Logger = NLog.LogManager.GetLogger("BulkRecursiveListing")
         Dim _ftp_unix_platform As New ArxOne.Ftp.Platform.UnixFtpPlatform
         Dim _ftp_entries As New List(Of ArxOne.Ftp.FtpEntry)
+        Dim _ftp_alternate_list_session As ArxOne.Ftp.FtpSession
 
         Try
 
-            If _ftp.ServerFeatures.HasFeature("MLSD") = True Then
+            If _ftp.ServerName.StartsWith("MLCBoard.com FTP Server ") Then
 
-                Try
+                _mylog.Info("Switching to MLCBoard FTP Server compatibility mode")
 
-                    _mylog.Info("Server support MLSD Listing - Trying to get Item list via MLSD Command...")
-                    _ftp_entries = ArxOne.Ftp.FtpClientUtility.MlsdEntries(_ftp, _ftp_path).ToList()
+                _ftp_alternate_list_session = _ftp.Session
 
-                    If _ftp_entries.FirstOrDefault.Name.ToLower.Contains("no such file or directory") Or _ftp_entries.FirstOrDefault.Path.ToString.ToLower.Contains("no such file or directory") Then
-                        Throw New Exception("MLSD Command failed")
+                _ftp_alternate_list_session.Expect(_ftp_alternate_list_session.SendCommand("CWD", _ftp_path.ToString), 250)
+
+                For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_alternate_list_session)
+                    Dim _entry As ArxOne.Ftp.FtpEntry
+
+                    _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+
+                    _ftp_entries.Add(_entry)
+                Next
+
+                _ftp_alternate_list_session.Invalidate()
+
+            Else
+
+                If _ftp.ServerFeatures.HasFeature("MLSD") = True Then
+
+                    Try
+
+                        _mylog.Info("Server support MLSD Listing - Trying to get Item list via MLSD Command...")
+                        _ftp_entries = ArxOne.Ftp.FtpClientUtility.MlsdEntries(_ftp, _ftp_path).ToList()
+
+                        If _ftp_entries.FirstOrDefault.Name.ToLower.Contains("no such file or directory") Or _ftp_entries.FirstOrDefault.Path.ToString.ToLower.Contains("no such file or directory") Then
+                            Throw New Exception("MLSD Command failed")
+                        End If
+
+                    Catch ex As Exception
+                        _mylog.Error("MLSD Command failed!")
+                        _ftp_entries.Clear()
+                    End Try
+
+                    If _ftp_entries.Count = 0 Then
+
+                        _mylog.Warn("MLSD Command does not return any Items - Trying LIST Command...")
+
+                        For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path)
+
+                            Dim _entry As ArxOne.Ftp.FtpEntry
+
+                            _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+
+                            _ftp_entries.Add(_entry)
+
+                        Next
+
                     End If
 
-                Catch ex As Exception
-                    _mylog.Error("MLSD Command failed!")
-                    _ftp_entries.Clear()
-                End Try
+                Else
 
-                If _ftp_entries.Count = 0 Then
-
-                    _mylog.Warn("MLSD Command does not return any Items - Trying LIST Command...")
+                    _mylog.Info("Server does not support MLSD Listing - Using default LIST Command")
 
                     For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path)
 
@@ -336,24 +373,10 @@ Module SFDLFileHelper
 
                     Next
 
+
                 End If
 
-            Else
-
-                _mylog.Info("Server does not support MLSD Listing - Using default LIST Command")
-
-                For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path)
-
-                    Dim _entry As ArxOne.Ftp.FtpEntry
-
-                    _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
-
-                    _ftp_entries.Add(_entry)
-
-                Next
-
             End If
-
 
             For Each _entry In _ftp_entries
 
