@@ -749,4 +749,10 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="Settings_DownloadDirectory_DirectoryNotWriteable" xml:space="preserve">
     <value>Das Verzeichnis ist nicht beschreibar!</value>
   </data>
+  <data name="VariousStrings_DownloadingBlacklist" xml:space="preserve">
+    <value>Downloading Blacklist...</value>
+  </data>
+  <data name="VariousStrings_ProcessedBlacklist" xml:space="preserve">
+    <value>Blacklist processed</value>
+  </data>
 </root>

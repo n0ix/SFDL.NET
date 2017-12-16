@@ -100,7 +100,7 @@ Public Class MainViewModel
         If _settings.ExcludeMaliciousFiles = True Then
 
             Dim _local_malicious_file_blacklist As String = String.Empty
-            Dim _mytask As New AppTask("Downloading Blacklist...")
+            Dim _mytask As New AppTask(My.Resources.Strings.VariousStrings_DownloadingBlacklist)
 
             Try
 
@@ -143,7 +143,7 @@ Public Class MainViewModel
             Catch ex As Exception
                 _log.Error(ex, ex.Message)
             Finally
-                _mytask.SetTaskStatus(TaskStatus.RanToCompletion, "Blacklist processed")
+                _mytask.SetTaskStatus(TaskStatus.RanToCompletion, My.Resources.Strings.VariousStrings_ProcessedBlacklist)
             End Try
 
         End If

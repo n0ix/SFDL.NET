@@ -22,7 +22,7 @@ Namespace My.Resources
     '''<summary>
     '''  Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
     '''</summary>
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0"),  _
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0"),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute()>  _
     Public Class Strings
@@ -1789,6 +1789,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Downloading Blacklist... ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property VariousStrings_DownloadingBlacklist() As String
+            Get
+                Return ResourceManager.GetString("VariousStrings_DownloadingBlacklist", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Download Geschwindigkeit ähnelt.
         '''</summary>
         Public Shared ReadOnly Property VariousStrings_DownloadSpeed() As String
@@ -1875,6 +1884,15 @@ Namespace My.Resources
         Public Shared ReadOnly Property VariousStrings_Play() As String
             Get
                 Return ResourceManager.GetString("VariousStrings_Play", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Blacklist processed ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property VariousStrings_ProcessedBlacklist() As String
+            Get
+                Return ResourceManager.GetString("VariousStrings_ProcessedBlacklist", resourceCulture)
             End Get
         End Property
         

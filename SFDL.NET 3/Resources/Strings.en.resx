@@ -743,4 +743,10 @@ Restart the download to apply these settings.</value>
   <data name="Settings_DownloadDirectory_DirectoryNotWriteable" xml:space="preserve">
     <value>The directory is not writable!</value>
   </data>
+  <data name="VariousStrings_DownloadingBlacklist" xml:space="preserve">
+    <value>Aktuelle Blacklist wird heruntergeladen....</value>
+  </data>
+  <data name="VariousStrings_ProcessedBlacklist" xml:space="preserve">
+    <value>Blacklist verarbeitet</value>
+  </data>
 </root>
