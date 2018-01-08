@@ -36,7 +36,23 @@
             .Host = _mylegacycontainer.ConnectionInfo.Host
             .Password = _mylegacycontainer.ConnectionInfo.Password
             .Port = _mylegacycontainer.ConnectionInfo.Port
-            .SSLProtocol = Security.Authentication.SslProtocols.None
+
+            Select Case _mylegacycontainer.ConnectionInfo.EncryptionMode
+
+                Case Container.Legacy.FTPEncryptionMode.Implicit
+
+                    .SSLProtocol = Security.Authentication.SslProtocols.Tls
+
+                Case Container.Legacy.FTPEncryptionMode.Explicit
+
+                    .SSLProtocol = Security.Authentication.SslProtocols.Ssl3
+
+                Case Else
+
+                    .SSLProtocol = Security.Authentication.SslProtocols.None
+
+            End Select
+
             .Username = _mylegacycontainer.ConnectionInfo.Username
 
         End With

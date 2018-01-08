@@ -9,6 +9,7 @@ Module FTPHelper
         Dim _creds As Net.NetworkCredential
         Dim _ftp_client_param As New ArxOne.Ftp.FtpClientParameters
         Dim _log As NLog.Logger = NLog.LogManager.GetLogger("SetupFTPClient")
+        Dim _protocol As FtpProtocol
 
         With _connection_info
 
@@ -39,6 +40,7 @@ Module FTPHelper
 
                 .SslProtocols = _connection_info.SSLProtocol
 
+
                 Select Case _connection_info.CharacterEncoding
 
                     Case Container.CharacterEncoding.ASCII
@@ -65,7 +67,43 @@ Module FTPHelper
 
             End With
 
-            _ftp_client = New ArxOne.Ftp.FtpClient(New Uri(String.Format("ftp://{0}:{1}", .Host, .Port)), _creds, _ftp_client_param)
+            Select Case _connection_info.SSLProtocol
+
+                Case Security.Authentication.SslProtocols.Tls
+
+                    _protocol = FtpProtocol.FtpES
+
+                Case Security.Authentication.SslProtocols.Tls11
+
+                    _protocol = FtpProtocol.FtpES
+
+                Case Security.Authentication.SslProtocols.Tls12
+
+                    _protocol = FtpProtocol.FtpES
+
+                Case Security.Authentication.SslProtocols.Ssl2
+
+                    _protocol = FtpProtocol.FtpS
+
+                Case Security.Authentication.SslProtocols.Ssl3
+
+                    _protocol = FtpProtocol.FtpS
+
+                Case Security.Authentication.SslProtocols.Default
+
+                    _protocol = FtpProtocol.Ftp
+
+                Case Security.Authentication.SslProtocols.None
+
+                    _protocol = FtpProtocol.Ftp
+
+                Case Else
+
+                    _protocol = FtpProtocol.Ftp
+
+            End Select
+
+            _ftp_client = New ArxOne.Ftp.FtpClient(_protocol, .Host, .Port, _creds, _ftp_client_param)
 
             AddHandler _ftp_client.ConnectionInitialized, AddressOf FTPConnectionInitialized
             AddHandler _ftp_client.Reply, AddressOf _log_ftp

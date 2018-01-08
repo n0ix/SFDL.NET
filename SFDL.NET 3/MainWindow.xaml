@@ -1044,21 +1044,70 @@
                         </ContextMenu>
                     </ListView.ContextMenu>
 
-
                     <ListView.Resources>
+
                         <Style TargetType="{x:Type ListViewItem}">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding ExcludedType}" Value="User">
-                                    <Setter Property="Background" Value="LightGray" />
+                                              
+                              <DataTrigger Binding="{Binding ExcludedType}" Value="User">
+                                   <Setter Property="Background" Value="LightGray" />
+                                    <Setter Property="Border.BorderBrush" Value="{DynamicResource Gray3}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
                                     <Setter Property="Background" Value="LightCoral" />
+                                    <Setter Property="Border.BorderBrush" Value="{DynamicResource Gray3}" />
                                 </DataTrigger>
+
+                                <DataTrigger Binding="{Binding ExcludedType}" Value="None">
+                                    <Setter Property="Border.BorderBrush" Value="{DynamicResource Gray3}" />
+                                </DataTrigger>
+
+                                <Trigger Property="IsSelected" Value="true">
+                                    <Setter Property="BorderBrush" Value="#FF143c65" />
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}"></Setter>
+                                </Trigger>
+
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsSelected" Value="true" />
+                                        <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource AccentColor2}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="BorderBrush" Value="#FF143c65" />
+                                </MultiTrigger>
+
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsSelected" Value="True" />
+                                        <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource AccentColor2}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="BorderBrush" Value="#FF143c65" />
+                                </MultiTrigger>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource AccentColor3}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+
                             </Style.Triggers>
                         </Style>
                     </ListView.Resources>
 
                 </ListView>
+                
+                
 
                 <GridSplitter
                     Grid.Row="1"
