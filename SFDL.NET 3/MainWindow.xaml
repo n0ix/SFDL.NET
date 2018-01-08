@@ -32,6 +32,7 @@
             <local:InvertBooleanConverter x:Key="boolConvert" />
             <local:CollectionViewNameConverter x:Key="CollectionViewNameConv" />
             <local:FileSizeConverter x:Key="FileSizeConv" />
+            <local:CollectionViewNameSecureIndicatorConverter x:Key="CollectionViewName2SecureIndicator"/>
 
 
             <VisualBrush
@@ -141,6 +142,16 @@
                 x:Key="TaskStatusRanToCompletion"
                 Stretch="Uniform"
                 Visual="{StaticResource appbar_check}" />
+
+            <VisualBrush
+                x:Key="FTPConnectionUnSecure"
+                Stretch="Uniform"
+                Visual="{StaticResource appbar_unlock_keyhole}" />
+
+            <VisualBrush
+                x:Key="FTPConnectionSecure"
+                Stretch="Uniform"
+                Visual="{StaticResource appbar_lock}" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
@@ -873,6 +884,23 @@
                                                         <DockPanel LastChildFill="False">
 
                                                             <StackPanel Orientation="Horizontal">
+
+                                                                <Rectangle
+                                                                    Width="16"
+                                                                    Height="16"
+                                                                    Margin="5,0"
+                                                                    Fill="White">
+                                                                    <Rectangle.Style>
+                                                                        <Style TargetType="{x:Type Rectangle}">
+                                                                            <Setter Property="OpacityMask" Value="{StaticResource FTPConnectionUnSecure}" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Name, Converter={StaticResource CollectionViewName2SecureIndicator}}" Value="Secure">
+                                                                                    <Setter Property="OpacityMask" Value="{StaticResource FTPConnectionSecure}" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Rectangle.Style>
+                                                                </Rectangle>
 
                                                                 <TextBlock
                                                                     VerticalAlignment="Bottom"

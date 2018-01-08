@@ -65,6 +65,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>SFDL.NET.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
@@ -138,6 +141,7 @@
     <Compile Include="Classes\Models\UnRARChain.vb" />
     <Compile Include="Classes\SingleInstance\SingleInstance.vb" />
     <Compile Include="Classes\ViewModels\MainViewModel.vb" />
+    <Compile Include="Classes\XAML Converter\CollectionViewNameSecureIndicatorConverter.vb" />
     <Compile Include="Classes\XAML Converter\FileSizeConverter.vb" />
     <Compile Include="Classes\XAML Converter\CollectionViewNameConverter.vb" />
     <Compile Include="Classes\XAML Converter\ExistingFileHandlingConverter.vb" />
@@ -255,6 +259,7 @@
       <LastGenOutput>Strings.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <None Include="Blacklist\Blacklist.lst" />
+    <None Include="My Project\app.manifest" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
