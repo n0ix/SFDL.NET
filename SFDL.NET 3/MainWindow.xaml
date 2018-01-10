@@ -761,7 +761,7 @@
                                 DisplayMemberBinding="{Binding FileSize, Converter={StaticResource FileSizeConv}}"
                                 Header="{x:Static p:Strings.ListView_DownloadItems_Header_Filesize}" />
 
-                            <GridViewColumn Width="100" Header="{x:Static p:Strings.ListView_DownloadItems_Header_Progress}">
+                            <GridViewColumn Width="115" Header="{x:Static p:Strings.ListView_DownloadItems_Header_Progress}">
 
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
