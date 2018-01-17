@@ -62,6 +62,11 @@ Public Class DownloadItem
                 Else
 
                     If value = True Then
+
+                        If ExcludedType = ExcludeType.User Then
+                            ExcludedType = ExcludeType.None
+                        End If
+
                         IWorkItemResult = Nothing
 
                         If GeneralHelper.IsDownloadStopped = False Then

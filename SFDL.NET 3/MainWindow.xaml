@@ -800,22 +800,6 @@
                                                     </Style>
                                                 </TextBlock.Style>
                                             </TextBlock>
-                                            <!--<Rectangle
-                                                Width="16"
-                                                Height="16"
-                                                Fill="{DynamicResource AccentColorBrush}" >
-                                                <Rectangle.Style>
-                                                    <Style TargetType="{x:Type Rectangle}">
-                                                        <Setter Property="OpacityMask" Value="Transparent"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
-                                                                <Setter Property="OpacityMask" Value="{StaticResource File_as_Virus_detected}" />
-                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.PopUp_Black_List}"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Rectangle.Style>
-                                            </Rectangle>-->
                                         </DockPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
@@ -922,8 +906,6 @@
                                                             <DataTrigger Binding="{Binding ExcludedType}" Value="User">
                                                                 <Setter Property="OpacityMask" Value="{StaticResource File_skipped_in_settings}" />
                                                             </DataTrigger>
-
-
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Rectangle.Style>
