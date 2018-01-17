@@ -50,6 +50,29 @@ Public Class ContainerSession
     Public Property LocalDownloadRoot As String = String.Empty
     Public Property Priority As Integer = 0
 
+    ''' <summary>
+    ''' Used for Grouping!
+    ''' </summary>
+    ''' <returns></returns>
+    Public ReadOnly Property Name As String
+        Get
+            Return String.Format("{0} | Priority: {1}", DisplayName, Priority)
+        End Get
+    End Property
+
+    Private _is_expanded As Boolean = True
+
+    Public Property IsExpanded As Boolean
+        Set(value As Boolean)
+            _is_expanded = value
+            RaisePropertyChanged("IsExpanded")
+        End Set
+        Get
+            Return _is_expanded
+        End Get
+    End Property
+
+
     Private _session_state_image As String = "None"
 
     Public Property SessionStateImage As String
@@ -102,5 +125,20 @@ Public Class ContainerSession
         End Get
     End Property
 
+#Region "Overrides for Grouping"
+
+    Public Overrides Function Equals(ByVal obj As Object) As Boolean
+        Return Object.Equals(obj, ID)
+    End Function
+
+    Public Overrides Function GetHashCode() As Integer
+        Return If(Not IsNothing(ID), ID.GetHashCode(), 0)
+    End Function
+
+    Public Overrides Function ToString() As String
+        Return If(Not IsNothing(Name), Name.ToString(), String.Empty)
+    End Function
+
+#End Region
 
 End Class

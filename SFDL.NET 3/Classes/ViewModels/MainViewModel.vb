@@ -1834,6 +1834,8 @@ Decrypt:
 
 #Region "Allgemeine Properties"
 
+    Public Property ExpanderStates As New Dictionary(Of String, Boolean)
+
     Private _max_download_speed As String
     Public Property MaxDownloadSpeed As String
 

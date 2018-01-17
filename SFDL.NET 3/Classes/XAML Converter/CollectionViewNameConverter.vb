@@ -19,7 +19,7 @@ Public Class CollectionViewNameConverter
         _container = MainViewModel.ThisInstance.ContainerSessions.Where(Function(mysession) mysession.ID.ToString.Equals(_my_string.ToString)).FirstOrDefault
 
         If Not IsNothing(_container) Then
-            Return String.Format("{0} | Priority: {1}", _container.DisplayName, _container.Priority)
+            Return _container
         Else
             Return Binding.DoNothing
         End If
@@ -27,7 +27,21 @@ Public Class CollectionViewNameConverter
     End Function
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
 
-        Return Binding.DoNothing
+        Dim _container As ContainerSession = Nothing
+
+        If IsNothing(value) = False Then
+
+            _container = TryCast(value, ContainerSession)
+
+            If IsNothing(_container) = False Then
+                Return _container.Name
+            Else
+                Return Binding.DoNothing
+            End If
+
+        Else
+            Return Binding.DoNothing
+        End If
 
     End Function
 

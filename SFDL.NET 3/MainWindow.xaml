@@ -933,7 +933,7 @@
                                 <Style TargetType="{x:Type GroupItem}">
                                     <Setter Property="Template">
                                         <Setter.Value>
-                                            <ControlTemplate>
+                                            <ControlTemplate TargetType="{x:Type GroupItem}">
                                                 <Expander Margin="0,3" IsExpanded="True" Controls:GroupBoxHelper.HeaderForeground="{DynamicResource WhiteBrush}">
                                                     <Expander.Header>
                                                         <DockPanel LastChildFill="False">
