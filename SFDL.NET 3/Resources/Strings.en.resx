@@ -744,9 +744,15 @@ Restart the download to apply these settings.</value>
     <value>The directory is not writable!</value>
   </data>
   <data name="VariousStrings_DownloadingBlacklist" xml:space="preserve">
-    <value>Aktuelle Blacklist wird heruntergeladen....</value>
+    <value>Downloading latest blacklist....</value>
   </data>
   <data name="VariousStrings_ProcessedBlacklist" xml:space="preserve">
     <value>Blacklist verarbeitet</value>
+  </data>
+  <data name="PopUp_Black_List" xml:space="preserve">
+    <value>File is a known virus. Attention!</value>
+  </data>
+  <data name="PopUp_Ignore_List" xml:space="preserve">
+    <value>File is skipped</value>
   </data>
 </root>

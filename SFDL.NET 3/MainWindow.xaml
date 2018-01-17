@@ -9,12 +9,15 @@
     xmlns:p="clr-namespace:SFDL.NET3.My.Resources"
     x:Name="SFDL_MainWindow"
     Title="SFDL.NET 3"
-    MinWidth="838"
-    MinHeight="580"
+    TitleForeground="{DynamicResource WhiteColor}"
+    WindowTitleBrush="{DynamicResource WhiteColorBrush}"
+    MinWidth="820"
+    MinHeight="550"    
     Dialog:DialogParticipation.Register="{Binding}"
     dng:DropBehavior.PreviewDropCommand="{Binding PreviewDropCommand}"
     AllowDrop="True"
     BorderThickness="2"
+    NonActiveBorderBrush="{DynamicResource AccentColorBrush2}"
     GlowBrush="{DynamicResource AccentColorBrush2}"
     Icon="Resources/Icons/Icon.ico"
     SaveWindowPosition="True"
@@ -34,6 +37,22 @@
             <local:FileSizeConverter x:Key="FileSizeConv" />
             <local:CollectionViewNameSecureIndicatorConverter x:Key="CollectionViewName2SecureIndicator"/>
 
+            <Style x:Key="CustomLightMetroWindowButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource DarkMetroWindowButtonStyle}">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+            </Style>
+
+            <Style x:Key="CustomDarkMetroWindowButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource DarkMetroWindowButtonStyle}">
+                <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+            </Style>
+
+            <Style TargetType="{x:Type Controls:WindowButtonCommands}" BasedOn="{StaticResource {x:Type Controls:WindowButtonCommands}}">
+                <Setter Property="LightMinButtonStyle" Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                <Setter Property="LightMaxButtonStyle" Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                <Setter Property="LightCloseButtonStyle" Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
+                <Setter Property="DarkMinButtonStyle" Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                <Setter Property="DarkMaxButtonStyle" Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+                <Setter Property="DarkCloseButtonStyle" Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
+            </Style>
 
             <VisualBrush
                 x:Key="DownloadStatusNone"
@@ -55,6 +74,14 @@
                 x:Key="DownloadStatusCompleted_HashInvalid"
                 Stretch="Uniform"
                 Visual="{StaticResource appbar_warning}" />
+            <VisualBrush
+                x:Key="File_as_Virus_detected"
+                Stretch="Uniform"
+                Visual="{StaticResource appbar_shield_alert}" />
+            <VisualBrush
+                x:Key="File_skipped_in_settings"
+                Stretch="Uniform"
+                Visual="{StaticResource appbar_page_hidden}" />
             <VisualBrush
                 x:Key="DownloadStatusRunning"
                 Stretch="Uniform"
@@ -159,6 +186,9 @@
         </ResourceDictionary>
     </Window.Resources>
 
+
+
+
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <Button Command="{Binding OpenNewUpdateWebsiteCommand}" Visibility="{Binding NewUpdateAvailableVisibility.Result}">
@@ -190,9 +220,7 @@
                 Theme="Adapt">
 
                 <Grid>
-
                     <StackPanel Margin="0,10,0,0">
-
                         <StackPanel Orientation="Horizontal">
                             <Label
                                 Margin="0,0,5,0"
@@ -274,14 +302,9 @@
                                         FontWeight="Bold" />
                                     <Label Content="{Binding ContainerInfoTotalSize.Result, Converter={StaticResource FileSizeConv}}" FontSize="14" />
                                 </StackPanel>
-
                             </StackPanel>
-
                         </GroupBox>
-
                     </StackPanel>
-
-
                 </Grid>
             </Controls:Flyout>
 
@@ -294,11 +317,8 @@
                 Theme="Adapt">
 
                 <Grid>
-
                     <StackPanel>
-
                         <Label Margin="0,0,0,3" Content="{x:Static p:Strings.InstantVideo_AvailableStreams}" />
-
                         <TreeView Name="InstantVideoStreamList" ItemsSource="{Binding ContainerSessions}">
 
                             <TreeView.ItemContainerStyle>
@@ -309,9 +329,7 @@
 
                             <TreeView.Resources>
                                 <HierarchicalDataTemplate DataType="{x:Type local:ContainerSession}" ItemsSource="{Binding InstantVideoStreams}">
-
                                     <StackPanel Orientation="Horizontal">
-
                                         <Rectangle
                                             Width="16"
                                             Height="16"
@@ -329,9 +347,7 @@
                                     </StackPanel>
                                 </HierarchicalDataTemplate>
                                 <DataTemplate DataType="{x:Type local:InstantVideoStream}">
-
                                     <StackPanel Orientation="Horizontal">
-
                                         <Rectangle
                                             Width="16"
                                             Height="16"
@@ -352,8 +368,7 @@
                             MinWidth="400"
                             Margin="0,5,0,0"
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Background="{DynamicResource BaseColorBrush}"
+                            VerticalAlignment="Center"                            
                             BorderBrush="{DynamicResource AccentColorBrush2}"
                             BorderThickness="1"
                             Command="{Binding InstantVideoCommand}">
@@ -370,13 +385,12 @@
                                 <TextBlock Text="{x:Static p:Strings.VariousStrings_Play}" />
                             </StackPanel>
                         </Button>
-
                     </StackPanel>
-
                 </Grid>
             </Controls:Flyout>
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
+
 
 
     <Grid>
@@ -389,7 +403,7 @@
                     <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
 
-                <Menu x:Name="MainMenu" Grid.Row="0">
+                <Menu x:Name="MainMenu" Grid.Row="0" Margin="5,1,5,0">
                     <MenuItem Header="{x:Static p:Strings.MainMenu_File}">
                         <MenuItem.Icon>
                             <Rectangle
@@ -595,7 +609,6 @@
                                 Height="16"
                                 Fill="{DynamicResource AccentColorBrush}">
                                 <Rectangle.OpacityMask>
-
                                     <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_question}" />
                                 </Rectangle.OpacityMask>
                             </Rectangle>
@@ -608,7 +621,6 @@
                                     Height="16"
                                     Fill="{DynamicResource AccentColorBrush}">
                                     <Rectangle.OpacityMask>
-
                                         <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_home_people}" />
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
@@ -622,33 +634,30 @@
                                     Height="16"
                                     Fill="{DynamicResource AccentColorBrush}">
                                     <Rectangle.OpacityMask>
-
                                         <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_book_open}" />
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </MenuItem.Icon>
                         </MenuItem>
-
                     </MenuItem>
 
                 </Menu>
                 <ToolBar
                     x:Name="MainToolBar"
                     Grid.Row="1"
-                    Height="42"
+                    Height="Auto"
                     VerticalAlignment="Top"
-                    ToolBarTray.IsLocked="True">
-
+                    ToolBarTray.IsLocked="True"
+                    Margin="5,0,5,0">
                     <Rectangle
                         Width="16"
                         Height="16"
-                        Margin="5,0"
+                        Margin="0"
                         Fill="{DynamicResource AccentColorBrush}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_control_play}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
-
                     <Button
                         Command="{Binding StartDownloadCommand}"
                         Content="{x:Static p:Strings.MainToolBar_StartDownload}"
@@ -666,7 +675,7 @@
                         Command="{Binding StopDownloadCommand}"
                         Content="{x:Static p:Strings.MainToolBar_StopDownload}"
                         IsEnabled="{Binding ButtonDownloadStartStop, Converter={StaticResource boolConvert}}" />
-                    <Separator Margin="5,2" />
+                    <Separator Margin="0" Background="{DynamicResource AccentColorBrush}" />
                     <Rectangle
                         Width="16"
                         Height="16"
@@ -680,7 +689,7 @@
                         Command="{Binding InstantVideoCommand}"
                         Content="{x:Static p:Strings.MainToolbar_InstandVideo}"
                         IsEnabled="{Binding ButtonInstantVideoEnabled}" />
-                    <Separator Margin="5,2" />
+                    <Separator Margin="0" Background="{DynamicResource AccentColorBrush}" />
                     <Rectangle
                         Width="25"
                         Height="25"
@@ -692,6 +701,7 @@
                     </Rectangle>
                     <TextBox
                         Width="120"
+                        BorderBrush="{DynamicResource AccentColorBrush}"
                         Controls:TextBoxHelper.ClearTextButton="True"
                         Controls:TextBoxHelper.UseFloatingWatermark="True"
                         Controls:TextBoxHelper.Watermark="Max KB/s"
@@ -703,7 +713,7 @@
                     Height="40"
                     Margin="0,0,10,0"
                     HorizontalAlignment="Right"
-                    Background="{DynamicResource BaseColorBrush}"
+                    Background="{DynamicResource WhiteColorBrush}"
                     BorderThickness="0"
                     Command="{Binding ShowContainerInfoCommand}">
                     <StackPanel>
@@ -725,8 +735,8 @@
                     <RowDefinition Height="*" MinHeight="250" />
                     <RowDefinition Height="5" />
                     <RowDefinition
-                        Height="*"
-                        MinHeight="120"
+                        Height="Auto"
+                        MinHeight="135"
                         MaxHeight="200" />
                 </Grid.RowDefinitions>
 
@@ -736,56 +746,110 @@
                     dng:DropBehavior.PreviewDropCommand="{Binding PreviewDropCommand}"
                     ItemsSource="{Binding DownloadItems}"
                     PreviewKeyUp="OnGridKeyUp"
-                    ScrollViewer.CanContentScroll="True"
                     SelectionMode="Extended"
-                    Style="{StaticResource VirtualisedMetroListView}"
+                    Style="{StaticResource VirtualisedMetroListView}"                    
+                    BorderThickness="0,0,0,0"                    
+                    Margin="6,0"                    
                     VirtualizingPanel.IsVirtualizingWhenGrouping="True">
 
                     <ListView.View>
-
                         <GridView>
-
-                            <local:FixedWidthColumn FixedWidth="30">
+                            <local:FixedWidthColumn FixedWidth="37">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox IsChecked="{Binding isSelected}" />
+                                        <CheckBox IsChecked="{Binding isSelected}" Margin="-2,0,0,0"/>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </local:FixedWidthColumn>
                             <GridViewColumn
-                                Width="370"
-                                DisplayMemberBinding="{Binding FileName}"
-                                Header="{x:Static p:Strings.ListView_DownloadItems_Header_Filename}" />
-                            <GridViewColumn
-                                Width="100"
-                                DisplayMemberBinding="{Binding FileSize, Converter={StaticResource FileSizeConv}}"
-                                Header="{x:Static p:Strings.ListView_DownloadItems_Header_Filesize}" />
-
-                            <GridViewColumn Width="115" Header="{x:Static p:Strings.ListView_DownloadItems_Header_Progress}">
-
+                                Width="370"                                
+                                Header="{x:Static p:Strings.ListView_DownloadItems_Header_Filename}">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ProgressBar
-                                            MinWidth="100"
-                                            Maximum="100"
-                                            Value="{Binding DownloadProgress}" />
+                                        <DockPanel LastChildFill="False" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="-12,0,0,0">
+                                            <Rectangle>
+                                                <Rectangle.Style>
+                                                    <Style TargetType="{x:Type Rectangle}">
+                                                        <Setter Property="OpacityMask" Value="Transparent"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
+                                                                <Setter Property="OpacityMask" Value="{StaticResource File_as_Virus_detected}" />
+                                                                <Setter Property="Fill" Value="{DynamicResource AccentColorBrush}"/>
+                                                                <Setter Property="Width" Value="16"/>
+                                                                <Setter Property="Height" Value="16"/>
+                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.PopUp_Black_List}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Rectangle.Style>
+                                            </Rectangle>
+                                            <TextBlock Name="tb_FileName" Margin="6,0,6,0" Text="{Binding FileName}" >
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ExcludedType}" Value="User">
+                                                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                                                <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.PopUp_Ignore_List}"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
+                                                                <Setter Property="Foreground" Value="#E5CB0000" />
+                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.PopUp_Black_List}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <!--<Rectangle
+                                                Width="16"
+                                                Height="16"
+                                                Fill="{DynamicResource AccentColorBrush}" >
+                                                <Rectangle.Style>
+                                                    <Style TargetType="{x:Type Rectangle}">
+                                                        <Setter Property="OpacityMask" Value="Transparent"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
+                                                                <Setter Property="OpacityMask" Value="{StaticResource File_as_Virus_detected}" />
+                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.PopUp_Black_List}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Rectangle.Style>
+                                            </Rectangle>-->
+                                        </DockPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
 
+                            <GridViewColumn
+                                Width="Auto"
+                                Header="{x:Static p:Strings.ListView_DownloadItems_Header_Filesize}" >
+                                <GridViewColumn.CellTemplate >
+                                    <DataTemplate >
+                                        <TextBlock  Margin="-12,0,9,0" Text="{Binding FileSize, Converter={StaticResource FileSizeConv}}" HorizontalAlignment="Right"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="auto" Header="{x:Static p:Strings.ListView_DownloadItems_Header_Progress}">
+                                <GridViewColumn.CellTemplate >
+                                    <DataTemplate >
+                                        <ProgressBar BorderThickness="0.75" BorderBrush="{DynamicResource AccentColorBrush}" Width="auto" Maximum="100" Value="{Binding DownloadProgress}" Margin="-12,0,8,0" Background="{DynamicResource WhiteBrush}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
                             </GridViewColumn>
                             <GridViewColumn Width="200" Header="{x:Static p:Strings.ListView_DownloadItems_Header_Status}">
-
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
+                                        <DockPanel LastChildFill="False">
                                             <Rectangle
                                                 Width="16"
                                                 Height="16"
-                                                Fill="{DynamicResource AccentColorBrush}">
+                                                Fill="{DynamicResource AccentColorBrush}" Margin="-8,0,8,0" DockPanel.Dock="Left">
                                                 <Rectangle.Style>
                                                     <Style TargetType="{x:Type Rectangle}">
                                                         <Setter Property="OpacityMask" Value="{StaticResource DownloadStatusNone}" />
                                                         <Style.Triggers>
+
                                                             <DataTrigger Binding="{Binding DownloadStatusImage}" Value="Queued">
                                                                 <Setter Property="OpacityMask" Value="{StaticResource DownloadStatusQueued}" />
                                                             </DataTrigger>
@@ -852,44 +916,51 @@
                                                             <DataTrigger Binding="{Binding DownloadStatusImage}" Value="HashCheck">
                                                                 <Setter Property="OpacityMask" Value="{StaticResource DownloadStatusHashCheck}" />
                                                             </DataTrigger>
+                                                            <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
+                                                                <Setter Property="OpacityMask" Value="{StaticResource File_as_Virus_detected}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding ExcludedType}" Value="User">
+                                                                <Setter Property="OpacityMask" Value="{StaticResource File_skipped_in_settings}" />
+                                                            </DataTrigger>
 
 
                                                         </Style.Triggers>
                                                     </Style>
                                                 </Rectangle.Style>
                                             </Rectangle>
-                                            <TextBlock Margin="5,0,0,0" Text="{Binding DownloadStatusString}" />
-                                        </StackPanel>
+                                            <TextBlock Margin="0,0,9,0" Text="{Binding DownloadStatusString}" HorizontalAlignment="Right" DockPanel.Dock="Right"/>
+                                        </DockPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
-
                             </GridViewColumn>
                             <GridViewColumn
-                                Width="200"
-                                DisplayMemberBinding="{Binding DownloadSpeed}"
-                                Header="{x:Static p:Strings.ListView_DownloadItems_Header_Speed}" />
+                                Width="Auto"                         
+                                Header="{x:Static p:Strings.ListView_DownloadItems_Header_Speed}">
+                                <GridViewColumn.CellTemplate >
+                                    <DataTemplate >
+                                        <TextBlock  Margin="0,0,13,0" Text="{Binding DownloadSpeed}" HorizontalAlignment="Right"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
 
                     <ListView.GroupStyle>
-
                         <GroupStyle>
                             <GroupStyle.ContainerStyle>
                                 <Style TargetType="{x:Type GroupItem}">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate>
-                                                <Expander IsExpanded="True">
+                                                <Expander Margin="0,3" IsExpanded="True" Controls:GroupBoxHelper.HeaderForeground="{DynamicResource WhiteBrush}">
                                                     <Expander.Header>
                                                         <DockPanel LastChildFill="False">
-
                                                             <StackPanel Orientation="Horizontal">
-
                                                                 <Rectangle
                                                                     Width="16"
                                                                     Height="16"
                                                                     Margin="5,0"
-                                                                    Fill="White">
+                                                                    Fill="{DynamicResource WhiteBrush}">
                                                                     <Rectangle.Style>
                                                                         <Style TargetType="{x:Type Rectangle}">
                                                                             <Setter Property="OpacityMask" Value="{StaticResource FTPConnectionUnSecure}" />
@@ -901,19 +972,16 @@
                                                                         </Style>
                                                                     </Rectangle.Style>
                                                                 </Rectangle>
-
-                                                                <TextBlock
-                                                                    VerticalAlignment="Bottom"
+                                                                <TextBlock                                                                    
+                                                                    VerticalAlignment="Center"
                                                                     FontSize="12"
                                                                     FontWeight="Bold"
-                                                                    Foreground="White"
-                                                                    Text="{Binding Name, Converter={StaticResource CollectionViewNameConv}}" />
-
-
+                                                                    Foreground="{DynamicResource WhiteBrush}"                                                                    
+                                                                    Text="{Binding Name, Converter={StaticResource CollectionViewNameConv}}" HorizontalAlignment="Left" >
+                                                                </TextBlock>
                                                             </StackPanel>
 
                                                             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-
                                                                 <Button
                                                                     Width="25"
                                                                     Height="25"
@@ -950,11 +1018,8 @@
                                                                         </Rectangle>
                                                                     </StackPanel>
                                                                 </Button>
-
                                                             </StackPanel>
-
                                                         </DockPanel>
-
                                                     </Expander.Header>
                                                     <ItemsPresenter />
                                                 </Expander>
@@ -971,21 +1036,19 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate>
-
-                                                <Expander IsExpanded="{Binding Items[0].IsExpanded}">
+                                                <Expander IsExpanded="{Binding Items[0].IsExpanded}" Controls:GroupBoxHelper.HeaderForeground="{DynamicResource WhiteBrush}">
                                                     <Expander.Header>
                                                         <DockPanel LastChildFill="False">
                                                             <StackPanel Orientation="Horizontal">
                                                                 <TextBlock
-                                                                    VerticalAlignment="Bottom"
+                                                                    VerticalAlignment="Center"
                                                                     FontSize="11"
-                                                                    FontWeight="Bold"
-                                                                    Foreground="White"
-                                                                    Text="{Binding Name, StringFormat=Package: {0}}" />
-
+                                                                    FontWeight="Bold"                                                                    
+                                                                    Foreground="{DynamicResource WhiteBrush}"
+                                                                    Text="{Binding Name, StringFormat=Package: {0}}" HorizontalAlignment="Left">
+                                                                </TextBlock>
                                                             </StackPanel>
                                                         </DockPanel>
-
                                                     </Expander.Header>
                                                     <ItemsPresenter />
                                                 </Expander>
@@ -995,8 +1058,6 @@
                                 </Style>
                             </GroupStyle.ContainerStyle>
                         </GroupStyle>
-
-
                     </ListView.GroupStyle>
 
                     <ListView.ContextMenu>
@@ -1068,92 +1129,33 @@
                                     </Rectangle>
                                 </MenuItem.Icon>
                             </MenuItem>
-
                         </ContextMenu>
                     </ListView.ContextMenu>
-
-                    <ListView.Resources>
-
-                        <Style TargetType="{x:Type ListViewItem}">
-                            <Style.Triggers>
-                                              
-                              <DataTrigger Binding="{Binding ExcludedType}" Value="User">
-                                   <Setter Property="Background" Value="LightGray" />
-                                    <Setter Property="Border.BorderBrush" Value="{DynamicResource Gray3}" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
-                                    <Setter Property="Background" Value="LightCoral" />
-                                    <Setter Property="Border.BorderBrush" Value="{DynamicResource Gray3}" />
-                                </DataTrigger>
-
-                                <DataTrigger Binding="{Binding ExcludedType}" Value="None">
-                                    <Setter Property="Border.BorderBrush" Value="{DynamicResource Gray3}" />
-                                </DataTrigger>
-
-                                <Trigger Property="IsSelected" Value="true">
-                                    <Setter Property="BorderBrush" Value="#FF143c65" />
-                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}"></Setter>
-                                </Trigger>
-
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="true" />
-                                        <Condition Property="Selector.IsSelectionActive" Value="True" />
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <SolidColorBrush Color="{DynamicResource AccentColor2}" />
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="BorderBrush" Value="#FF143c65" />
-                                </MultiTrigger>
-
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="True" />
-                                        <Condition Property="Selector.IsSelectionActive" Value="False" />
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <SolidColorBrush Color="{DynamicResource AccentColor2}" />
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="BorderBrush" Value="#FF143c65" />
-                                </MultiTrigger>
-
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <SolidColorBrush Color="{DynamicResource AccentColor3}" />
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-
-                            </Style.Triggers>
-                        </Style>
-                    </ListView.Resources>
-
                 </ListView>
-                
-                
 
                 <GridSplitter
+                    DockPanel.Dock="Bottom"
                     Grid.Row="1"
                     Height="2"
                     HorizontalAlignment="Stretch"
-                    ResizeDirection="Rows" />
+                    ResizeDirection="Rows" 
+                    Background="{DynamicResource AccentColorBrush}"
+                    Margin="2,0,2,-2"
+                    />
 
                 <GroupBox
+                    DockPanel.Dock="Bottom"
                     Grid.Row="2"
-                    MinHeight="110"
-                    Header="{x:Static p:Strings.Expander_Header_Tasks}">
-                    <TabControl Controls:TabControlHelper.IsUnderlined="True" TabStripPlacement="Bottom">
+                    MinHeight="120"
+                    Height="auto"
+                    Header="{x:Static p:Strings.Expander_Header_Tasks}" Margin="6">
+                    <TabControl Controls:TabControlHelper.IsUnderlined="True" TabStripPlacement="Top" Margin="0,0,0,0">
                         <TabItem Controls:ControlsHelper.HeaderFontSize="12" Header="{x:Static p:Strings.AppTasks_ListView_ActiveTasks_Header}">
                             <ListView
                                 x:Name="ListViewActiveTasks"
-                                ItemsSource="{Binding ActiveTasks}"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                Style="{StaticResource VirtualisedMetroListView}">
+                                ItemsSource="{Binding ActiveTasks}"                                
+                                Style="{StaticResource VirtualisedMetroListView}"
+                                BorderThickness="0,0,0,0" MinHeight="50">
                                 <ListView.View>
                                     <GridView AllowsColumnReorder="False">
                                         <GridView.ColumnHeaderContainerStyle>
@@ -1165,30 +1167,53 @@
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <Rectangle
-                                                            Width="16"
-                                                            Height="16"
-                                                            Fill="{DynamicResource AccentColorBrush}">
+                                                        <Rectangle>
                                                             <Rectangle.Style>
                                                                 <Style TargetType="{x:Type Rectangle}">
-                                                                    <Setter Property="OpacityMask" Value="{StaticResource TaskStatusRunning}" />
+                                                                    <Setter Property="OpacityMask" Value="Transparent"/>
+                                                                    <Setter Property="Width" Value="0"/>
+                                                                    <Setter Property="Height" Value="0"/>
                                                                     <Style.Triggers>
                                                                         <DataTrigger Binding="{Binding TaskStatusImage}" Value="Failed">
                                                                             <Setter Property="OpacityMask" Value="{StaticResource TaskStatusFailed}" />
+                                                                            <Setter Property="Width" Value="16"/>
+                                                                            <Setter Property="Height" Value="16"/>
+                                                                            <Setter Property="Fill" Value="{DynamicResource AccentColorBrush}"/>
                                                                         </DataTrigger>
                                                                         <DataTrigger Binding="{Binding TaskStatusImage}" Value="Canceled">
                                                                             <Setter Property="OpacityMask" Value="{StaticResource TaskStatusCanceled}" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding TaskStatusImage}" Value="Running">
-                                                                            <Setter Property="OpacityMask" Value="{StaticResource TaskStatusRunning}" />
+                                                                            <Setter Property="Width" Value="16"/>
+                                                                            <Setter Property="Height" Value="16"/>
+                                                                            <Setter Property="Fill" Value="{DynamicResource AccentColorBrush}"/>
                                                                         </DataTrigger>
                                                                         <DataTrigger Binding="{Binding TaskStatusImage}" Value="RanToCompletion">
                                                                             <Setter Property="OpacityMask" Value="{StaticResource TaskStatusRanToCompletion}" />
+                                                                            <Setter Property="Width" Value="16"/>
+                                                                            <Setter Property="Height" Value="16"/>
+                                                                            <Setter Property="Fill" Value="{DynamicResource AccentColorBrush}"/>
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </Rectangle.Style>
                                                         </Rectangle>
+
+                                                        <Controls:ProgressRing>
+                                                            <Controls:ProgressRing.Style>
+                                                                <Style TargetType="{x:Type Controls:ProgressRing}">
+                                                                    <Setter Property="Height" Value="0"/>
+                                                                    <Setter Property="Width" Value="0"/>
+                                                                    <Setter Property="MinHeight" Value="0"/>
+                                                                    <Setter Property="MinWidth" Value="0"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding TaskStatusImage}" Value="Running">
+                                                                            <Setter Property="Margin" Value="0,0,4,0"/>
+                                                                            <Setter Property="Width" Value="14"/>
+                                                                            <Setter Property="Height" Value="14"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Controls:ProgressRing.Style>
+                                                        </Controls:ProgressRing>
                                                         <TextBlock Margin="5,0,0,0" Text="{Binding TaskDisplayText}" />
                                                     </StackPanel>
                                                 </DataTemplate>
@@ -1199,10 +1224,8 @@
                             </ListView>
 
                         </TabItem>
-                        <TabItem Controls:ControlsHelper.HeaderFontSize="12" Header="{x:Static p:Strings.AppTasks_ListView_TaskHistory_Header}">
-
-
-                            <ListView x:Name="ListViewDoneTasks" ItemsSource="{Binding DoneTasks}">
+                        <TabItem Controls:ControlsHelper.HeaderFontSize="12"  Header="{x:Static p:Strings.AppTasks_ListView_TaskHistory_Header}">
+                            <ListView x:Name="ListViewDoneTasks" ItemsSource="{Binding DoneTasks}" Style="{StaticResource VirtualisedMetroListView}" BorderThickness="0,0,0,0">
                                 <ListView.View>
                                     <GridView AllowsColumnReorder="False">
                                         <GridView.ColumnHeaderContainerStyle>
@@ -1247,12 +1270,10 @@
                                 </ListView.View>
                                 <ListView.ContextMenu>
                                     <ContextMenu>
-
                                         <MenuItem
                                             Command="{Binding CopyDoneTaskTextCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
                                             Header="{x:Static p:Strings.VariousStrings_Copy}">
-
                                             <MenuItem.Icon>
                                                 <Rectangle
                                                     Width="16"
@@ -1263,7 +1284,6 @@
                                                     </Rectangle.OpacityMask>
                                                 </Rectangle>
                                             </MenuItem.Icon>
-
                                         </MenuItem>
                                     </ContextMenu>
                                 </ListView.ContextMenu>
@@ -1271,11 +1291,7 @@
                         </TabItem>
                     </TabControl>
                 </GroupBox>
-
             </Grid>
-
         </DockPanel>
-
     </Grid>
-
 </Controls:MetroWindow>

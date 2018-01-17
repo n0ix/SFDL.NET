@@ -755,4 +755,10 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="VariousStrings_ProcessedBlacklist" xml:space="preserve">
     <value>Blacklist processed</value>
   </data>
+  <data name="PopUp_Black_List" xml:space="preserve">
+    <value>Datei ist ein bekannter Virus. Vorsicht!</value>
+  </data>
+  <data name="PopUp_Ignore_List" xml:space="preserve">
+    <value>Datei wird übersprungen</value>
+  </data>
 </root>

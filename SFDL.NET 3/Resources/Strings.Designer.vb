@@ -897,6 +897,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Datei ist ein bekannter Virus. Vorsicht! ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property PopUp_Black_List() As String
+            Get
+                Return ResourceManager.GetString("PopUp_Black_List", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Datei wird übersprungen ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property PopUp_Ignore_List() As String
+            Get
+                Return ResourceManager.GetString("PopUp_Ignore_List", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die {0} Download gestoppt ähnelt.
         '''</summary>
         Public Shared ReadOnly Property PostDownload_AppTask_Completed_1_Message() As String
