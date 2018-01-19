@@ -307,64 +307,21 @@ Module SFDLFileHelper
 
         Try
 
+            'Create Session for Bulk Listing
+
             _ftp_list_session = _ftp.Session
 
-            If _ftp.ServerName.StartsWith("MLCBoard.com FTP Server ") Then
+            Select Case _ftp.ServerName.ToLower
 
-                _mylog.Info("Switching to MLCBoard FTP Server compatibility mode")
+#Region "Known FTP Servers"
 
-                _ftp_list_session = _ftp.Session
+                Case "mlcboard.com ftp server"
 
-                _ftp_list_session.Expect(_ftp_list_session.SendCommand("CWD", _ftp_path.ToString), 250)
+                    _mylog.Info("Switching to MLCBoard FTP Server compatibility mode")
 
-                For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session)
-                    Dim _entry As ArxOne.Ftp.FtpEntry
+                    _ftp_list_session.Expect(_ftp_list_session.SendCommand("CWD", _ftp_path.ToString), 250)
 
-                    _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
-
-                    _ftp_entries.Add(_entry)
-                Next
-
-            Else
-
-                If _ftp.ServerFeatures.HasFeature("MLSD") = True Then
-
-                    Try
-
-                        _mylog.Info("Server support MLSD Listing - Trying to get Item list via MLSD Command...")
-                        _ftp_entries = ArxOne.Ftp.FtpClientUtility.MlsdEntries(_ftp, _ftp_path, _ftp_list_session).ToList()
-
-                        If _ftp_entries.FirstOrDefault.Name.ToLower.Contains("no such file or directory") Or _ftp_entries.FirstOrDefault.Path.ToString.ToLower.Contains("no such file or directory") Then
-                            Throw New Exception("MLSD Command failed")
-                        End If
-
-                    Catch ex As Exception
-                        _mylog.Error("MLSD Command failed!")
-                        _ftp_entries.Clear()
-                    End Try
-
-                    If _ftp_entries.Count = 0 Then
-
-                        _mylog.Warn("MLSD Command does not return any Items - Trying LIST Command...")
-
-                        For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path, _ftp_list_session)
-
-                            Dim _entry As ArxOne.Ftp.FtpEntry
-
-                            _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
-
-                            _ftp_entries.Add(_entry)
-
-                        Next
-
-                    End If
-
-                Else
-
-                    _mylog.Info("Server does not support MLSD Listing - Using default LIST Command")
-
-                    For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path, _ftp_list_session)
-
+                    For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session)
                         Dim _entry As ArxOne.Ftp.FtpEntry
 
                         _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
@@ -373,10 +330,91 @@ Module SFDLFileHelper
 
                     Next
 
+#End Region
 
-                End If
+#Region "Generic FTP Servers"
 
-            End If
+                Case Else
+
+#Region "MLSD Listing"
+
+                    If _ftp_entries.Count = 0 AndAlso _ftp.ServerFeatures.HasFeature("MLSD") = True Then
+
+                        Try
+
+                            _mylog.Info("Server support MLSD Listing - Trying to get Item list via MLSD Command...")
+                            _ftp_entries = ArxOne.Ftp.FtpClientUtility.MlsdEntries(_ftp, _ftp_path, _ftp_list_session).ToList()
+
+                            If _ftp_entries.FirstOrDefault.Name.ToLower.Contains("no such file or directory") Or _ftp_entries.FirstOrDefault.Path.ToString.ToLower.Contains("no such file or directory") Then
+                                Throw New Exception("MLSD Command failed")
+                            End If
+
+                        Catch ex As Exception
+                            _mylog.Error("MLSD Command failed!")
+                            _ftp_entries.Clear()
+                        End Try
+
+                    End If
+
+#End Region
+
+#Region "LIST with Parameter"
+
+                    Try
+
+                        If _ftp_entries.Count = 0 Then
+
+                            For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path, _ftp_list_session)
+
+                                Dim _entry As ArxOne.Ftp.FtpEntry
+
+                                _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+
+                                _ftp_entries.Add(_entry)
+
+                            Next
+
+                        End If
+
+                    Catch ex As Exception
+                        _mylog.Error("LIST with Parameter Command failed!")
+                        _ftp_entries.Clear()
+                    End Try
+
+#End Region
+
+
+#End Region
+
+
+#Region "CWD first then LIST"
+
+                    Try
+
+                        If _ftp_entries.Count = 0 Then
+
+                            _ftp_list_session.Expect(_ftp_list_session.SendCommand("CWD", _ftp_path.ToString), 250)
+
+                            For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session)
+                                Dim _entry As ArxOne.Ftp.FtpEntry
+
+                                _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+
+                                _ftp_entries.Add(_entry)
+
+                            Next
+
+
+                        End If
+
+                    Catch ex As Exception
+                        _mylog.Error("LIST Command failed!")
+                        _ftp_entries.Clear()
+                    End Try
+
+#End Region
+            End Select
+
 
             For Each _entry In _ftp_entries
 
