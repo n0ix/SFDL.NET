@@ -75,14 +75,6 @@
                 Stretch="Uniform"
                 Visual="{StaticResource appbar_warning}" />
             <VisualBrush
-                x:Key="File_as_Virus_detected"
-                Stretch="Uniform"
-                Visual="{StaticResource appbar_shield_alert}" />
-            <VisualBrush
-                x:Key="File_skipped_in_settings"
-                Stretch="Uniform"
-                Visual="{StaticResource appbar_page_hidden}" />
-            <VisualBrush
                 x:Key="DownloadStatusRunning"
                 Stretch="Uniform"
                 Visual="{StaticResource appbar_cabinet_in}" />
@@ -169,16 +161,22 @@
                 x:Key="TaskStatusRanToCompletion"
                 Stretch="Uniform"
                 Visual="{StaticResource appbar_check}" />
-
             <VisualBrush
                 x:Key="FTPConnectionUnSecure"
                 Stretch="Uniform"
                 Visual="{StaticResource appbar_unlock_keyhole}" />
-
             <VisualBrush
                 x:Key="FTPConnectionSecure"
                 Stretch="Uniform"
                 Visual="{StaticResource appbar_lock}" />
+            <VisualBrush
+                x:Key="FileMalicious"
+                Stretch="Uniform"
+                Visual="{StaticResource appbar_shield_alert}" />
+            <VisualBrush
+                x:Key="FileIgnored"
+                Stretch="Uniform"
+                Visual="{StaticResource appbar_page_hidden}" />
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
@@ -773,11 +771,11 @@
                                                         <Setter Property="OpacityMask" Value="Transparent"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
-                                                                <Setter Property="OpacityMask" Value="{StaticResource File_as_Virus_detected}" />
+                                                                <Setter Property="OpacityMask" Value="{StaticResource FileMalicious}" />
                                                                 <Setter Property="Fill" Value="{DynamicResource AccentColorBrush}"/>
                                                                 <Setter Property="Width" Value="16"/>
                                                                 <Setter Property="Height" Value="16"/>
-                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.PopUp_Black_List}"/>
+                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.ListView_DownloadItems_PopUp_Blacklist}"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -790,11 +788,11 @@
                                                             <DataTrigger Binding="{Binding ExcludedType}" Value="User">
                                                                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
                                                                 <Setter Property="TextDecorations" Value="Strikethrough"/>
-                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.PopUp_Ignore_List}"/>
+                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.ListView_DownloadItems_PopUp_UserIgnore}"/>
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
                                                                 <Setter Property="Foreground" Value="#E5CB0000" />
-                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.PopUp_Black_List}"/>
+                                                                <Setter Property="ToolTip" Value="{x:Static p:Strings.ListView_DownloadItems_PopUp_Blacklist}"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -901,10 +899,10 @@
                                                                 <Setter Property="OpacityMask" Value="{StaticResource DownloadStatusHashCheck}" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding ExcludedType}" Value="Malicious">
-                                                                <Setter Property="OpacityMask" Value="{StaticResource File_as_Virus_detected}" />
+                                                                <Setter Property="OpacityMask" Value="{StaticResource FileMalicious}" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding ExcludedType}" Value="User">
-                                                                <Setter Property="OpacityMask" Value="{StaticResource File_skipped_in_settings}" />
+                                                                <Setter Property="OpacityMask" Value="{StaticResource FileIgnored}" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>

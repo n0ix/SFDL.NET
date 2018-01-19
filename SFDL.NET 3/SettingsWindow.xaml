@@ -25,6 +25,7 @@
         <ResourceDictionary>
             <local:ExistingFileHandlingConverter x:Key="Filehandlingconvert" />
             <local:LangauageConverter x:Key="Langconvert" />
+            <local:InvertBooleanConverter x:Key="InvertBool" />
 
             <Style x:Key="ThemeMenuItemStyle" TargetType="MenuItem">
                 <Setter Property="Background" Value="{DynamicResource BaseColorBrush}" />
@@ -197,10 +198,12 @@
                                     MinWidth="330"
                                     Header="{x:Static p:Strings.Settings_DownloadSettings}">
                                     <Grid>
-                                        <StackPanel>
+                                        <StackPanel Margin="0,0,5,0">
+                                            <RadioButton x:Name="rd_ask_downloadfolder" Content="Bei jedem Download nach dem Speicherort fragen" Margin="0,5,0,10" GroupName="DownloadFolder" IsChecked="{Binding AskForDownloadDirectory}"></RadioButton>
+                                            <RadioButton x:Name="rd_standard_download_folder" Content="Dateien im Download Stardard Ordner speichern" Margin="0,0,0,5" GroupName="DownloadFolder" IsChecked="{Binding AskForDownloadDirectory, Converter={StaticResource InvertBool}}"></RadioButton>
                                             <TextBox
                                                 x:Name="TxtDownloadPath"
-                                                Margin="5,5,0,0"
+                                                Margin="0,5,0,0"
                                                 HorizontalAlignment="Stretch"
                                                 Controls:TextBoxHelper.ButtonCommand="{Binding BrowseFolderCommand}"
                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
@@ -209,7 +212,8 @@
                                                 Text="{Binding DownloadDirectory, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" />
                                             <CheckBox
                                                 x:Name="ChkCreatePackageSubfolder"
-                                                Margin="5,10,0,5"
+                                                Margin="0,10,0,5"
+                                                IsEnabled="{Binding IsChecked, ElementName=rd_standard_download_folder}"
                                                 Content="{x:Static p:Strings.Settings_CreateSubfolderEachPackage}"
                                                 IsChecked="{Binding CreatePackageSubfolder}" />
                                         </StackPanel>

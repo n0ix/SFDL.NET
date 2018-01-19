@@ -81,6 +81,15 @@ Public Class SettingsViewModel
             Return _settings.CreatePackageSubfolder
         End Get
     End Property
+
+    Public Property AskForDownloadDirectory As Boolean
+        Set(value As Boolean)
+            _settings.AskForDownloadDirectory = value
+        End Set
+        Get
+            Return _settings.AskForDownloadDirectory
+        End Get
+    End Property
     Public Property ExistingFileHandling As ExistingFileHandling
         Set(value As ExistingFileHandling)
             _settings.ExistingFileHandling = value

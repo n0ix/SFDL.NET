@@ -181,15 +181,20 @@ Public Class MainViewModel
 
                     _new_session.InitCollectionSync()
 
-                    'GenerateContainerSessionChains(_new_session)
-
                     Await Task.Run(Sub()
 
                                        For Each _item In _new_session.DownloadItems
 
                                            'Update DownloadPath cause it could have changed
-                                           _item.LocalFile = GetDownloadFilePath(CType(Application.Current.Resources("Settings"), Settings), _new_session, _item)
-                                           '_item.DownloadStatus = DownloadItem.Status.None
+                                           If _settings.AskForDownloadDirectory = False Then
+                                               _item.LocalFile = GetDownloadFilePath(_settings.DownloadDirectory, _settings.CreatePackageSubfolder, _new_session, _item)
+                                           Else
+                                               If String.IsNullOrWhiteSpace(_item.LocalFile) = True OrElse System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(_item.LocalFile)) = False Then
+                                                   'ToDo: Ask User where to place Download
+
+                                               End If
+                                           End If
+
                                            _item.DownloadProgress = 0
                                            _item.DownloadSpeed = String.Empty
                                            _item.SingleSessionMode = False
@@ -203,8 +208,8 @@ Public Class MainViewModel
                                        DownloadItems.AddRange(_new_session.DownloadItems)
 
                                    End Sub)
-
-                    _new_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_new_session, _settings)
+                    'ToDo: Use UserSelcted Path
+                    _new_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_new_session, _settings.DownloadDirectory)
 
                     ContainerSessions.Add(_new_session)
 
@@ -371,7 +376,11 @@ Decrypt:
                 _file_blacklist.Add(New BlacklistItem(BlacklistItem.Type.User, _item))
             Next
 
-            GenerateContainerSessionDownloadItems(_mycontainer_session, _settings.NotMarkAllContainerFiles, _file_blacklist)
+            If _settings.AskForDownloadDirectory = True Then
+
+            Else
+                GenerateContainerSessionDownloadItems(_mycontainer_session, _settings.NotMarkAllContainerFiles, _file_blacklist, _settings.DownloadDirectory, _settings.CreatePackageSubfolder)
+            End If
 
             If _bulk_result = False Or _mycontainer_session.DownloadItems.Count = 0 Then
                 Throw New Exception(String.Format(My.Resources.Strings.OpenSFDL_Exception_FTPDown, Path.GetFileName(_sfdl_container_path)))
@@ -379,7 +388,8 @@ Decrypt:
 
             GenerateContainerSessionChains(_mycontainer_session)
 
-            _mycontainer_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_mycontainer_session, _settings)
+            'ToDo: Use User selected Path
+            _mycontainer_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_mycontainer_session, _settings.DownloadDirectory)
 
             Await Task.Run(Sub()
                                DownloadItems.AddRange(_mycontainer_session.DownloadItems)
@@ -784,7 +794,8 @@ Decrypt:
                                                                                _dlitem.RetryPossible = False
                                                                                _dlitem.SizeDownloaded = 0
                                                                                _dlitem.LocalFileSize = 0
-                                                                               _dlitem.LocalFile = GetDownloadFilePath(Application.Current.Resources("Settings"), ContainerSessions.Where(Function(mysession) mysession.ID.Equals(_dlitem.ParentContainerID)).First, _dlitem)
+                                                                               'ToDo
+                                                                               '_dlitem.LocalFile = GetDownloadFilePath(_, ContainerSessions.Where(Function(mysession) mysession.ID.Equals(_dlitem.ParentContainerID)).First, _dlitem)
 
                                                                            Else
 

@@ -6,6 +6,7 @@
     Public Property ExistingFileHandling As ExistingFileHandling = ExistingFileHandling.ResumeFile
     Public Property PreventStandby As Boolean = True
     Public Property CreatePackageSubfolder As Boolean = False
+    Public Property AskForDownloadDirectory As Boolean = False
     Public Property MaxDownloadThreads As Integer = 3
     Public Property MaxRetry As Integer = 3
     Public Property RetryWaitTime As Integer = 3

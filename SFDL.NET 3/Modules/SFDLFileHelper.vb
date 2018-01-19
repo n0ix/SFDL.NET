@@ -187,7 +187,7 @@ Module SFDLFileHelper
 
     End Sub
 
-    Sub GenerateContainerSessionDownloadItems(ByVal _containersession As ContainerSession, ByVal _mark_files As Boolean, ByVal _blacklist As List(Of BlacklistItem))
+    Sub GenerateContainerSessionDownloadItems(ByVal _containersession As ContainerSession, ByVal _mark_files As Boolean, ByVal _blacklist As List(Of BlacklistItem), ByVal _user_download_folder As String, ByVal _create_sub_folder As Boolean)
 
         Dim _tmp_list As New List(Of DownloadItem)
 
@@ -206,7 +206,7 @@ Module SFDLFileHelper
 
                     .PackageName = _package.Name
                     .ParentContainerID = _containersession.ID
-                    .LocalFile = GetDownloadFilePath(CType(Application.Current.Resources("Settings"), Settings), _containersession, _dl_item)
+                    .LocalFile = GetDownloadFilePath(_user_download_folder, _create_sub_folder, _containersession, _dl_item)
 
 #Region "Blacklist Check"
 
@@ -460,12 +460,12 @@ Module SFDLFileHelper
 
     End Function
 
-    Function GetSessionLocalDownloadRoot(ByVal _container_session As ContainerSession, ByVal _settings As Settings) As String
+    Function GetSessionLocalDownloadRoot(ByVal _container_session As ContainerSession, ByVal _user_download_dir As String) As String
 
         Dim _download_item As DownloadItem = _container_session.DownloadItems(0)
         Dim _test_path As String = String.Empty
         Dim _flag As Boolean = False
-        Dim _app_download_path As String = _settings.DownloadDirectory
+        Dim _app_download_path As String = _user_download_dir
 
         Try
 
@@ -487,7 +487,7 @@ Module SFDLFileHelper
                     Return _test_path
                 End If
 
-                If IO.Path.Equals(_test_path, _settings.DownloadDirectory) Then
+                If IO.Path.Equals(_test_path, _user_download_dir) Then
                     _flag = True
                 End If
 
@@ -501,7 +501,7 @@ Module SFDLFileHelper
 
     End Function
 
-    Function GetDownloadFilePath(ByVal _settings As Settings, ByVal _container_session As ContainerSession, ByVal _item As DownloadItem) As String
+    Function GetDownloadFilePath(ByVal _user_download_dir As Boolean, ByVal _create_sub_folder As Boolean, ByVal _container_session As ContainerSession, ByVal _item As DownloadItem) As String
 
         Dim _download_dir As String = String.Empty
         Dim _tmp_last_sub_dir As String = String.Empty
@@ -509,9 +509,9 @@ Module SFDLFileHelper
 
         Try
 
-            _download_dir = IO.Path.Combine(_settings.DownloadDirectory, _container_session.DisplayName)
+            _download_dir = IO.Path.Combine(_user_download_dir, _container_session.DisplayName)
 
-            If _settings.CreatePackageSubfolder Then
+            If _create_sub_folder Then
                 _download_dir = IO.Path.Combine(_download_dir, _item.PackageName)
             End If
 

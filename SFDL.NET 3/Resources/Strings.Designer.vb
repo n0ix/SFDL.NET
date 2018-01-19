@@ -591,6 +591,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Datei steht auf der Blacklist und ist höchstwahrscheinlich bösartig - Vorsicht! ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property ListView_DownloadItems_PopUp_Blacklist() As String
+            Get
+                Return ResourceManager.GetString("ListView_DownloadItems_PopUp_Blacklist", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Datei wird aufgrund deiner Einstellungen ignoriert/übersprungen ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property ListView_DownloadItems_PopUp_UserIgnore() As String
+            Get
+                Return ResourceManager.GetString("ListView_DownloadItems_PopUp_UserIgnore", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Extras ähnelt.
         '''</summary>
         Public Shared ReadOnly Property MainMenu_Extra() As String
@@ -897,24 +915,6 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Datei ist ein bekannter Virus. Vorsicht! ähnelt.
-        '''</summary>
-        Public Shared ReadOnly Property PopUp_Black_List() As String
-            Get
-                Return ResourceManager.GetString("PopUp_Black_List", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Datei wird übersprungen ähnelt.
-        '''</summary>
-        Public Shared ReadOnly Property PopUp_Ignore_List() As String
-            Get
-                Return ResourceManager.GetString("PopUp_Ignore_List", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die {0} Download gestoppt ähnelt.
         '''</summary>
         Public Shared ReadOnly Property PostDownload_AppTask_Completed_1_Message() As String
@@ -1100,6 +1100,24 @@ Namespace My.Resources
         Public Shared ReadOnly Property Settings_DownloadDir() As String
             Get
                 Return ResourceManager.GetString("Settings_DownloadDir", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Bei jedem Download nach dem Ordner fragen ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_DownloadDir_AskFolderEachDownload() As String
+            Get
+                Return ResourceManager.GetString("Settings_DownloadDir_AskFolderEachDownload", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Dateien immer im Standard-Download-Ordner speichern ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_DownloadDir_UseStandardFolder() As String
+            Get
+                Return ResourceManager.GetString("Settings_DownloadDir_UseStandardFolder", resourceCulture)
             End Get
         End Property
         

@@ -755,10 +755,16 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="VariousStrings_ProcessedBlacklist" xml:space="preserve">
     <value>Blacklist processed</value>
   </data>
-  <data name="PopUp_Black_List" xml:space="preserve">
-    <value>Datei ist ein bekannter Virus. Vorsicht!</value>
+  <data name="ListView_DownloadItems_PopUp_Blacklist" xml:space="preserve">
+    <value>Datei steht auf der Blacklist und ist höchstwahrscheinlich bösartig - Vorsicht!</value>
   </data>
-  <data name="PopUp_Ignore_List" xml:space="preserve">
-    <value>Datei wird übersprungen</value>
+  <data name="ListView_DownloadItems_PopUp_UserIgnore" xml:space="preserve">
+    <value>Datei wird aufgrund deiner Einstellungen ignoriert/übersprungen</value>
+  </data>
+  <data name="Settings_DownloadDir_AskFolderEachDownload" xml:space="preserve">
+    <value>Bei jedem Download nach dem Ordner fragen</value>
+  </data>
+  <data name="Settings_DownloadDir_UseStandardFolder" xml:space="preserve">
+    <value>Dateien immer im Standard-Download-Ordner speichern</value>
   </data>
 </root>

@@ -749,10 +749,16 @@ Restart the download to apply these settings.</value>
   <data name="VariousStrings_ProcessedBlacklist" xml:space="preserve">
     <value>Blacklist verarbeitet</value>
   </data>
-  <data name="PopUp_Black_List" xml:space="preserve">
-    <value>File is a known virus. Attention!</value>
+  <data name="ListView_DownloadItems_PopUp_Blacklist" xml:space="preserve">
+    <value>File is blacklisted and most likely malicious - be careful!</value>
   </data>
-  <data name="PopUp_Ignore_List" xml:space="preserve">
-    <value>File is skipped</value>
+  <data name="ListView_DownloadItems_PopUp_UserIgnore" xml:space="preserve">
+    <value>File is ignored/skiped due to your settings</value>
+  </data>
+  <data name="Settings_DownloadDir_AskFolderEachDownload" xml:space="preserve">
+    <value>Ask for the folder with each download</value>
+  </data>
+  <data name="Settings_DownloadDir_UseStandardFolder" xml:space="preserve">
+    <value>Always save files in the standard download folder</value>
   </data>
 </root>
