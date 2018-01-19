@@ -934,7 +934,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                <Expander Margin="0,3" IsExpanded="True" Controls:GroupBoxHelper.HeaderForeground="{DynamicResource WhiteBrush}">
+                                                <Expander Margin="0,3" IsExpanded="True" Controls:GroupBoxHelper.HeaderForeground="White">
                                                     <Expander.Header>
                                                         <DockPanel LastChildFill="False">
                                                             <StackPanel Orientation="Horizontal">
@@ -942,7 +942,7 @@
                                                                     Width="16"
                                                                     Height="16"
                                                                     Margin="5,0"
-                                                                    Fill="{DynamicResource WhiteBrush}">
+                                                                    Fill="White">
                                                                     <Rectangle.Style>
                                                                         <Style TargetType="{x:Type Rectangle}">
                                                                             <Setter Property="OpacityMask" Value="{StaticResource FTPConnectionUnSecure}" />
@@ -958,7 +958,7 @@
                                                                     VerticalAlignment="Center"
                                                                     FontSize="12"
                                                                     FontWeight="Bold"
-                                                                    Foreground="{DynamicResource WhiteBrush}"                                                                    
+                                                                    Foreground="White"                                                                    
                                                                     Text="{Binding Name, Converter={StaticResource CollectionViewNameConv}}" HorizontalAlignment="Left" >
                                                                 </TextBlock>
                                                             </StackPanel>
@@ -1018,7 +1018,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate>
-                                                <Expander IsExpanded="{Binding Items[0].IsExpanded}" Controls:GroupBoxHelper.HeaderForeground="{DynamicResource WhiteBrush}">
+                                                <Expander IsExpanded="{Binding Items[0].IsExpanded}" Controls:GroupBoxHelper.HeaderForeground="White">
                                                     <Expander.Header>
                                                         <DockPanel LastChildFill="False">
                                                             <StackPanel Orientation="Horizontal">
@@ -1026,7 +1026,7 @@
                                                                     VerticalAlignment="Center"
                                                                     FontSize="11"
                                                                     FontWeight="Bold"                                                                    
-                                                                    Foreground="{DynamicResource WhiteBrush}"
+                                                                    Foreground="White"
                                                                     Text="{Binding Name, StringFormat=Package: {0}}" HorizontalAlignment="Left">
                                                                 </TextBlock>
                                                             </StackPanel>

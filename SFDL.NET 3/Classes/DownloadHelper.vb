@@ -652,9 +652,9 @@
 
             _item.DownloadSpeed = String.Empty
 
-            _item.PreserveStatusAndUnCheck()
-
             If GeneralHelper.IsDownloadStopped = False And _item.DownloadStatus = NET3.DownloadItem.Status.Completed Then
+
+                _item.PreserveStatusAndUnCheck()
 
                 _item.DownloadStatus = NET3.DownloadItem.Status.HashCheck
 

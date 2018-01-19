@@ -62,16 +62,15 @@ Public Class ContainerSession
 
     Private _is_expanded As Boolean = True
 
-    Public Property IsExpanded As Boolean
-        Set(value As Boolean)
-            _is_expanded = value
-            RaisePropertyChanged("IsExpanded")
-        End Set
-        Get
-            Return _is_expanded
-        End Get
-    End Property
-
+    'Public Property IsExpanded As Boolean
+    '    Set(value As Boolean)
+    '        _is_expanded = value
+    '        RaisePropertyChanged("IsExpanded")
+    '    End Set
+    '    Get
+    '        Return _is_expanded
+    '    End Get
+    'End Property
 
     Private _session_state_image As String = "None"
 
