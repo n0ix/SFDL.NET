@@ -181,20 +181,32 @@ Public Class MainViewModel
 
                     _new_session.InitCollectionSync()
 
+                    If _settings.AskForDownloadDirectory = True Then
+
+                        Dim _popup_result As String = Nothing
+
+                        'Ask for Download Path if Directory doesent exists anymore or is not filled
+                        If String.IsNullOrWhiteSpace(_new_session.LocalDownloadRoot) Or Not System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(_new_session.LocalDownloadRoot)) Then
+
+                            _popup_result = Await MahApps.Metro.SimpleChildWindow.ChildWindowManager.ShowChildWindowAsync(Of String)(WindowInstance, New SelectContainerDownloadPathPopUp())
+
+                            If IsNothing(_popup_result) OrElse String.IsNullOrEmpty(_popup_result.ToString) Then
+                                Throw New Exception("User Cancel!")
+                            End If
+
+                            _new_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_new_session, _popup_result.ToString)
+
+                        End If
+
+                    Else
+                        _new_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_new_session, _settings.DownloadDirectory)
+                    End If
+
                     Await Task.Run(Sub()
 
                                        For Each _item In _new_session.DownloadItems
-
                                            'Update DownloadPath cause it could have changed
-                                           If _settings.AskForDownloadDirectory = False Then
-                                               _item.LocalFile = GetDownloadFilePath(_settings.DownloadDirectory, _settings.CreatePackageSubfolder, _new_session, _item)
-                                           Else
-                                               If String.IsNullOrWhiteSpace(_item.LocalFile) = True OrElse System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(_item.LocalFile)) = False Then
-                                                   'ToDo: Ask User where to place Download
-
-                                               End If
-                                           End If
-
+                                           _item.LocalFile = GetDownloadFilePath(_settings.CreatePackageSubfolder, _new_session, _item)
                                            _item.DownloadProgress = 0
                                            _item.DownloadSpeed = String.Empty
                                            _item.SingleSessionMode = False
@@ -208,8 +220,6 @@ Public Class MainViewModel
                                        DownloadItems.AddRange(_new_session.DownloadItems)
 
                                    End Sub)
-                    'ToDo: Use UserSelcted Path
-                    _new_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_new_session, _settings.DownloadDirectory)
 
                     ContainerSessions.Add(_new_session)
 
@@ -378,18 +388,27 @@ Decrypt:
 
             If _settings.AskForDownloadDirectory = True Then
 
+                Dim _popup_result As String = Nothing
+
+                _popup_result = Await MahApps.Metro.SimpleChildWindow.ChildWindowManager.ShowChildWindowAsync(Of String)(WindowInstance, New SelectContainerDownloadPathPopUp())
+
+                If IsNothing(_popup_result) OrElse String.IsNullOrEmpty(_popup_result.ToString) Then
+                    Throw New Exception("User Cancel!")
+                End If
+
+                _mycontainer_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_mycontainer_session, _popup_result.ToString)
+
             Else
-                GenerateContainerSessionDownloadItems(_mycontainer_session, _settings.NotMarkAllContainerFiles, _file_blacklist, _settings.DownloadDirectory, _settings.CreatePackageSubfolder)
+                _mycontainer_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_mycontainer_session, _settings.DownloadDirectory)
             End If
+
+            GenerateContainerSessionDownloadItems(_mycontainer_session, _settings.NotMarkAllContainerFiles, _file_blacklist, _settings.CreatePackageSubfolder)
 
             If _bulk_result = False Or _mycontainer_session.DownloadItems.Count = 0 Then
                 Throw New Exception(String.Format(My.Resources.Strings.OpenSFDL_Exception_FTPDown, Path.GetFileName(_sfdl_container_path)))
             End If
 
             GenerateContainerSessionChains(_mycontainer_session)
-
-            'ToDo: Use User selected Path
-            _mycontainer_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_mycontainer_session, _settings.DownloadDirectory)
 
             Await Task.Run(Sub()
                                DownloadItems.AddRange(_mycontainer_session.DownloadItems)
@@ -794,8 +813,15 @@ Decrypt:
                                                                                _dlitem.RetryPossible = False
                                                                                _dlitem.SizeDownloaded = 0
                                                                                _dlitem.LocalFileSize = 0
-                                                                               'ToDo
-                                                                               '_dlitem.LocalFile = GetDownloadFilePath(_, ContainerSessions.Where(Function(mysession) mysession.ID.Equals(_dlitem.ParentContainerID)).First, _dlitem)
+
+                                                                               If _settings.AskForDownloadDirectory = False Then
+
+                                                                                   Dim _this_container_session As ContainerSession = ContainerSessions.Where(Function(mysession) mysession.ID.Equals(_dlitem.ParentContainerID)).First
+
+                                                                                   _this_container_session.LocalDownloadRoot = GetSessionLocalDownloadRoot(_this_container_session, _settings.DownloadDirectory)
+                                                                                   _dlitem.LocalFile = GetDownloadFilePath(_settings.CreatePackageSubfolder, _this_container_session, _dlitem)
+
+                                                                               End If
 
                                                                            Else
 
@@ -1844,6 +1870,19 @@ Decrypt:
 #End Region
 
 #Region "Allgemeine Properties"
+
+    Private _is_child_window_open As Boolean = False
+
+    Public Property IsChildWindowOpen
+        Set(value)
+            _is_child_window_open = value
+            RaisePropertyChanged("IsChildWindowOpen")
+        End Set
+        Get
+            Return _is_child_window_open
+        End Get
+    End Property
+
 
     Public Property ExpanderStates As New Dictionary(Of String, Boolean)
 

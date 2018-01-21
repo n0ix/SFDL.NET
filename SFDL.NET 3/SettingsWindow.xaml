@@ -209,11 +209,11 @@
                                                 Controls:TextBoxHelper.UseFloatingWatermark="True"
                                                 Controls:TextBoxHelper.Watermark="{x:Static p:Strings.Settings_DownloadDir}"
                                                 Style="{StaticResource OpenFileMetroTextBox}"
+                                                IsEnabled="{Binding ElementName=rd_ask_downloadfolder, Path=IsChecked, Converter={StaticResource InvertBool}}"
                                                 Text="{Binding DownloadDirectory, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}" />
                                             <CheckBox
                                                 x:Name="ChkCreatePackageSubfolder"
                                                 Margin="0,10,0,5"
-                                                IsEnabled="{Binding IsChecked, ElementName=rd_standard_download_folder}"
                                                 Content="{x:Static p:Strings.Settings_CreateSubfolderEachPackage}"
                                                 IsChecked="{Binding CreatePackageSubfolder}" />
                                         </StackPanel>

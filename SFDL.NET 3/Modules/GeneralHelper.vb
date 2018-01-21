@@ -1,4 +1,5 @@
-﻿Module GeneralHelper
+﻿Imports System.Windows.Forms
+Module GeneralHelper
 
     Private _lock_download_stopped As New Object
 
@@ -28,6 +29,5 @@
             Return False
         End Try
     End Function
-
 
 End Module

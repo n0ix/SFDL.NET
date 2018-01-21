@@ -26,6 +26,7 @@
     WindowStartupLocation="CenterScreen"
     WindowState="{Binding WindowState}">
 
+
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo />
     </Window.TaskbarItemInfo>
@@ -389,12 +390,9 @@
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
 
-
-
-    <Grid>
+    <Grid x:Name="RootGrid">
 
         <DockPanel>
-
             <Grid DockPanel.Dock="Top">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="35" />

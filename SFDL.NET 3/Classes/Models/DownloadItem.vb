@@ -422,7 +422,7 @@ Public Class DownloadItem
     Protected Overridable Sub Dispose(disposing As Boolean)
         If Not disposedValue Then
             If disposing Then
-                ' TODO: verwalteten Zustand (verwaltete Objekte) entsorgen.
+                'verwalteten Zustand(verwaltete Objekte) entsorgen.
             End If
 
             ' TODO: nicht verwaltete Ressourcen (nicht verwaltete Objekte) freigeben und Finalize() weiter unten überschreiben.

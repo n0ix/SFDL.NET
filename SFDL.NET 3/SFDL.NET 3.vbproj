@@ -73,9 +73,11 @@
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MoreLinq, Version=2.8.21218.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
-      <HintPath>..\packages\morelinq.2.8.0\lib\net40\MoreLinq.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MahApps.Metro.SimpleChildWindow, Version=1.4.1.6, Culture=neutral, PublicKeyToken=bbbfdff7f500a992, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.SimpleChildWindow.1.4.1\lib\net45\MahApps.Metro.SimpleChildWindow.dll</HintPath>
+    </Reference>
+    <Reference Include="MoreLinq, Version=2.9.21302.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.2.9.0\lib\net40\MoreLinq.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
@@ -141,6 +143,7 @@
     <Compile Include="Classes\Models\UnRARChain.vb" />
     <Compile Include="Classes\SingleInstance\SingleInstance.vb" />
     <Compile Include="Classes\ViewModels\MainViewModel.vb" />
+    <Compile Include="Classes\ViewModels\SelectContainerDownloadPathPopUpVieModel.vb" />
     <Compile Include="Classes\XAML Converter\CollectionViewNameSecureIndicatorConverter.vb" />
     <Compile Include="Classes\XAML Converter\FileSizeConverter.vb" />
     <Compile Include="Classes\XAML Converter\CollectionViewNameConverter.vb" />
@@ -156,6 +159,9 @@
     <Compile Include="Classes\ViewModels\SettingsViewModel.vb" />
     <Compile Include="Classes\ViewModels\ViewModelBase.vb" />
     <Compile Include="Classes\XAML Converter\LangauageConverter.vb" />
+    <Compile Include="SelectContainerDownloadPathPopUp.xaml.vb">
+      <DependentUpon>SelectContainerDownloadPathPopUp.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.vb">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -189,6 +195,10 @@
     <Compile Include="SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="SelectContainerDownloadPathPopUp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
