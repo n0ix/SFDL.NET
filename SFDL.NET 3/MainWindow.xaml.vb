@@ -87,7 +87,7 @@ Public Class MainWindow
 
         End If
 
-        If IsNothing(Application.Current.Resources("FaultedSettings")) = False AndAlso Application.Current.Resources("FaultedSettings") = True Then
+        If Not IsNothing(Application.Current.Resources("FaultedSettings")) AndAlso CType(Application.Current.Resources("FaultedSettings"), Boolean) = True Then
 
             Dim _dialog_settings As New MetroDialogSettings
 

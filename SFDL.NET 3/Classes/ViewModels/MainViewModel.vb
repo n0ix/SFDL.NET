@@ -1115,7 +1115,7 @@ Decrypt:
 
                 _progress_dialog_controller.SetIndeterminate()
 
-                Await Tasks.Task.Delay(TimeSpan.FromSeconds(30).TotalMilliseconds)
+                Await Tasks.Task.Delay(TimeSpan.FromSeconds(30))
 
                 If _progress_dialog_controller.IsOpen Then
                     Await _progress_dialog_controller.CloseAsync()
@@ -1145,7 +1145,7 @@ Decrypt:
 
                     _progress_dialog_controller.SetIndeterminate()
 
-                    Await Tasks.Task.Delay(TimeSpan.FromSeconds(30).TotalMilliseconds)
+                    Await Tasks.Task.Delay(TimeSpan.FromSeconds(30))
 
                     If _progress_dialog_controller.IsOpen Then
                         Await _progress_dialog_controller.CloseAsync()
@@ -1873,8 +1873,8 @@ Decrypt:
 
     Private _is_child_window_open As Boolean = False
 
-    Public Property IsChildWindowOpen
-        Set(value)
+    Public Property IsChildWindowOpen As Boolean
+        Set(value As Boolean)
             _is_child_window_open = value
             RaisePropertyChanged("IsChildWindowOpen")
         End Set
