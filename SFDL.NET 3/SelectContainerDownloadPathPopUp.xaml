@@ -91,7 +91,7 @@
                 Margin="5"
                 BorderBrush="{DynamicResource AccentColorBrush2}"
                 BorderThickness="1"
-                Command="{Binding OKCommand}">
+                Command="{Binding OKCommand}" IsDefault="True">
                     <StackPanel Orientation="Horizontal">
                         <Rectangle
                         Width="16"

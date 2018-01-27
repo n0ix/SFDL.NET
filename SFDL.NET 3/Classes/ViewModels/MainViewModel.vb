@@ -392,7 +392,7 @@ Decrypt:
 
                 _popup_result = Await MahApps.Metro.SimpleChildWindow.ChildWindowManager.ShowChildWindowAsync(Of String)(WindowInstance, New SelectContainerDownloadPathPopUp())
 
-                If IsNothing(_popup_result) OrElse String.IsNullOrEmpty(_popup_result.ToString) Then
+                If IsNothing(_popup_result) OrElse String.IsNullOrWhiteSpace(_popup_result.ToString) OrElse _popup_result.ToString.ToLower.Equals("cancel") Then
                     Throw New Exception("User Cancel!")
                 End If
 
