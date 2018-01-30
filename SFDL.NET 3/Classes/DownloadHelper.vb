@@ -829,7 +829,10 @@
                 _item.RetryCount += 1
                 _log.Info("Spooling item to the retry waitinglist")
                 _item.DownloadStatus = NET3.DownloadItem.Status.Retry
+
             End If
+
+            _ftp_session.Invalidate()
 
         End Try
 
