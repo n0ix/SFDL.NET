@@ -271,10 +271,14 @@ Module SFDLFileHelper
 
         Dim _ftp As ArxOne.Ftp.FtpClient = Nothing
         Dim _rt As Boolean = True
+        Dim _stopwatch As New Stopwatch
+
 
         Try
 
             SetupFTPClient(_ftp, _container_session.ContainerFile.Connection)
+
+            _stopwatch.Start()
 
             For Each _package In _container_session.ContainerFile.Packages.Where(Function(mypackage) mypackage.BulkFolderMode = True)
 
@@ -283,6 +287,10 @@ Module SFDLFileHelper
                 Next
 
             Next
+
+            _stopwatch.Stop()
+
+            _log.Debug("Recursive listing completed - This took {0} seconds", _stopwatch.Elapsed.TotalSeconds)
 
         Catch ex As Exception
             _rt = False
@@ -295,20 +303,24 @@ Module SFDLFileHelper
 
     End Function
 
-    Function GetRecursiveListing(ByVal _bulk_folder As String, ByVal _ftp As ArxOne.Ftp.FtpClient, ByVal _packagename As String, Optional ByVal _subdirmode As Boolean = False) As List(Of SFDL.Container.FileItem)
+    Function GetRecursiveListing(ByVal _bulk_folder As String, ByVal _ftp As ArxOne.Ftp.FtpClient, ByVal _packagename As String, Optional ByVal _subdirmode As Boolean = False, Optional _ftp_session As ArxOne.Ftp.FtpSession = Nothing) As List(Of SFDL.Container.FileItem)
 
         Dim _ftp_path As New ArxOne.Ftp.FtpPath(_bulk_folder)
         Dim _rt_list As New List(Of SFDL.Container.FileItem)
         Dim _mylog As NLog.Logger = NLog.LogManager.GetLogger("BulkRecursiveListing")
         Dim _ftp_unix_platform As New ArxOne.Ftp.Platform.UnixFtpPlatform
         Dim _ftp_entries As New List(Of ArxOne.Ftp.FtpEntry)
-        Dim _ftp_list_session As ArxOne.Ftp.FtpSession
+        Dim _ftp_list_session As ArxOne.Ftp.FtpSession = Nothing
 
         Try
 
             'Create Session for Bulk Listing
-
-            _ftp_list_session = _ftp.Session
+            If IsNothing(_ftp_session) Then
+                _ftp_list_session = _ftp.Session
+            Else
+                _mylog.Info("Reusing existing ftp session")
+                _ftp_list_session = _ftp_session
+            End If
 
             Select Case _ftp.ServerName.ToLower
 
@@ -320,15 +332,15 @@ Module SFDLFileHelper
 
                     _ftp_list_session.Expect(_ftp_list_session.SendCommand("CWD", _ftp_path.ToString), 250)
 
-                    For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session)
-                        Dim _entry As ArxOne.Ftp.FtpEntry
+                    Parallel.ForEach(ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session), Sub(_item)
 
-                        _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+                                                                                                             Dim _entry As ArxOne.Ftp.FtpEntry
 
-                        _ftp_entries.Add(_entry)
+                                                                                                             _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
 
-                    Next
+                                                                                                             _ftp_entries.Add(_entry)
 
+                                                                                                         End Sub)
 #End Region
 
 #Region "Generic FTP Servers"
@@ -363,15 +375,15 @@ Module SFDLFileHelper
 
                         If _ftp_entries.Count = 0 Then
 
-                            For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path, _ftp_list_session)
+                            Parallel.ForEach(ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path, _ftp_list_session), Sub(_item)
 
-                                Dim _entry As ArxOne.Ftp.FtpEntry
+                                                                                                                       Dim _entry As ArxOne.Ftp.FtpEntry
 
-                                _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+                                                                                                                       _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
 
-                                _ftp_entries.Add(_entry)
+                                                                                                                       _ftp_entries.Add(_entry)
 
-                            Next
+                                                                                                                   End Sub)
 
                         End If
 
@@ -394,16 +406,15 @@ Module SFDLFileHelper
 
                             _ftp_list_session.Expect(_ftp_list_session.SendCommand("CWD", _ftp_path.ToString), 250)
 
-                            For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session)
-                                Dim _entry As ArxOne.Ftp.FtpEntry
+                            Parallel.ForEach(ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session), Sub(_item)
 
-                                _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+                                                                                                                     Dim _entry As ArxOne.Ftp.FtpEntry
 
-                                _ftp_entries.Add(_entry)
+                                                                                                                     _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
 
-                            Next
+                                                                                                                     _ftp_entries.Add(_entry)
 
-
+                                                                                                                 End Sub)
                         End If
 
                     Catch ex As Exception
@@ -428,7 +439,7 @@ Module SFDLFileHelper
                         End If
 
                         If _entry.Type = ArxOne.Ftp.FtpEntryType.Directory And Not (_entry.Name.ToString.Equals(".") Or _entry.Name.ToString.Equals("..")) Then
-                            _rt_list.AddRange(GetRecursiveListing(_entry.Path.ToString, _ftp, _packagename, True))
+                            _rt_list.AddRange(GetRecursiveListing(_entry.Path.ToString, _ftp, _packagename, True, _ftp_list_session))
                         Else
 
                             If _entry.Type = ArxOne.Ftp.FtpEntryType.File Then

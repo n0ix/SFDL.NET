@@ -15,7 +15,7 @@ Imports System.Windows
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("")>
 <Assembly: AssemblyProduct("SFDL.NET 3")>
-<Assembly: AssemblyCopyright("n0ix ©  2017")>
+<Assembly: AssemblyCopyright("n0ix ©  2018")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: ComVisible(false)>
 
@@ -55,5 +55,5 @@ Imports System.Windows
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("3.0.3.1")>
-<Assembly: AssemblyFileVersion("3.0.3.1")>
+<Assembly: AssemblyVersion("3.0.3.2")>
+<Assembly: AssemblyFileVersion("3.0.3.2")>

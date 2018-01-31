@@ -404,7 +404,7 @@ Decrypt:
 
             GenerateContainerSessionDownloadItems(_mycontainer_session, _settings.NotMarkAllContainerFiles, _file_blacklist, _settings.CreatePackageSubfolder)
 
-            If _bulk_result = False Or _mycontainer_session.DownloadItems.Count = 0 Then
+            If _mycontainer_session.DownloadItems.Count = 0 Then
                 Throw New Exception(String.Format(My.Resources.Strings.OpenSFDL_Exception_FTPDown, Path.GetFileName(_sfdl_container_path)))
             End If
 
