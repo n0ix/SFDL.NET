@@ -1572,11 +1572,9 @@ Decrypt:
 
             Dim _item As DownloadItem = TryCast(parameter, DownloadItem)
 
-            For Each _item In DownloadItems.Where(Function(myitem) myitem.PackageName.Equals(_item.PackageName) AndAlso myitem.isSelected = False)
-
-                _item.isSelected = True
-
-            Next
+            System.Threading.Tasks.Parallel.ForEach(DownloadItems.Where(Function(myitem) myitem.PackageName.Equals(_item.PackageName) AndAlso myitem.isSelected = False), Sub(_myitem)
+                                                                                                                                                                              _myitem.isSelected = True
+                                                                                                                                                                          End Sub)
 
         End If
 
@@ -1594,12 +1592,10 @@ Decrypt:
 
             Dim _item As DownloadItem = TryCast(parameter, DownloadItem)
 
-            For Each _item In DownloadItems.Where(Function(myitem) myitem.PackageName.Equals(_item.PackageName) AndAlso myitem.isSelected = True)
 
-                _item.isSelected = False
-
-            Next
-
+            System.Threading.Tasks.Parallel.ForEach(DownloadItems.Where(Function(myitem) myitem.PackageName.Equals(_item.PackageName) AndAlso myitem.isSelected = False), Sub(_myitem)
+                                                                                                                                                                              _myitem.isSelected = False
+                                                                                                                                                                          End Sub)
         End If
 
     End Sub
@@ -1682,11 +1678,13 @@ Decrypt:
                 _mytask.SetTaskStatus(TaskStatus.Faulted, My.Resources.Strings.CloseSFDLContainer_AppTask_Faulted_Message)
             Else
 
-                _tmp_list = DownloadItems.Where(Function(myitem) _container_session.ID.Equals(myitem.ParentContainerID)).ToList
+                _tmp_list = DownloadItems.Where(Function(myitem) _container_session.ID.Equals(myitem.ParentContainerID)).ToList()
 
-                For Each _item In _tmp_list
-                    DownloadItems.Remove(_item)
-                Next
+                DownloadItems.RemoveRange(_tmp_list)
+
+                'For Each _item In _tmp_list
+                '    DownloadItems.Remove(_item)
+                'Next
 
                 _mytask.SetTaskStatus(TaskStatus.RanToCompletion, String.Format(My.Resources.Strings.CloseSFDLContainer_AppTask_Completed_Message, Path.GetFileName(_container_session.ContainerFileName)))
 
