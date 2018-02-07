@@ -392,6 +392,7 @@
         Dim buffer As [Byte]()
         Dim bytesRead As Integer = 0
         Dim _starttime As DateTime = DateTime.Now
+        Dim _ftp_read_stream As IO.Stream = Nothing
 
         Dim _percent_downloaded As Integer = 0
         Dim _ctime As TimeSpan
@@ -453,89 +454,109 @@
 
                 _item.DownloadStatus = NET3.DownloadItem.Status.Running
 
-                Using _ftp_read_stream = ArxOne.Ftp.FtpClientUtility.Retr(_ftp_session.Connection.Client, New ArxOne.Ftp.FtpPath(_item.FullPath), ArxOne.Ftp.FtpTransferMode.Binary, _restart, _ftp_session)
+                _log.Info("Trying to get FTP Stream using full path...")
 
-                    buffer = New Byte(8192) {}
-                    bytesRead = _ftp_read_stream.Read(buffer, 0, buffer.Length)
+                Try
 
-                    Using _local_write_stream As New IO.FileStream(_item.LocalFile, _filemode, IO.FileAccess.Write, IO.FileShare.None, 8192, False)
+                    _ftp_read_stream = ArxOne.Ftp.FtpClientUtility.Retr(_ftp_session.Connection.Client, New ArxOne.Ftp.FtpPath(_item.FullPath), ArxOne.Ftp.FtpTransferMode.Binary, _restart, _ftp_session)
 
-                        While bytesRead > 0 And (_item.IWorkItemResult.IsCanceled = False)
+                    _log.Info("Successfully opened ftp stream!")
 
-                            Dim _tmp_percent_downloaded As Double = 0
-                            Dim _new_perc As Integer = 0
-                            Dim _download_speed As String = String.Empty
+                Catch ex As Exception
+                    _log.Warn(ex, "Failed to open ftp stream using full path")
+                    _ftp_read_stream = Nothing
+                End Try
 
-                            _local_write_stream.Write(buffer, 0, bytesRead)
+                If IsNothing(_ftp_read_stream) Then
 
-                            bytesRead = _ftp_read_stream.Read(buffer, 0, buffer.Length)
-                            _item.SizeDownloaded += bytesRead
+                    _log.Info("Trying alternate mode...")
 
-                            elapsed = DateTime.Now.Subtract(_starttime)
-                            bytesPerSec = CInt(If(elapsed.TotalSeconds < 1, _item.SizeDownloaded, _item.SizeDownloaded / elapsed.TotalSeconds))
+                    _ftp_session.Expect(_ftp_session.SendCommand("CWD", _item.DirectoryPath), 250)
+
+                    _ftp_read_stream = ArxOne.Ftp.FtpClientUtility.Retr(_ftp_session.Connection.Client, New ArxOne.Ftp.FtpPath(_item.FileName), ArxOne.Ftp.FtpTransferMode.Binary, _restart, _ftp_session)
+
+                    _log.Info("yeah! - successfully opened ftp stream!")
+
+                End If
+
+                ' Using _ftp_read_stream = ArxOne.Ftp.FtpClientUtility.Retr(_ftp_session.Connection.Client, New ArxOne.Ftp.FtpPath(_item.FullPath), ArxOne.Ftp.FtpTransferMode.Binary, _restart, _ftp_session)
+
+                buffer = New Byte(8192) {}
+                bytesRead = _ftp_read_stream.Read(buffer, 0, buffer.Length)
+
+                Using _local_write_stream As New IO.FileStream(_item.LocalFile, _filemode, IO.FileAccess.Write, IO.FileShare.None, 8192, False)
+
+                    While bytesRead > 0 And (_item.IWorkItemResult.IsCanceled = False)
+
+                        Dim _tmp_percent_downloaded As Double = 0
+                        Dim _new_perc As Integer = 0
+                        Dim _download_speed As String = String.Empty
+
+                        _local_write_stream.Write(buffer, 0, bytesRead)
+
+                        bytesRead = _ftp_read_stream.Read(buffer, 0, buffer.Length)
+                        _item.SizeDownloaded += bytesRead
+
+                        elapsed = DateTime.Now.Subtract(_starttime)
+                        bytesPerSec = CInt(If(elapsed.TotalSeconds < 1, _item.SizeDownloaded, _item.SizeDownloaded / elapsed.TotalSeconds))
 
 #Region "Berechnung Download Speed / Fortschritt"
 
-                            _tmp_percent_downloaded = CDbl(_local_write_stream.Position) / CDbl(_item.FileSize)
-                            _new_perc = CInt(_tmp_percent_downloaded * 100)
+                        _tmp_percent_downloaded = CDbl(_local_write_stream.Position) / CDbl(_item.FileSize)
+                        _new_perc = CInt(_tmp_percent_downloaded * 100)
 
-                            If _new_perc <> _percent_downloaded Then 'Nicht jedesmal Updaten
+                        If _new_perc <> _percent_downloaded Then 'Nicht jedesmal Updaten
 
-                                Dim _tmp_speed As Double
+                            Dim _tmp_speed As Double
 
-                                _percent_downloaded = _new_perc
+                            _percent_downloaded = _new_perc
 
-                                _ctime = DateTime.Now.Subtract(_starttime)
+                            _ctime = DateTime.Now.Subtract(_starttime)
 
-                                _tmp_speed = Math.Round(bytesPerSec / 1024, 2)
+                            _tmp_speed = Math.Round(bytesPerSec / 1024, 2)
 
-                                If _tmp_speed >= 1024 Then
-                                    _download_speed = Math.Round(_tmp_speed / 1024, 2) & " MB/s"
-                                Else
-                                    _download_speed = _tmp_speed & " KB/s"
-                                End If
-
-                                _item.DownloadSpeed = _download_speed
-                                _item.DownloadProgress = _percent_downloaded
-                                _item.LocalFileSize = _local_write_stream.Length
-
-
+                            If _tmp_speed >= 1024 Then
+                                _download_speed = Math.Round(_tmp_speed / 1024, 2) & " MB/s"
+                            Else
+                                _download_speed = _tmp_speed & " KB/s"
                             End If
+
+                            _item.DownloadSpeed = _download_speed
+                            _item.DownloadProgress = _percent_downloaded
+                            _item.LocalFileSize = _local_write_stream.Length
+
+
+                        End If
 
 #End Region
 
 #Region "Limit Speed"
 
+                        Dim _max_bytes_per_second As Integer
 
-                            Dim _max_bytes_per_second As Integer
+                        If Not String.IsNullOrWhiteSpace(MainViewModel.ThisInstance.MaxDownloadSpeed) Then
 
-                            If Not String.IsNullOrWhiteSpace(MainViewModel.ThisInstance.MaxDownloadSpeed) Then
+                            _max_bytes_per_second = Integer.Parse(MainViewModel.ThisInstance.MaxDownloadSpeed)
 
-                                _max_bytes_per_second = Integer.Parse(MainViewModel.ThisInstance.MaxDownloadSpeed)
+                            If Not _max_bytes_per_second <= 0 Then
 
-                                If Not _max_bytes_per_second <= 0 Then
-
-                                    If Not _dl_count <= 1 Then
-                                        _max_bytes_per_second = CInt((_max_bytes_per_second * 1024) / _dl_count)
-                                    Else
-                                        _max_bytes_per_second = CInt((_max_bytes_per_second * 1024))
-                                    End If
-
-                                    ThrottleByteTransfer(_max_bytes_per_second, _item.SizeDownloaded, _ctime, bytesPerSec)
-
+                                If Not _dl_count <= 1 Then
+                                    _max_bytes_per_second = CInt((_max_bytes_per_second * 1024) / _dl_count)
+                                Else
+                                    _max_bytes_per_second = CInt((_max_bytes_per_second * 1024))
                                 End If
+
+                                ThrottleByteTransfer(_max_bytes_per_second, _item.SizeDownloaded, _ctime, bytesPerSec)
 
                             End If
 
+                        End If
 #End Region
-
-
-
-                        End While
-
-                    End Using
+                    End While
 
                 End Using
+
+                ' End Using
 
             End If
 
@@ -625,6 +646,10 @@
             End If
 
         Finally
+
+            If Not IsNothing(_ftp_read_stream) Then
+                _ftp_read_stream.Dispose()
+            End If
 
             SyncLock _obj_dl_count_lok
                 _dl_count -= 1

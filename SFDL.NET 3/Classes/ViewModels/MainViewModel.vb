@@ -996,7 +996,7 @@ Decrypt:
                                  DLItemQuery.AddRange(_mysession.DownloadItems.Where(Function(myitem) (myitem.DownloadStatus = DownloadItem.Status.Running)))
                                  DLItemQuery.AddRange(_mysession.DownloadItems.Where(Function(myitem) (myitem.DownloadStatus = DownloadItem.Status.Retry)))
                                  DLItemQuery.AddRange(_mysession.DownloadItems.Where(Function(myitem) (myitem.DownloadStatus = DownloadItem.Status.RetryWait)))
-                                 DLItemQuery.AddRange(_mysession.DownloadItems.Where(Function(myitem) (myitem.isSelected = True)))
+                                 'DLItemQuery.AddRange(_mysession.DownloadItems.Where(Function(myitem) (myitem.isSelected = True)))
 
                                  If DLItemQuery.Count = 0 Or GeneralHelper.IsDownloadStopped = True Then
 
