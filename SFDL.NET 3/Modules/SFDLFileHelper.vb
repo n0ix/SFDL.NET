@@ -332,15 +332,19 @@ Module SFDLFileHelper
 
                     _ftp_list_session.Expect(_ftp_list_session.SendCommand("CWD", _ftp_path.ToString), 250)
 
-                    Parallel.ForEach(ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session), Sub(_item)
+                    For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session)
 
-                                                                                                             Dim _entry As ArxOne.Ftp.FtpEntry
+                        Dim _entry As ArxOne.Ftp.FtpEntry
 
-                                                                                                             _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+                        _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
 
-                                                                                                             _ftp_entries.Add(_entry)
+                        If Not IsNothing(_entry) Then
+                            _ftp_entries.Add(_entry)
+                        Else
+                            _log.Error("Failed to parse line", _item)
+                        End If
 
-                                                                                                         End Sub)
+                    Next
 #End Region
 
 #Region "Generic FTP Servers"
@@ -375,15 +379,19 @@ Module SFDLFileHelper
 
                         If _ftp_entries.Count = 0 Then
 
-                            Parallel.ForEach(ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path, _ftp_list_session), Sub(_item)
+                            For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, _ftp_path, _ftp_list_session)
 
-                                                                                                                       Dim _entry As ArxOne.Ftp.FtpEntry
+                                Dim _entry As ArxOne.Ftp.FtpEntry
 
-                                                                                                                       _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+                                _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
 
-                                                                                                                       _ftp_entries.Add(_entry)
+                                If Not IsNothing(_entry) Then
+                                    _ftp_entries.Add(_entry)
+                                Else
+                                    _log.Error("Failed to parse line", _item)
+                                End If
 
-                                                                                                                   End Sub)
+                            Next
 
                         End If
 
@@ -406,15 +414,20 @@ Module SFDLFileHelper
 
                             _ftp_list_session.Expect(_ftp_list_session.SendCommand("CWD", _ftp_path.ToString), 250)
 
-                            Parallel.ForEach(ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session), Sub(_item)
+                            For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session)
 
-                                                                                                                     Dim _entry As ArxOne.Ftp.FtpEntry
+                                Dim _entry As ArxOne.Ftp.FtpEntry
 
-                                                                                                                     _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+                                _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
 
-                                                                                                                     _ftp_entries.Add(_entry)
+                                If Not IsNothing(_entry) Then
+                                    _ftp_entries.Add(_entry)
+                                Else
+                                    _log.Error("Failed to parse line", _item)
+                                End If
 
-                                                                                                                 End Sub)
+                            Next
+
                         End If
 
                     Catch ex As Exception
@@ -425,6 +438,7 @@ Module SFDLFileHelper
 #End Region
             End Select
 
+            _ftp_entries = _ftp_entries.OrderBy(Function(_myitem) _myitem.Name).ToList()
 
             For Each _entry In _ftp_entries
 
@@ -470,9 +484,9 @@ Module SFDLFileHelper
 
                 Catch ex As Exception
                     _mylog.Error(ex, ex.Message)
-                End Try
+                                         End Try
 
-            Next
+                                     Next
 
         Catch ex As Exception
             _mylog.Error(ex, ex.Message)
