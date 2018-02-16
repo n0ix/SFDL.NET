@@ -322,11 +322,18 @@ Module SFDLFileHelper
                 _ftp_list_session = _ftp_session
             End If
 
-            Select Case _ftp.ServerName.ToLower
+
+            _mylog.Debug("Getting Server Vendor...")
+
+            _ftp.GetVendor(_ftp_list_session)
+
+            _mylog.Debug("Vendor: {0}", _ftp.Vendor.ToString)
+
+            Select Case _ftp.Vendor
 
 #Region "Known FTP Servers"
 
-                Case "mlcboard.com ftp server"
+                Case ArxOne.Ftp.FtpServerVendor.MLCBoardcom
 
                     _mylog.Info("Switching to MLCBoard FTP Server compatibility mode")
 
@@ -373,6 +380,38 @@ Module SFDLFileHelper
 
 #End Region
 
+
+#Region "CWD first then LIST"
+
+                    Try
+
+                        If _ftp_entries.Count = 0 Then
+
+                            _ftp_list_session.Expect(_ftp_list_session.SendCommand("CWD", _ftp_path.ToString), 250)
+
+                            For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session)
+
+                                Dim _entry As ArxOne.Ftp.FtpEntry
+
+                                _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
+
+                                If Not IsNothing(_entry) Then
+                                    _ftp_entries.Add(_entry)
+                                Else
+                                    _log.Error("Failed to parse line", _item)
+                                End If
+
+                            Next
+
+                        End If
+
+                    Catch ex As Exception
+                        _mylog.Error("LIST (CWD first) Command failed!")
+                        _ftp_entries.Clear()
+                    End Try
+
+#End Region
+
 #Region "LIST with Parameter"
 
                     Try
@@ -403,39 +442,9 @@ Module SFDLFileHelper
 #End Region
 
 
-#End Region
-
-
-#Region "CWD first then LIST"
-
-                    Try
-
-                        If _ftp_entries.Count = 0 Then
-
-                            _ftp_list_session.Expect(_ftp_list_session.SendCommand("CWD", _ftp_path.ToString), 250)
-
-                            For Each _item In ArxOne.Ftp.FtpClientUtility.List(_ftp, Nothing, _ftp_list_session)
-
-                                Dim _entry As ArxOne.Ftp.FtpEntry
-
-                                _entry = FTPHelper.TryParseLine(_item, _bulk_folder)
-
-                                If Not IsNothing(_entry) Then
-                                    _ftp_entries.Add(_entry)
-                                Else
-                                    _log.Error("Failed to parse line", _item)
-                                End If
-
-                            Next
-
-                        End If
-
-                    Catch ex As Exception
-                        _mylog.Error("LIST Command failed!")
-                        _ftp_entries.Clear()
-                    End Try
 
 #End Region
+
             End Select
 
             _ftp_entries = _ftp_entries.OrderBy(Function(_myitem) _myitem.Name).ToList()
