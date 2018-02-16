@@ -1572,13 +1572,14 @@ Decrypt:
 
             Dim _item As DownloadItem = TryCast(parameter, DownloadItem)
 
-            System.Threading.Tasks.Parallel.ForEach(DownloadItems.Where(Function(myitem) myitem.PackageName.Equals(_item.PackageName) AndAlso myitem.isSelected = False), Sub(_myitem)
-                                                                                                                                                                              _myitem.isSelected = True
-                                                                                                                                                                          End Sub)
+            For Each x In DownloadItems.Where(Function(myitem) (myitem.PackageName.Equals(_item.PackageName) And myitem.ParentContainerID.Equals(_item.ParentContainerID)) AndAlso myitem.isSelected = False).ToList
+                x.isSelected = True
+            Next
 
         End If
 
     End Sub
+
 
     Public ReadOnly Property UnMarkAllItemsInPackageCommand As ICommand
         Get
@@ -1592,10 +1593,10 @@ Decrypt:
 
             Dim _item As DownloadItem = TryCast(parameter, DownloadItem)
 
+            For Each x In DownloadItems.Where(Function(myitem) (myitem.PackageName.Equals(_item.PackageName) And myitem.ParentContainerID.Equals(_item.ParentContainerID)) AndAlso myitem.isSelected = True).ToList
+                x.isSelected = False
+            Next
 
-            System.Threading.Tasks.Parallel.ForEach(DownloadItems.Where(Function(myitem) myitem.PackageName.Equals(_item.PackageName) AndAlso myitem.isSelected = False), Sub(_myitem)
-                                                                                                                                                                              _myitem.isSelected = False
-                                                                                                                                                                          End Sub)
         End If
 
     End Sub
