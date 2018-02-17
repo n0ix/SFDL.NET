@@ -1951,6 +1951,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die SFDL Download Verzeichnis wählen ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property VariousStrings_SelectDownloadFolderPopup() As String
+            Get
+                Return ResourceManager.GetString("VariousStrings_SelectDownloadFolderPopup", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die SFDL Informationen ähnelt.
         '''</summary>
         Public Shared ReadOnly Property VariousStrings_SFDLInformation() As String

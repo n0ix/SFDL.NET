@@ -767,4 +767,7 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="Settings_DownloadDir_UseStandardFolder" xml:space="preserve">
     <value>Dateien immer im Standard-Download-Ordner speichern</value>
   </data>
+  <data name="VariousStrings_SelectDownloadFolderPopup" xml:space="preserve">
+    <value>SFDL Download Verzeichnis wählen</value>
+  </data>
 </root>

@@ -100,8 +100,9 @@ Public Class MainViewModel
     Private Async Function RunDownloadPathDialog() As Task(Of String)
 
         Dim _log As Logger = LogManager.GetLogger("RunDownloadPathDialog")
-        Dim m_customDialog = New CustomDialog() With {.Title = "Choose Download Folder"}
+        Dim m_customDialog = New CustomDialog() With {.Title = My.Resources.Strings.VariousStrings_SelectDownloadFolderPopup}
         Dim dataContext As SelectContainerDownloadPathPopUpVieModel
+
 
         dataContext = New SelectContainerDownloadPathPopUpVieModel(Sub(instance)
                                                                        _dialogCoordinator.HideMetroDialogAsync(Me, m_customDialog)
