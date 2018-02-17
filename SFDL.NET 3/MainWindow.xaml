@@ -824,7 +824,7 @@
                             <GridViewColumn Width="auto" Header="{x:Static p:Strings.ListView_DownloadItems_Header_Progress}">
                                 <GridViewColumn.CellTemplate >
                                     <DataTemplate >
-                                        <ProgressBar BorderThickness="0.75" BorderBrush="{DynamicResource AccentColorBrush}" Width="auto" Maximum="100" Value="{Binding DownloadProgress}" Margin="-12,0,8,0" Background="{DynamicResource WhiteBrush}" />
+                                        <Controls:MetroProgressBar BorderThickness="0.75" BorderBrush="{DynamicResource AccentColorBrush}" Width="auto" Maximum="100" Value="{Binding DownloadProgress}" Margin="-12,0,8,0" Background="{DynamicResource WhiteBrush}" MinHeight="12" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
