@@ -9,7 +9,6 @@
     xmlns:p="clr-namespace:SFDL.NET3.My.Resources"
     x:Name="SFDL_MainWindow"
     Title="SFDL.NET 3"
-    TitleForeground="{DynamicResource WhiteColor}"
     WindowTitleBrush="{DynamicResource WhiteColorBrush}"
     MinWidth="820"
     MinHeight="550"    
@@ -24,7 +23,9 @@
     ShowIconOnTitleBar="True"
     ShowTitleBar="True"
     WindowStartupLocation="CenterScreen"
-    WindowState="{Binding WindowState}">
+    WindowState="{Binding WindowState}"
+    TextOptions.TextFormattingMode="Display"
+    TextOptions.TextRenderingMode="ClearType">
 
 
     <Window.TaskbarItemInfo>
@@ -37,6 +38,15 @@
             <local:CollectionViewNameConverter x:Key="CollectionViewNameConv" />
             <local:FileSizeConverter x:Key="FileSizeConv" />
             <local:CollectionViewNameSecureIndicatorConverter x:Key="CollectionViewName2SecureIndicator"/>
+
+            <Style x:Key="MyCustomListView" TargetType="{x:Type ListView}" BasedOn="{StaticResource VirtualisedMetroListView}">
+                <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+                <Style.Triggers>
+                    <Trigger Property="IsGrouping" Value="True">
+                        <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
             <Style x:Key="CustomLightMetroWindowButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource DarkMetroWindowButtonStyle}">
                 <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
@@ -738,15 +748,15 @@
 
                 <ListView
                     x:Name="ListView_DownloadItems"
+                    Style="{StaticResource MyCustomListView}"
+                    VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                     MinHeight="250"
                     dng:DropBehavior.PreviewDropCommand="{Binding PreviewDropCommand}"
                     ItemsSource="{Binding DownloadItems}"
                     PreviewKeyUp="OnGridKeyUp"
-                    SelectionMode="Extended"
-                    Style="{StaticResource VirtualisedMetroListView}"                    
+                    SelectionMode="Extended"                   
                     BorderThickness="0,0,0,0"                    
-                    Margin="6,0"                    
-                    VirtualizingPanel.IsVirtualizingWhenGrouping="True">
+                    Margin="6,0">
 
                     <ListView.View>
                         <GridView>
@@ -779,9 +789,10 @@
                                                     </Style>
                                                 </Rectangle.Style>
                                             </Rectangle>
+                                            
                                             <TextBlock Name="tb_FileName" Margin="6,0,6,0" Text="{Binding FileName}" >
                                                 <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
+                                                    <Style TargetType="TextBlock" BasedOn="{StaticResource MetroTextBlock}">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding ExcludedType}" Value="User">
                                                                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
@@ -1132,7 +1143,7 @@
                             <ListView
                                 x:Name="ListViewActiveTasks"
                                 ItemsSource="{Binding ActiveTasks}"                                
-                                Style="{StaticResource VirtualisedMetroListView}"
+                                Style="{StaticResource MyCustomListView}"
                                 BorderThickness="0,0,0,0" MinHeight="50">
                                 <ListView.View>
                                     <GridView AllowsColumnReorder="False">

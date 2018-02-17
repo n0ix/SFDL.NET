@@ -1,6 +1,5 @@
 ﻿Public Class DelegateCommand
     Implements ICommand
-    'Private ReadOnly _action As Action
     Private ReadOnly _action As Action(Of Object)
 
     Public Sub New(action As Action(Of Object))

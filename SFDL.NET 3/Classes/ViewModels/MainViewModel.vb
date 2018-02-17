@@ -29,6 +29,7 @@ Public Class MainViewModel
     Private _progress_dialog_controller As ProgressDialogController
     Private view As CollectionView
     Private _file_blacklist As New List(Of BlacklistItem)
+    Private ReadOnly _dialogCoordinator As IDialogCoordinator
 
     Public Sub UpdateSettings()
 
@@ -36,10 +37,11 @@ Public Class MainViewModel
 
     End Sub
 
-    Public Sub New()
+    Public Sub New(ByVal dialogCoordinator As IDialogCoordinator)
 
         _instance = Me
         _settings = CType(Application.Current.Resources("Settings"), Settings)
+        _dialogCoordinator = dialogCoordinator
         GeneralHelper.SetDownloadStoppedFlag(True)
 
         'Init ThreadSafe Observ Collections
@@ -48,6 +50,7 @@ Public Class MainViewModel
         BindingOperations.EnableCollectionSynchronization(DoneTasks, _lock_done_tasks)
         BindingOperations.EnableCollectionSynchronization(DownloadItems, _lock_download_items)
         BindingOperations.EnableCollectionSynchronization(ContainerSessions, _lock_container_sessions)
+
 
         CreateView()
 
@@ -92,6 +95,31 @@ Public Class MainViewModel
 #End Region
 
 #Region "Private Subs"
+
+    Private Async Function RunDownloadPathDialog() As Task(Of String)
+
+        Dim _log As Logger = LogManager.GetLogger("RunDownloadPathDialog")
+        Dim m_customDialog = New CustomDialog() With {.Title = "Choose Download Folder"}
+        Dim dataContext As SelectContainerDownloadPathPopUpVieModel
+        Dim _result As String
+
+        dataContext = New SelectContainerDownloadPathPopUpVieModel(Sub(instance)
+                                                                       _dialogCoordinator.HideMetroDialogAsync(Me, m_customDialog)
+                                                                   End Sub)
+
+        m_customDialog.Content = New SelectContainerDownloadPathPopUp With {.DataContext = dataContext}
+
+
+        Await _dialogCoordinator.ShowMetroDialogAsync(Me, m_customDialog)
+
+        Await dataContext.GetResult()
+
+        _log.Debug("Result Dialog: {0}", dataContext.DownloadDirectory)
+
+
+        Return dataContext.DownloadDirectory
+
+    End Function
 
     Private Async Sub DownloadBlacklist()
 
@@ -188,7 +216,7 @@ Public Class MainViewModel
                         'Ask for Download Path if Directory doesent exists anymore or is not filled
                         If String.IsNullOrWhiteSpace(_new_session.LocalDownloadRoot) Or Not System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(_new_session.LocalDownloadRoot)) Then
 
-                            _popup_result = Await MahApps.Metro.SimpleChildWindow.ChildWindowManager.ShowChildWindowAsync(Of String)(WindowInstance, New SelectContainerDownloadPathPopUp())
+                            _popup_result = Await RunDownloadPathDialog()
 
                             If IsNothing(_popup_result) OrElse String.IsNullOrEmpty(_popup_result.ToString) Then
                                 Throw New Exception("User Cancel!")
@@ -334,7 +362,7 @@ Decrypt:
 
                     If _container_password_already_found = False Then
 
-                        _decrypt_password = Await DialogCoordinator.Instance.ShowInputAsync(Me, My.Resources.Strings.OpenSFDL_Prompt_Decrypt_Title, String.Format(My.Resources.Strings.OpenSFDL_Prompt_Decrypt_Message, Path.GetFileName(_sfdl_container_path)))
+                        _decrypt_password = Await _dialogCoordinator.ShowInputAsync(Me, My.Resources.Strings.OpenSFDL_Prompt_Decrypt_Title, String.Format(My.Resources.Strings.OpenSFDL_Prompt_Decrypt_Message, Path.GetFileName(_sfdl_container_path)))
 
                         If String.IsNullOrWhiteSpace(_decrypt_password) Then
                             Throw New Exception(String.Format(My.Resources.Strings.OpenSFDL_Decrypt_Aborted_Message, Path.GetFileName(_sfdl_container_path)))
@@ -388,11 +416,11 @@ Decrypt:
 
             If _settings.AskForDownloadDirectory = True Then
 
-                Dim _popup_result As String = Nothing
+                Dim _popup_result As String = String.Empty
 
-                _popup_result = Await MahApps.Metro.SimpleChildWindow.ChildWindowManager.ShowChildWindowAsync(Of String)(WindowInstance, New SelectContainerDownloadPathPopUp())
+                _popup_result = Await RunDownloadPathDialog()
 
-                If IsNothing(_popup_result) OrElse String.IsNullOrWhiteSpace(_popup_result.ToString) OrElse _popup_result.ToString.ToLower.Equals("cancel") Then
+                If IsNothing(_popup_result) OrElse String.IsNullOrWhiteSpace(_popup_result.ToString) Then
                     Throw New Exception("User Cancel!")
                 End If
 
@@ -1109,7 +1137,7 @@ Decrypt:
 
             If CheckedPostDownloadShutdownComputer = True Then
 
-                _progress_dialog_controller = Await DialogCoordinator.Instance.ShowProgressAsync(Me, "SFDL.NET", My.Resources.Strings.ExcutePostDownloadActions_Progress_ShutdownComputer_Message, True, _dialog_settings)
+                _progress_dialog_controller = Await _dialogCoordinator.ShowProgressAsync(Me, "SFDL.NET", My.Resources.Strings.ExcutePostDownloadActions_Progress_ShutdownComputer_Message, True, _dialog_settings)
 
                 AddHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
 
@@ -1139,7 +1167,7 @@ Decrypt:
 
                 If CheckedPostDownloadExitApp = True Then
 
-                    _progress_dialog_controller = Await DialogCoordinator.Instance.ShowProgressAsync(Me, "SFDL.NET", My.Resources.Strings.ExcutePostDownloadActions_Progress_ApplicationExit_Message, True, _dialog_settings)
+                    _progress_dialog_controller = Await _dialogCoordinator.ShowProgressAsync(Me, "SFDL.NET", My.Resources.Strings.ExcutePostDownloadActions_Progress_ApplicationExit_Message, True, _dialog_settings)
 
                     AddHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
 
@@ -1483,7 +1511,7 @@ Decrypt:
 
     Private Async Sub ShowHelp()
 
-        Await DialogCoordinator.Instance.ShowMessageAsync(Me, "SFDL.NET 3", String.Format("Version: {0}", My.Application.Info.Version.ToString) & vbNewLine & vbNewLine & "Thanks to who supported and helped me with this Project" & vbNewLine & "Special thanks goes to tox2 for his great help")
+        Await _dialogCoordinator.ShowMessageAsync(Me, "SFDL.NET 3", String.Format("Version: {0}", My.Application.Info.Version.ToString) & vbNewLine & vbNewLine & "Thanks to who supported and helped me with this Project" & vbNewLine & "Special thanks goes to tox2 for his great help")
 
     End Sub
 
@@ -1519,7 +1547,7 @@ Decrypt:
     Private Async Sub InstantVideo()
 
         If CheckIfVLCInstalled() = False Then
-            Await DialogCoordinator.Instance.ShowMessageAsync(Me, "InstantVideo", My.Resources.Strings.InstantVideo_Message_VLCNotInstalled_Message)
+            Await _dialogCoordinator.ShowMessageAsync(Me, "InstantVideo", My.Resources.Strings.InstantVideo_Message_VLCNotInstalled_Message)
         Else
 
             InstantVideoOpen = True
@@ -1548,7 +1576,7 @@ Decrypt:
             End Try
 
             If _error = True Then
-                Await DialogCoordinator.Instance.ShowMessageAsync(Me, "InstantVideo Fehler", "Das ausgewählte InstatVideo konnte nicht gestartet werden!")
+                Await _dialogCoordinator.ShowMessageAsync(Me, "InstantVideo Fehler", "Das ausgewählte InstatVideo konnte nicht gestartet werden!")
             End If
 
 

@@ -10,7 +10,7 @@ Public Class MainWindow
 
     Public Sub New()
 
-        Dim _mvvm As New MainViewModel
+        Dim _mvvm As New MainViewModel(DialogCoordinator.Instance)
         ' Dieser Aufruf ist für den Designer erforderlich.
         InitializeComponent()
 

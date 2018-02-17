@@ -1,12 +1,35 @@
 ﻿Imports System.ComponentModel
-Imports MahApps.Metro.Controls.Dialogs
+Imports System.Runtime.CompilerServices
+
 Public Class SelectContainerDownloadPathPopUpVieModel
     Inherits ViewModelBase
     Implements IDataErrorInfo
 
-#Region "Properties"
+    Private _closing As Boolean = False
+    Private _init As Boolean = True
 
-    Public Property WindowInstance As SelectContainerDownloadPathPopUp
+
+    Public Sub New(ByVal closeHandler As Action(Of Object))
+        _closeCommand = New DelegateCommand(closeHandler)
+    End Sub
+
+
+    Public Async Function GetResult() As Task(Of String)
+
+        Await System.Threading.Tasks.Task.Run(Function()
+
+                                                  While _closing = False
+                                                      'Wait
+                                                  End While
+                                                  Return True
+                                              End Function)
+
+        Return _download_dir
+    End Function
+
+
+
+#Region "Properties"
 
     Private _download_dir As String = String.Empty
 
@@ -23,6 +46,8 @@ Public Class SelectContainerDownloadPathPopUpVieModel
 #End Region
 
 #Region "Commands"
+
+    Private ReadOnly _closeCommand As ICommand
 
     Private Sub SelectDownloadFolder()
 
@@ -44,27 +69,25 @@ Public Class SelectContainerDownloadPathPopUpVieModel
         End Get
     End Property
 
+    Private Sub Ok()
 
-    Private Sub OK()
-        WindowInstance.Close(DownloadDirectory)
+        _closing = True
+
+        CloseCommand.Execute(Me)
+
     End Sub
 
-    Public ReadOnly Property OKCommand() As ICommand
+    Public ReadOnly Property OKCommand As ICommand
         Get
             Return New DelegateCommand(AddressOf OK)
         End Get
     End Property
 
-    Private Sub Cancel()
-        WindowInstance.Close("Cancel")
-    End Sub
-
-    Public ReadOnly Property CancelCommand() As ICommand
+    Public ReadOnly Property CloseCommand As ICommand
         Get
-            Return New DelegateCommand(AddressOf Cancel)
+            Return _closeCommand
         End Get
     End Property
-
 
     Default Public ReadOnly Property Item(columnName As String) As String Implements IDataErrorInfo.Item
         Get
