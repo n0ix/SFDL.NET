@@ -430,7 +430,7 @@
             End If
 
 
-            If (_settings.ExistingFileHandling = ExistingFileHandling.ResumeFile Or _isRetry = True) And IO.File.Exists(_item.LocalFile) Then
+            If (_settings.ExistingFileHandling = ExistingFileHandling.ResumeFile Or _isRetry = True) AndAlso (IO.File.Exists(_item.LocalFile)) Then
 
                 _filemode = IO.FileMode.Append
                 _restart = New IO.FileInfo(_item.LocalFile).Length

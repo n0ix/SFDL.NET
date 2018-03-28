@@ -218,6 +218,7 @@ Module FTPHelper
 
     Function TryParseLine(ByVal _item As String, _parent_folder As String) As ArxOne.Ftp.FtpEntry
 
+        Dim _ftp_generic_platform As New ArxOne.Ftp.Platform.FtpPlatform
         Dim _ftp_unix_platform As New ArxOne.Ftp.Platform.UnixFtpPlatform
         Dim _ftp_windows_platform As New ArxOne.Ftp.Platform.WindowsFtpPlatform
         Dim _ftp_filezilla_platform As New ArxOne.Ftp.Platform.WindowsFileZillaFtpPlatform
@@ -231,6 +232,10 @@ Module FTPHelper
 
         If IsNothing(_rt) Then
             _rt = _ftp_filezilla_platform.Parse(_item, _parent_folder)
+        End If
+
+        If IsNothing(_rt) Then
+            _rt = _ftp_generic_platform.Parse(_item, _parent_folder)
         End If
 
         Return _rt
