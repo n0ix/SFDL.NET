@@ -1164,31 +1164,55 @@ Decrypt:
 
                 End If
 
-            Else
+            ElseIf CheckedPostDownloadStandbyComputer = True Then
 
-                If CheckedPostDownloadExitApp = True Then
+                _progress_dialog_controller = Await _dialogCoordinator.ShowProgressAsync(Me, "SFDL.NET", My.Resources.Strings.ExcutePostDownloadActions_Progress_StandbyComputer_Message, True, _dialog_settings)
 
-                    _progress_dialog_controller = Await _dialogCoordinator.ShowProgressAsync(Me, "SFDL.NET", My.Resources.Strings.ExcutePostDownloadActions_Progress_ApplicationExit_Message, True, _dialog_settings)
+                AddHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
 
-                    AddHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
+                _progress_dialog_controller.SetIndeterminate()
 
-                    _progress_dialog_controller.SetIndeterminate()
+                Await Tasks.Task.Delay(TimeSpan.FromSeconds(30))
 
-                    Await Tasks.Task.Delay(TimeSpan.FromSeconds(30))
+                If _progress_dialog_controller.IsOpen Then
+                    Await _progress_dialog_controller.CloseAsync()
+                End If
 
-                    If _progress_dialog_controller.IsOpen Then
-                        Await _progress_dialog_controller.CloseAsync()
-                    End If
+                If _progress_dialog_controller.IsCanceled = False Then
 
-                    If _progress_dialog_controller.IsCanceled = False Then
+                    StandyHandler.Reset()
 
-                        RemoveHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
+                    RemoveHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
 
-                        DispatchService.DispatchService.Invoke(Sub()
-                                                                   Application.Current.Shutdown()
-                                                               End Sub)
+                    StandyHandler.SetStandby()
 
-                    End If
+                End If
+
+            End If
+
+
+
+            If CheckedPostDownloadExitApp = True Then
+
+                _progress_dialog_controller = Await _dialogCoordinator.ShowProgressAsync(Me, "SFDL.NET", My.Resources.Strings.ExcutePostDownloadActions_Progress_ApplicationExit_Message, True, _dialog_settings)
+
+                AddHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
+
+                _progress_dialog_controller.SetIndeterminate()
+
+                Await Tasks.Task.Delay(TimeSpan.FromSeconds(30))
+
+                If _progress_dialog_controller.IsOpen Then
+                    Await _progress_dialog_controller.CloseAsync()
+                End If
+
+                If _progress_dialog_controller.IsCanceled = False Then
+
+                    RemoveHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
+
+                    DispatchService.DispatchService.Invoke(Sub()
+                                                               Application.Current.Shutdown()
+                                                           End Sub)
 
                 End If
 
@@ -1295,15 +1319,33 @@ Decrypt:
             _checked_shutdown_computer_after_download = value
             RaisePropertyChanged("CheckedPostDownloadShutdownComputer")
 
-            If value = True Then
-                CheckedPostDownloadExitApp = True
-            Else
-                CheckedPostDownloadExitApp = False
-            End If
+            'If value = True Then
+            '    CheckedPostDownloadExitApp = True
+            'Else
+            '    CheckedPostDownloadExitApp = False
+            'End If
 
         End Set
         Get
             Return _checked_shutdown_computer_after_download
+        End Get
+    End Property
+
+    Private _checked_standby_computer_after_download As Boolean = False
+    Public Property CheckedPostDownloadStandbyComputer As Boolean
+        Set(value As Boolean)
+            _checked_standby_computer_after_download = value
+            RaisePropertyChanged("CheckedPostDownloadStandbyComputer")
+
+            'If value = True Then
+            '    CheckedPostDownloadExitApp = True
+            'Else
+            '    CheckedPostDownloadExitApp = False
+            'End If
+
+        End Set
+        Get
+            Return _checked_standby_computer_after_download
         End Get
     End Property
 

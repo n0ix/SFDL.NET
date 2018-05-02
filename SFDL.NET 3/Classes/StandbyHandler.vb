@@ -11,4 +11,18 @@ Public Class StandyHandler
 
     End Function
 
+    Public Shared Function Reset() As NativeMethods.EXECUTION_STATE
+
+        Try
+            Return NativeMethods.SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS)
+        Catch ex As Exception
+            Return NativeMethods.SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS)
+        End Try
+
+    End Function
+
+    Public Shared Sub SetStandby()
+        SetSuspendState(False, True, True)
+    End Sub
+
 End Class

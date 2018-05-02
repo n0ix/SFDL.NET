@@ -606,6 +606,21 @@
                                     </Rectangle>
                                 </MenuItem.Icon>
                             </MenuItem>
+                            <MenuItem
+                                Header="{x:Static p:Strings.MainMenu_Extra_AfterDownload_Standby}"
+                                IsCheckable="True"
+                                IsChecked="{Binding CheckedPostDownloadShComputer}">
+                                <MenuItem.Icon>
+                                    <Rectangle
+                                        Width="16"
+                                        Height="16"
+                                        Fill="{DynamicResource AccentColorBrush}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_sleep}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </MenuItem.Icon>
+                            </MenuItem>
                         </MenuItem>
                     </MenuItem>
                     <MenuItem Header="{x:Static p:Strings.MainMenu_Help}">

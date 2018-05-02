@@ -2,6 +2,7 @@
 Imports System.ComponentModel
 Imports MahApps.Metro
 Imports MahApps.Metro.Controls.Dialogs
+Imports Microsoft.Win32
 Imports NLog
 
 Public Class MainWindow
@@ -145,6 +146,29 @@ Public Class MainWindow
 
 #End Region
 
+        _log.Info("Adding PowerModeChanged Handler")
+
+        AddHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
+
+    End Sub
+
+    Private Sub PowerModeChanged(sender As Object, e As PowerModeChangedEventArgs)
+
+        Dim _log As Logger = LogManager.GetLogger("PowerModeChanged")
+
+        If e.Mode = Microsoft.Win32.PowerModes.Resume Then
+
+            Dim _settings As Settings = CType(Application.Current.Resources("Settings"), Settings)
+
+            If Not IsNothing(_settings) AndAlso _settings.PreventStandby = True Then
+                _log.Info("System has resumed from Standy/Hibernation - recalling 'BlockStandby'")
+                StandyHandler.PreventStandby()
+            Else
+                _log.Debug("System has resumed from Standy/Hibernation")
+            End If
+        Else
+            _log.Debug("System PoweMode Changed")
+        End If
 
     End Sub
 
@@ -236,6 +260,13 @@ Public Class MainWindow
 
             End If
 
+        Catch ex As Exception
+
+        End Try
+
+        Try
+            _log.Info("Info removing PowerMode Handler")
+            RemoveHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
         Catch ex As Exception
             _log.Error(ex, ex.Message)
         End Try

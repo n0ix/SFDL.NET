@@ -764,4 +764,10 @@ Restart the download to apply these settings.</value>
   <data name="VariousStrings_SelectDownloadFolderPopup" xml:space="preserve">
     <value>Choose SFDL download directory</value>
   </data>
+  <data name="ExcutePostDownloadActions_Progress_StandbyComputer_Message" xml:space="preserve">
+    <value>Der Computer wird in 30 Sekunden in den Standby Modus versetzt</value>
+  </data>
+  <data name="MainMenu_Extra_AfterDownload_Standby" xml:space="preserve">
+    <value>Putting the PC into standby</value>
+  </data>
 </root>

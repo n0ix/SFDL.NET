@@ -770,4 +770,10 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="VariousStrings_SelectDownloadFolderPopup" xml:space="preserve">
     <value>SFDL Download Verzeichnis wählen</value>
   </data>
+  <data name="ExcutePostDownloadActions_Progress_StandbyComputer_Message" xml:space="preserve">
+    <value>Der Computer wird in 30 Sekunden in den Standby Modus versetzt</value>
+  </data>
+  <data name="MainMenu_Extra_AfterDownload_Standby" xml:space="preserve">
+    <value>PC in Standby versetzen</value>
+  </data>
 </root>
