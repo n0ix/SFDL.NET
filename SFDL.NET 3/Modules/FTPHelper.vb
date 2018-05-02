@@ -19,8 +19,13 @@ Module FTPHelper
                 _creds = New Net.NetworkCredential("anonymous", "Password")
             End If
 
-            With _ftp_client_param
+            If _connection_info.DataType = Container.FTPDataType.ASCII Then
+                .DataType = Container.FTPDataType.ASCII
+            Else
+                .DataType = Container.FTPDataType.Binary
+            End If
 
+            With _ftp_client_param
 
                 If Net.IPAddress.TryParse(_connection_info.Host, Net.IPAddress.Parse("127.0.0.10")) = True Then
                     .ActiveTransferHost = Net.IPAddress.Parse(_connection_info.Host)
