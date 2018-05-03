@@ -311,7 +311,6 @@
                 Throw New DownloadStoppedException("DownloadStopped!")
             End If
 
-
             SyncLock _obj_ftp_client_lock
 
                 _ftp_server_uid = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(String.Format("{0}{1}{2}{3}", _args.ConnectionInfo.Host, _args.ConnectionInfo.Port, _args.ConnectionInfo.Username, _args.ConnectionInfo.Password).ToLower))
@@ -358,7 +357,7 @@
 
             End SyncLock
 
-            DownloadItem(_item, _ftp_session, _args.RetryMode)
+            DownloadItem(_item, _ftp_session, _args.SingleSessionMode, _args.RetryMode)
 
         Catch ex As DownloadStoppedException
             _log.Info("Download Stopped")
@@ -374,7 +373,7 @@
             ParseFTPException(ex, _item)
         Finally
 
-            PostDownload(_item, _ftp_session)
+            PostDownload(_item, _ftp_session, _args.SingleSessionMode)
 
         End Try
 
@@ -383,7 +382,7 @@
     End Function
 
 
-    Private Sub DownloadItem(ByVal _item As DownloadItem, ByVal _ftp_session As ArxOne.Ftp.FtpSession, Optional _isRetry As Boolean = False)
+    Private Sub DownloadItem(ByVal _item As DownloadItem, ByVal _ftp_session As ArxOne.Ftp.FtpSession, ByVal _ssm As Boolean, Optional _isRetry As Boolean = False)
 
         Dim _filemode As IO.FileMode
         Dim _restart As Long = 0
@@ -626,13 +625,13 @@
             End SyncLock
 
             _item.DownloadSpeed = String.Empty
-            PostDownload(_item, _ftp_session)
+            PostDownload(_item, _ftp_session, _ssm)
 
         End Try
 
     End Sub
 
-    Private Sub PostDownload(ByRef _item As DownloadItem, ByVal _ftp_session As ArxOne.Ftp.FtpSession)
+    Private Sub PostDownload(ByRef _item As DownloadItem, ByVal _ftp_session As ArxOne.Ftp.FtpSession, ByVal _ssm As Boolean)
 
         Dim _hashcommand As String = String.Empty
         Dim _reply As ArxOne.Ftp.FtpReply
@@ -813,7 +812,7 @@
 
         Finally
 
-            If _item.DownloadStatus = NET3.DownloadItem.Status.Failed_ServerFull And _item.SingleSessionMode = False Then
+            If _item.DownloadStatus = NET3.DownloadItem.Status.Failed_ServerFull And _ssm = False Then
                 RaiseEvent ServerFull(_item)
             End If
 
@@ -827,7 +826,23 @@
 
             End If
 
-            _ftp_session.Invalidate()
+
+            SyncLock _obj_ftp_client_lock
+
+                Try
+
+                    If _ssm = False And _ftp_session_collection.Count >= 1 Then
+                        _log.Info("Invalidating Session...")
+                        _ftp_session.Invalidate()
+                    Else
+                        _log.Info("Running in Single Session Mode or we have only one remaining ftp session --> let this Session intact")
+                    End If
+
+                Catch ex As Exception
+                    _log.Error("Failed to invalidate FTP Session")
+                End Try
+
+            End SyncLock
 
         End Try
 

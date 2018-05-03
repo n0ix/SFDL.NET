@@ -238,7 +238,6 @@ Public Class MainViewModel
                                            _item.LocalFile = GetDownloadFilePath(_settings.CreatePackageSubfolder, _new_session, _item)
                                            _item.DownloadProgress = 0
                                            _item.DownloadSpeed = String.Empty
-                                           _item.SingleSessionMode = False
                                            _item.RetryCount = 0
                                            _item.RetryPossible = False
                                            _item.LocalFileSize = 0
@@ -837,7 +836,6 @@ Decrypt:
                                                                                _dlitem.IWorkItemResult = Nothing
                                                                                _dlitem.DownloadProgress = 0
                                                                                _dlitem.DownloadSpeed = String.Empty
-                                                                               _dlitem.SingleSessionMode = False
                                                                                _dlitem.RetryCount = 0
                                                                                _dlitem.RetryPossible = False
                                                                                _dlitem.SizeDownloaded = 0
@@ -1241,10 +1239,6 @@ Decrypt:
                      SyncLock ContainerSessions.First(Function(mysession) mysession.ID.Equals(_item.ParentContainerID)).SynLock
 
                          ContainerSessions.Where(Function(mycontainer) mycontainer.ID.Equals(_item.ParentContainerID))(0).SingleSessionMode = True
-
-                         For Each _item In ContainerSessions.Where(Function(mycontainer) mycontainer.ID.Equals(_item.ParentContainerID)).FirstOrDefault().DownloadItems
-                             _item.SingleSessionMode = True
-                         Next
 
                      End SyncLock
 
