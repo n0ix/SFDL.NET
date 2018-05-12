@@ -609,7 +609,7 @@
                             <MenuItem
                                 Header="{x:Static p:Strings.MainMenu_Extra_AfterDownload_Standby}"
                                 IsCheckable="True"
-                                IsChecked="{Binding CheckedPostDownloadShComputer}">
+                                IsChecked="{Binding CheckedPostDownloadStandbyComputer}">
                                 <MenuItem.Icon>
                                     <Rectangle
                                         Width="16"

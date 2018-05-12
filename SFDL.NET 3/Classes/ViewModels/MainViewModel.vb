@@ -1178,9 +1178,13 @@ Decrypt:
 
                 If _progress_dialog_controller.IsCanceled = False Then
 
+                    _log.Info("Reseting Standby Block..")
+
                     StandyHandler.Reset()
 
                     RemoveHandler _progress_dialog_controller.Canceled, AddressOf PostDownloadProgressDialogCancelEvent
+
+                    _log.Info("Invoking Standby....")
 
                     StandyHandler.SetStandby()
 
@@ -1312,13 +1316,6 @@ Decrypt:
         Set(value As Boolean)
             _checked_shutdown_computer_after_download = value
             RaisePropertyChanged("CheckedPostDownloadShutdownComputer")
-
-            'If value = True Then
-            '    CheckedPostDownloadExitApp = True
-            'Else
-            '    CheckedPostDownloadExitApp = False
-            'End If
-
         End Set
         Get
             Return _checked_shutdown_computer_after_download
@@ -1330,13 +1327,6 @@ Decrypt:
         Set(value As Boolean)
             _checked_standby_computer_after_download = value
             RaisePropertyChanged("CheckedPostDownloadStandbyComputer")
-
-            'If value = True Then
-            '    CheckedPostDownloadExitApp = True
-            'Else
-            '    CheckedPostDownloadExitApp = False
-            'End If
-
         End Set
         Get
             Return _checked_standby_computer_after_download
