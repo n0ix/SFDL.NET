@@ -12,6 +12,7 @@
     Public Property RetryWaitTime As Integer = 3
     Public Property NotMarkAllContainerFiles As Boolean = False
     Public Property SearchUpdates As Boolean = True
+    Public Property MinimizeToTray As Boolean = False
     Public Property InstantVideo As Boolean = False
     Public Property UnRARSettings As New UnRARSettings
     Public Property SpeedReportSettings As New SpeedreportSettings

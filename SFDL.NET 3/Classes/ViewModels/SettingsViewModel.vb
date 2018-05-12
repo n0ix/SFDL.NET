@@ -45,6 +45,17 @@ Public Class SettingsViewModel
             Return _settings.SearchUpdates
         End Get
     End Property
+
+    Public Property MinimizeToTray As Boolean
+        Set(value As Boolean)
+            _settings.MinimizeToTray = value
+            RaisePropertyChanged("MinimizeToTray")
+        End Set
+        Get
+            Return _settings.MinimizeToTray
+        End Get
+    End Property
+
     Public Property Language As String
         Set(value As String)
             _settings.Language = value

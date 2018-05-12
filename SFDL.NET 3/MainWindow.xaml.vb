@@ -229,44 +229,20 @@ Public Class MainWindow
                     End If
 
                 Else
-
-                    If MainViewModel.ThisInstance.WindowState = WindowState.Normal Or MainViewModel.ThisInstance.WindowState = WindowState.Maximized Then
-
-                        My.Settings.UserWindowState = MainViewModel.ThisInstance.WindowState
-
-                        My.Settings.UserWindowHeight = Me.Height
-                        My.Settings.UserWindowWitdh = Me.Width
-
-                        My.Settings.Save()
-
-                    End If
-
                     MainViewModel.ThisInstance.SaveSessions()
                 End If
+
             Else
-
-                If MainViewModel.ThisInstance.WindowState = WindowState.Normal Or MainViewModel.ThisInstance.WindowState = WindowState.Maximized Then
-
-                    My.Settings.UserWindowState = MainViewModel.ThisInstance.WindowState
-
-                    My.Settings.UserWindowHeight = Me.Height
-                    My.Settings.UserWindowWitdh = Me.Width
-
-                    My.Settings.Save()
-
-                End If
-
                 MainViewModel.ThisInstance.SaveSessions()
-
             End If
 
-        Catch ex As Exception
+            'Only if exit has not been canceld
+            If e.Cancel = False Then
+                NotifyIcon.Dispose()
+                _log.Info("Info removing PowerMode Handler")
+                RemoveHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
+            End If
 
-        End Try
-
-        Try
-            _log.Info("Info removing PowerMode Handler")
-            RemoveHandler Microsoft.Win32.SystemEvents.PowerModeChanged, AddressOf PowerModeChanged
         Catch ex As Exception
             _log.Error(ex, ex.Message)
         End Try
@@ -288,6 +264,35 @@ Public Class MainWindow
             LV_DownloadItems_CM_OpenParentFolder.IsEnabled = True
             LV_DownloadItems_CM_UnMarkAllItems.IsEnabled = True
 
+        End If
+
+    End Sub
+
+    Private Sub SFDL_MainWindow_StateChanged(sender As Object, e As EventArgs) Handles SFDL_MainWindow.StateChanged
+
+        'We save the last State before we got minimized so we can restore it correctly
+        If MainViewModel.ThisInstance.WindowState = WindowState.Normal Or MainViewModel.ThisInstance.WindowState = WindowState.Maximized Then
+            My.Settings.UserWindowState = MainViewModel.ThisInstance.WindowState
+            My.Settings.Save()
+        ElseIf MainViewModel.ThisInstance.WindowState = WindowState.Minimized Then
+
+            Dim _settings As Settings = CType(Application.Current.Resources("Settings"), Settings)
+
+            If Not IsNothing(_settings) AndAlso _settings.MinimizeToTray = True Then
+                Me.Hide()
+            End If
+
+        End If
+
+    End Sub
+
+    Private Sub SFDL_MainWindow_SizeChanged(sender As Object, e As SizeChangedEventArgs) Handles SFDL_MainWindow.SizeChanged
+
+        If MainViewModel.ThisInstance.WindowState = WindowState.Normal Or MainViewModel.ThisInstance.WindowState = WindowState.Maximized Then
+            My.Settings.UserWindowState = MainViewModel.ThisInstance.WindowState
+            My.Settings.UserWindowHeight = Me.Height
+            My.Settings.UserWindowWitdh = Me.Width
+            My.Settings.Save()
         End If
 
     End Sub

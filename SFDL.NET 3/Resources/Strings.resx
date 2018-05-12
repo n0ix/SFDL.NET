@@ -776,4 +776,10 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="MainMenu_Extra_AfterDownload_Standby" xml:space="preserve">
     <value>PC in Standby versetzen</value>
   </data>
+  <data name="Settings_Send2Tray" xml:space="preserve">
+    <value>Ins Tray minimieren</value>
+  </data>
+  <data name="TrayIcon_RestoreWindow" xml:space="preserve">
+    <value>Fenster wiederherstellen</value>
+  </data>
 </root>

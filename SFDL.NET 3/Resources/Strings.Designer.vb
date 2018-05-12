@@ -1555,6 +1555,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Ins Tray minimieren ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_Send2Tray() As String
+            Get
+                Return ResourceManager.GetString("Settings_Send2Tray", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Speedreport nach dem Download anzeigen ähnelt.
         '''</summary>
         Public Shared ReadOnly Property Settings_ShowSpeedreportAfterDownload() As String
@@ -1668,6 +1677,15 @@ Namespace My.Resources
         Public Shared ReadOnly Property Speedreport_Exception_SpeedreportFailed() As String
             Get
                 Return ResourceManager.GetString("Speedreport_Exception_SpeedreportFailed", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Fenster wiederherstellen ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property TrayIcon_RestoreWindow() As String
+            Get
+                Return ResourceManager.GetString("TrayIcon_RestoreWindow", resourceCulture)
             End Get
         End Property
         

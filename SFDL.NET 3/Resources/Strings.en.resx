@@ -201,8 +201,8 @@
   <data name="Settings_AutomaticUnRAR" xml:space="preserve">
     <value>Automatically extract archives</value>
   </data>
-  <data name="Settings_ClicknLoad" xml:space="preserve">
-    <value>Click'n'Load</value>
+  <data name="Settings_Send2Tray" xml:space="preserve">
+    <value>Minimize to Tray</value>
   </data>
   <data name="Settings_CreateSubfolderEachDownload" xml:space="preserve">
     <value>Create subfolder for each download</value>
@@ -769,5 +769,8 @@ Restart the download to apply these settings.</value>
   </data>
   <data name="MainMenu_Extra_AfterDownload_Standby" xml:space="preserve">
     <value>Putting the PC into standby</value>
+  </data>
+  <data name="TrayIcon_RestoreWindow" xml:space="preserve">
+    <value>Restore window</value>
   </data>
 </root>

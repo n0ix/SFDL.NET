@@ -7,6 +7,7 @@
     xmlns:dng="clr-namespace:SFDL.DragnDrop;assembly=SFDL.DragnDrop"
     xmlns:local="clr-namespace:SFDL.NET3"
     xmlns:p="clr-namespace:SFDL.NET3.My.Resources"
+    xmlns:tb="http://www.hardcodet.net/taskbar"
     x:Name="SFDL_MainWindow"
     Title="SFDL.NET 3"
     WindowTitleBrush="{DynamicResource WhiteColorBrush}"
@@ -23,7 +24,8 @@
     ShowIconOnTitleBar="True"
     ShowTitleBar="True"
     WindowStartupLocation="CenterScreen"
-    WindowState="{Binding WindowState}"
+    WindowState="{Binding WindowState,Mode=TwoWay}"
+    Visibility="{Binding WindowVisibility,Mode=TwoWay}"
     TextOptions.TextFormattingMode="Display"
     TextOptions.TextRenderingMode="ClearType">
 
@@ -194,9 +196,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
-
-
 
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
@@ -400,7 +399,38 @@
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
 
+
+
     <Grid x:Name="RootGrid">
+
+        <tb:TaskbarIcon 
+                    x:Name="NotifyIcon"
+                    Visibility="{Binding TrayIconVisibility}"
+                    ToolTipText="SFDL.NET 3"
+                    IconSource="/Resources/Icons/Icon.ico"
+                    MenuActivation="LeftOrRightClick"
+                    PopupActivation="DoubleClick">
+
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="{x:Static p:Strings.TrayIcon_RestoreWindow}" Command="{Binding ShowMainWindowCommand}">
+                        <MenuItem.Icon>
+                            <Rectangle
+                                Width="16"
+                                Height="16"
+                                Fill="{DynamicResource AccentColorBrush}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_window_maximize}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+
+
+        </tb:TaskbarIcon>
 
         <DockPanel>
             <Grid DockPanel.Dock="Top">

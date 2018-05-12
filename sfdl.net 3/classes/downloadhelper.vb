@@ -3,12 +3,13 @@
 
     Private _log As NLog.Logger = NLog.LogManager.GetLogger("DownloadHelper")
     Private _ftp_client_collection As New Dictionary(Of String, ArxOne.Ftp.FtpClient)
-    Private _ftp_session_collection As New Dictionary(Of String, ArxOne.Ftp.FtpSession)
+    Private _ftp_session_collection As New Dictionary(Of String, List(Of ArxOne.Ftp.FtpSession))
     Private _settings As New Settings
     Private _obj_ftp_client_lock As New Object
     Private _obj_dl_count_lok As New Object
-    Private _obj_precheck_lock As New Object
+    Private _obj_session_dic_lock As New Object
     Private _dl_count As Integer = 0
+    Private _ftp_session_count As Integer = 0
 
 
     Public Sub New()
@@ -293,6 +294,58 @@
 
     End Sub
 
+    Private Function AddFTPSessionToDic(ByVal _ftp_server_uid As String, ByVal _ftp_session As ArxOne.Ftp.FtpSession)
+
+        Dim _current_list As New List(Of ArxOne.Ftp.FtpSession)
+        Dim _rt As New List(Of ArxOne.Ftp.FtpSession)
+
+        SyncLock _obj_session_dic_lock
+
+            If _ftp_session_collection.ContainsKey(_ftp_server_uid) Then
+
+                _current_list = _ftp_session_collection(_ftp_server_uid)
+
+                If Not IsNothing(_current_list) Then
+                    _current_list.Add(_ftp_session)
+                    _rt = _current_list
+                End If
+
+            Else
+                _current_list = New List(Of ArxOne.Ftp.FtpSession)
+                _current_list.Add(_ftp_session)
+                _rt = _current_list
+
+            End If
+
+        End SyncLock
+
+        Return _rt
+
+    End Function
+
+    Private Function RemoveFTPSessionFromDic(ByVal _ftp_server_uid As String, ByVal _ftp_session As ArxOne.Ftp.FtpSession)
+
+        Dim _current_list As New List(Of ArxOne.Ftp.FtpSession)
+        Dim _rt As New List(Of ArxOne.Ftp.FtpSession)
+
+        SyncLock _obj_session_dic_lock
+
+            If _ftp_session_collection.ContainsKey(_ftp_server_uid) Then
+
+                _current_list = _ftp_session_collection(_ftp_server_uid)
+
+                If Not IsNothing(_current_list) Then
+                    _current_list.Remove(_ftp_session)
+                    _rt = _current_list
+                End If
+
+            End If
+
+        End SyncLock
+
+        Return _rt
+
+    End Function
 
 #End Region
 
@@ -300,7 +353,7 @@
 
         Dim _ftp_session As ArxOne.Ftp.FtpSession = Nothing
         Dim _ftp_client As ArxOne.Ftp.FtpClient = Nothing
-        Dim _ftp_server_uid As String
+        Dim _ftp_server_uid As String = String.Empty
         Dim _batr As New BasicAvailabilityTestResult
 
         Try
@@ -310,7 +363,6 @@
             If _item.IWorkItemResult.IsCanceled = True Then
                 Throw New DownloadStoppedException("DownloadStopped!")
             End If
-
 
             SyncLock _obj_ftp_client_lock
 
@@ -347,18 +399,26 @@
                     If _ftp_session_collection.ContainsKey(_ftp_server_uid) = False Then
                         _log.Info("SSM Mode - No FTP Session for this Connection found - Creating a new one")
                         _ftp_session = _ftp_client.Session
-                        _ftp_session_collection.Add(_ftp_server_uid, _ftp_session)
+                        _ftp_session_collection.Add(_ftp_server_uid, AddFTPSessionToDic(_ftp_server_uid, _ftp_session))
                     Else
                         _log.Info("SSM Mode - Using existing FTP Session for this Connection")
-                        _ftp_session = _ftp_session_collection(_ftp_server_uid)
+                        _ftp_session = _ftp_session_collection(_ftp_server_uid).First
                     End If
                 Else
+
                     _ftp_session = _ftp_client.Session
+
+                    If _ftp_session_collection.ContainsKey(_ftp_server_uid) = False Then
+                        _ftp_session_collection.Add(_ftp_server_uid, AddFTPSessionToDic(_ftp_server_uid, _ftp_session))
+                    Else
+                        _ftp_session_collection(_ftp_server_uid) = AddFTPSessionToDic(_ftp_server_uid, _ftp_session)
+                    End If
+
                 End If
 
             End SyncLock
 
-            DownloadItem(_item, _ftp_session, _args.RetryMode)
+            DownloadItem(_item, _ftp_session, _args.SingleSessionMode, _ftp_server_uid, _args.RetryMode)
 
         Catch ex As DownloadStoppedException
             _log.Info("Download Stopped")
@@ -374,7 +434,7 @@
             ParseFTPException(ex, _item)
         Finally
 
-            PostDownload(_item, _ftp_session)
+            PostDownload(_item, _ftp_session, _args.SingleSessionMode, _ftp_server_uid)
 
         End Try
 
@@ -383,7 +443,7 @@
     End Function
 
 
-    Private Sub DownloadItem(ByVal _item As DownloadItem, ByVal _ftp_session As ArxOne.Ftp.FtpSession, Optional _isRetry As Boolean = False)
+    Private Sub DownloadItem(ByVal _item As DownloadItem, ByVal _ftp_session As ArxOne.Ftp.FtpSession, ByVal _ssm As Boolean, ByVal _ftp_server_uid As String, Optional _isRetry As Boolean = False)
 
         Dim _filemode As IO.FileMode
         Dim _restart As Long = 0
@@ -626,13 +686,13 @@
             End SyncLock
 
             _item.DownloadSpeed = String.Empty
-            PostDownload(_item, _ftp_session)
+            PostDownload(_item, _ftp_session, _ssm, _ftp_server_uid)
 
         End Try
 
     End Sub
 
-    Private Sub PostDownload(ByRef _item As DownloadItem, ByVal _ftp_session As ArxOne.Ftp.FtpSession)
+    Private Sub PostDownload(ByRef _item As DownloadItem, ByVal _ftp_session As ArxOne.Ftp.FtpSession, ByVal _ssm As Boolean, ByVal _ftp_server_uid As String)
 
         Dim _hashcommand As String = String.Empty
         Dim _reply As ArxOne.Ftp.FtpReply
@@ -813,7 +873,7 @@
 
         Finally
 
-            If _item.DownloadStatus = NET3.DownloadItem.Status.Failed_ServerFull And _item.SingleSessionMode = False Then
+            If _item.DownloadStatus = NET3.DownloadItem.Status.Failed_ServerFull And _ssm = False Then
                 RaiseEvent ServerFull(_item)
             End If
 
@@ -827,7 +887,26 @@
 
             End If
 
-            _ftp_session.Invalidate()
+
+            SyncLock _obj_ftp_client_lock
+
+                Try
+
+                    If _ssm = False And _ftp_session_collection(_ftp_server_uid).Count >= 1 Then
+
+                        _log.Info("Invalidating Session...")
+                        RemoveFTPSessionFromDic(_ftp_server_uid, _ftp_session)
+                        _ftp_session.Invalidate()
+
+                    Else
+                        _log.Info("Running in Single Session Mode or we have only one remaining ftp session --> let this Session intact")
+                    End If
+
+                Catch ex As Exception
+                    _log.Error("Failed to invalidate FTP Session")
+                End Try
+
+            End SyncLock
 
         End Try
 

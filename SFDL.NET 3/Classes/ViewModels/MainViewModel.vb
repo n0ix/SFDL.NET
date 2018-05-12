@@ -59,6 +59,12 @@ Public Class MainViewModel
 
         NewUpdateAvailableVisibility = New NotifyTaskCompletion(Of Visibility)(IsNewUpdateAvailible(_settings))
 
+        If _settings.MinimizeToTray = True Then
+            TrayIconVisibility = Visibility.Visible
+        Else
+            TrayIconVisibility = Visibility.Hidden
+        End If
+
         DownloadBlacklist()
 
 
@@ -1820,8 +1826,6 @@ Decrypt:
             If Not _session.Priority = 0 Then
 
                 If ContainerSessions.Any(Function(i) Not i.ID.Equals(_session.ID) AndAlso i.Priority = _session.Priority) Then
-
-                    Debug.WriteLine("!!!!!!!!!!")
                     CheckAndSetPrio(_session, _session.Priority, _session.Priority - 1)
                 End If
 
@@ -1836,9 +1840,6 @@ Decrypt:
         If Not IsNothing(parameter) Then
 
             Dim _container_session As ContainerSession = Nothing
-
-            'AddHandler _mytask.TaskDone, AddressOf TaskDoneEvent
-            'ActiveTasks.Add(_mytask)
 
             If parameter.GetType Is GetType(String) Then
 
@@ -1963,6 +1964,18 @@ Decrypt:
         End Get
     End Property
 
+    Private Shared _instance As MainViewModel
+    Public Shared ReadOnly Property ThisInstance As MainViewModel
+        Get
+            Return _instance
+        End Get
+    End Property
+
+
+#End Region
+
+#Region "Window Propeties"
+
     Public Property WindowInstance As Window
 
     Private _window_state As WindowState = WindowState.Normal
@@ -1976,13 +1989,16 @@ Decrypt:
         End Get
     End Property
 
-    Private Shared _instance As MainViewModel
-    Public Shared ReadOnly Property ThisInstance As MainViewModel
+    Private _window_visibility As Visibility = Visibility.Visible
+    Public Property WindowVisibility As Visibility
+        Set(value As Visibility)
+            _window_visibility = value
+            RaisePropertyChanged("WindowVisibility")
+        End Set
         Get
-            Return _instance
+            Return _window_visibility
         End Get
     End Property
-
 
 #End Region
 
@@ -2187,6 +2203,44 @@ Decrypt:
         End Try
 
     End Sub
+
+#End Region
+
+#Region "TrayIcon"
+
+    Private _trayicon_visibility As Visibility
+
+    Public Property TrayIconVisibility As Visibility
+        Set(value As Visibility)
+            _trayicon_visibility = value
+            RaisePropertyChanged("TrayIconVisibility")
+        End Set
+        Get
+            Return _trayicon_visibility
+        End Get
+    End Property
+
+    Public ReadOnly Property ShowMainWindowCommand As ICommand
+        Get
+            Return New DelegateCommand(AddressOf ShowMainWindow)
+        End Get
+    End Property
+
+    Private Sub ShowMainWindow()
+
+        Dim _tmp As WindowState = My.Settings.UserWindowState
+
+        Me.WindowVisibility = Visibility.Visible
+        Me.WindowState = WindowState.Maximized
+        Me.WindowInstance.Show()
+
+        If Not _tmp = WindowState.Maximized Then
+            Me.WindowState = _tmp
+            Me.WindowInstance.Show()
+        End If
+
+    End Sub
+
 
 #End Region
 
