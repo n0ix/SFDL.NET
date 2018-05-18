@@ -36,6 +36,12 @@ Public Class MainViewModel
 
         _settings = CType(Application.Current.Resources("Settings"), Settings)
 
+        If _settings.MinimizeToTray = True Then
+            TrayIconVisibility = Visibility.Visible
+        Else
+            TrayIconVisibility = Visibility.Hidden
+        End If
+
     End Sub
 
     Public Sub New(ByVal dialogCoordinator As IDialogCoordinator)
