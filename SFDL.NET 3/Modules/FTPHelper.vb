@@ -235,9 +235,16 @@ Module FTPHelper
         Dim _ftp_unix_platform As New ArxOne.Ftp.Platform.UnixFtpPlatform
         Dim _ftp_windows_platform As New ArxOne.Ftp.Platform.WindowsFtpPlatform
         Dim _ftp_filezilla_platform As New ArxOne.Ftp.Platform.WindowsFileZillaFtpPlatform
+        Dim _ftp_unix_alt_platfrom As New ArxOne.Ftp.Platform.UnixAltFtpPlatform
+
+
         Dim _rt As ArxOne.Ftp.FtpEntry = Nothing
 
         _rt = _ftp_unix_platform.Parse(_item, _parent_folder)
+
+        If IsNothing(_rt) Then
+            _rt = _ftp_unix_alt_platfrom.Parse(_item, _parent_folder)
+        End If
 
         If IsNothing(_rt) Then
             _rt = _ftp_windows_platform.Parse(_item, _parent_folder)
