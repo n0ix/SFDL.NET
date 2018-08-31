@@ -19,12 +19,6 @@ Module FTPHelper
                 _creds = New Net.NetworkCredential("anonymous", "Password")
             End If
 
-            If _connection_info.DataType = Container.FTPDataType.ASCII Then
-                .DataType = Container.FTPDataType.ASCII
-            Else
-                .DataType = Container.FTPDataType.Binary
-            End If
-
             With _ftp_client_param
 
                 If Net.IPAddress.TryParse(_connection_info.Host, Net.IPAddress.Parse("127.0.0.10")) = True Then
@@ -37,11 +31,25 @@ Module FTPHelper
 
                 .AnonymousPassword = "sfdl@anon.net"
 
-                If _connection_info.DataConnectionType = Container.FTPDataConnectionType.Passive Then
-                    .Passive = True
-                Else
-                    .Passive = False
-                End If
+                Select Case _connection_info.DataConnectionType
+
+                    Case Container.FTPDataConnectionType.Passive
+                        .DataConnectionType = FtpDataConnectionType.PASV
+
+
+                    Case Container.FTPDataConnectionType.PASV
+                        .DataConnectionType = FtpDataConnectionType.PASV
+
+                    Case Container.FTPDataConnectionType.EPASV
+
+                        .DataConnectionType = FtpDataConnectionType.EPASV
+
+                    Case Container.FTPDataConnectionType.Active
+
+                        .DataConnectionType = FtpDataConnectionType.Active
+
+                End Select
+
 
                 .SslProtocols = _connection_info.SSLProtocol
 

@@ -13,22 +13,22 @@
                     .DataConnectionType = Container.FTPDataConnectionType.Active
 
                 Case Container.Legacy.FTPDataConnectionType.AutoPassive
-                    .DataConnectionType = Container.FTPDataConnectionType.Passive
+                    .DataConnectionType = Container.FTPDataConnectionType.PASV
 
                 Case Container.Legacy.FTPDataConnectionType.EPRT
-                    .DataConnectionType = Container.FTPDataConnectionType.Passive
+                    .DataConnectionType = Container.FTPDataConnectionType.PASV
 
                 Case Container.Legacy.FTPDataConnectionType.EPSV
-                    .DataConnectionType = Container.FTPDataConnectionType.Passive
+                    .DataConnectionType = Container.FTPDataConnectionType.EPASV
 
                 Case Container.Legacy.FTPDataConnectionType.PASV
-                    .DataConnectionType = Container.FTPDataConnectionType.Passive
+                    .DataConnectionType = Container.FTPDataConnectionType.PASV
 
                 Case Container.Legacy.FTPDataConnectionType.PASVEX
-                    .DataConnectionType = Container.FTPDataConnectionType.Passive
+                    .DataConnectionType = Container.FTPDataConnectionType.PASV
 
                 Case Container.Legacy.FTPDataConnectionType.PORT
-                    .DataConnectionType = Container.FTPDataConnectionType.Passive
+                    .DataConnectionType = Container.FTPDataConnectionType.PASV
 
             End Select
 
