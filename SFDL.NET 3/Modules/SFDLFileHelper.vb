@@ -493,9 +493,9 @@ Module SFDLFileHelper
 
                 Catch ex As Exception
                     _mylog.Error(ex, ex.Message)
-                                         End Try
+                End Try
 
-                                     Next
+            Next
 
         Catch ex As Exception
             _mylog.Error(ex, ex.Message)
@@ -531,44 +531,24 @@ Module SFDLFileHelper
 
     End Function
 
+    Private Function SanitiseFileOrFolderName(ByVal filename As String) As String
+        Dim invalidChars = Regex.Escape(New String(IO.Path.GetInvalidFileNameChars()))
+        Dim invalidReStr = String.Format("[{0}]+", invalidChars)
+        Dim reservedWords = {"CON", "PRN", "AUX", "CLOCK$", "NUL", "COM0", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT0", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"}
+        Dim sanitisedNamePart = Regex.Replace(filename, invalidReStr, "_")
+
+        For Each reservedWord In reservedWords
+            Dim reservedWordPattern = String.Format("^{0}\.", reservedWord)
+            sanitisedNamePart = Regex.Replace(sanitisedNamePart, reservedWordPattern, "_reservedWord_.", RegexOptions.IgnoreCase)
+        Next
+
+        Return sanitisedNamePart
+    End Function
+
+
+
     Function GetSessionLocalDownloadRoot(ByVal _container_session As ContainerSession, ByVal _user_download_dir As String) As String
 
-        'Dim _download_item As DownloadItem = _container_session.DownloadItems(0)
-        'Dim _test_path As String = String.Empty
-        'Dim _flag As Boolean = False
-        'Dim _app_download_path As String = _user_download_dir
-
-        'Try
-
-        '    If _app_download_path.EndsWith("\") Then
-        '        _app_download_path = _app_download_path.Remove(_app_download_path.Length - 1)
-        '    End If
-
-
-        '    For Each _item In IO.Path.GetDirectoryName(_download_item.LocalFile).Split("\")
-
-        '        If IO.Path.IsPathRooted(_item) AndAlso _item.EndsWith("\") = False Then
-        '            _item = _item & "\"
-        '        End If
-
-        '        _test_path = IO.Path.Combine(_test_path, _item)
-
-        '        If _flag = True Then
-        '            'Pfad ermittelt
-        '            Return _test_path
-        '        End If
-
-        '        If IO.Path.Equals(_test_path, _user_download_dir) Then
-        '            _flag = True
-        '        End If
-
-        '    Next
-
-        'Catch ex As Exception
-        '    _log.Error(ex, ex.Message)
-        'End Try
-
-        'Return _test_path
 
         Return IO.Path.Combine(_user_download_dir, _container_session.DisplayName)
 
@@ -583,10 +563,10 @@ Module SFDLFileHelper
 
         Try
 
-            _download_dir = _container_session.LocalDownloadRoot
+            _download_dir = SanitiseFileOrFolderName(_container_session.LocalDownloadRoot)
 
             If _create_sub_folder Then
-                _download_dir = IO.Path.Combine(_download_dir, _item.PackageName)
+                _download_dir = IO.Path.Combine(_download_dir, SanitiseFileOrFolderName(_item.PackageName))
             End If
 
             _tmp_last_sub_dir = _item.DirectoryPath.Replace(_item.DirectoryRoot, "")
@@ -599,7 +579,7 @@ Module SFDLFileHelper
                 _tmp_last_sub_dir = _tmp_last_sub_dir.Remove(_tmp_last_sub_dir.Length - 1, 1)
             End If
 
-            _dowload_local_filename = IO.Path.Combine(_download_dir, _tmp_last_sub_dir, _item.FileName)
+            _dowload_local_filename = IO.Path.Combine(_download_dir, SanitiseFileOrFolderName(_tmp_last_sub_dir), SanitiseFileOrFolderName(_item.FileName))
 
             _dowload_local_filename = CleanDownloadPathInput(_dowload_local_filename)
 
