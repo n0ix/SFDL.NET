@@ -34,13 +34,10 @@ Module FTPHelper
                 Select Case _connection_info.DataConnectionType
 
                     Case Container.FTPDataConnectionType.Passive
+
                         .DataConnectionType = FtpDataConnectionType.PASV
 
-
-                    Case Container.FTPDataConnectionType.PASV
-                        .DataConnectionType = FtpDataConnectionType.PASV
-
-                    Case Container.FTPDataConnectionType.EPASV
+                    Case Container.FTPDataConnectionType.ExtendedPassive
 
                         .DataConnectionType = FtpDataConnectionType.EPASV
 
