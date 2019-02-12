@@ -184,7 +184,7 @@
     <Compile Include="MainWindow.xaml.vb">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\DownloadHelper.vb" />
+    <Compile Include="Classes\DownloadHelper2.vb" />
     <Compile Include="Modules\FTPHelper.vb" />
     <Compile Include="Modules\FileRegisterHelper.vb" />
     <Compile Include="Modules\GeneralHelper.vb" />
