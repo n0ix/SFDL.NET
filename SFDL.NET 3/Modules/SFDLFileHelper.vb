@@ -539,7 +539,7 @@ Module SFDLFileHelper
 
         For Each reservedWord In reservedWords
             Dim reservedWordPattern = String.Format("^{0}\.", reservedWord)
-            sanitisedNamePart = Regex.Replace(sanitisedNamePart, reservedWordPattern, "_reservedWord_.", RegexOptions.IgnoreCase)
+            sanitisedNamePart = Regex.Replace(sanitisedNamePart, reservedWordPattern, String.Format("_{0}", reservedWord), RegexOptions.IgnoreCase)
         Next
 
         Return sanitisedNamePart
@@ -550,7 +550,7 @@ Module SFDLFileHelper
     Function GetSessionLocalDownloadRoot(ByVal _container_session As ContainerSession, ByVal _user_download_dir As String) As String
 
 
-        Return IO.Path.Combine(_user_download_dir, _container_session.DisplayName)
+        Return IO.Path.Combine(_user_download_dir, SanitiseFileOrFolderName(_container_session.DisplayName))
 
 
     End Function
@@ -563,7 +563,7 @@ Module SFDLFileHelper
 
         Try
 
-            _download_dir = SanitiseFileOrFolderName(_container_session.LocalDownloadRoot)
+            _download_dir = _container_session.LocalDownloadRoot
 
             If _create_sub_folder Then
                 _download_dir = IO.Path.Combine(_download_dir, SanitiseFileOrFolderName(_item.PackageName))
