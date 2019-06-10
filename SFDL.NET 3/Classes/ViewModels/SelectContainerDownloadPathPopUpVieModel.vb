@@ -53,12 +53,17 @@ Public Class SelectContainerDownloadPathPopUpVieModel
 
         Dim _sdf_dialog As New Forms.FolderBrowserDialog
 
-        With _sdf_dialog
-            .ShowNewFolderButton = True
-        End With
+        _sdf_dialog.ShowNewFolderButton = True
+
+        If (My.Settings.UserRecentFolderPath IsNot Nothing AndAlso String.IsNullOrWhiteSpace(My.Settings.UserRecentFolderPath) = False) Then
+            _sdf_dialog.SelectedPath = My.Settings.UserRecentFolderPath
+        End If
 
         If _sdf_dialog.ShowDialog() = Forms.DialogResult.OK Then
             Me.DownloadDirectory = _sdf_dialog.SelectedPath
+            My.Settings.UserRecentFolderPath = _sdf_dialog.SelectedPath
+            My.Settings.Save()
+
         End If
 
     End Sub
