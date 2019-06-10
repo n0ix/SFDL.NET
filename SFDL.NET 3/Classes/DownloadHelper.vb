@@ -27,7 +27,7 @@
         Return ex.HResult = HR_ERROR_HANDLE_DISK_FULL OrElse ex.HResult = HR_ERROR_DISK_FULL
     End Function
 
-    Private Sub ThrottleByteTransfer(maxBytesPerSecond As Integer, bytesTotal As Long, elapsed As TimeSpan, bytesPerSec As Integer)
+    Private Sub ThrottleByteTransfer(maxBytesPerSecond As Long, bytesTotal As Long, elapsed As TimeSpan, bytesPerSec As Integer)
         ' we only throttle if the maxBytesPerSecond is not zero (zero turns off the throttle)
         If maxBytesPerSecond > 0 Then
             ' we only throttle if our through-put is higher than what we want
@@ -566,7 +566,7 @@
 
 #Region "Limit Speed"
 
-                            Dim _max_bytes_per_second As Integer
+                            Dim _max_bytes_per_second As Long
 
                             If Not String.IsNullOrWhiteSpace(MainViewModel.ThisInstance.MaxDownloadSpeed) Then
 
@@ -575,9 +575,9 @@
                                 If Not _max_bytes_per_second <= 0 Then
 
                                     If Not _dl_count <= 1 Then
-                                        _max_bytes_per_second = CInt((_max_bytes_per_second * 1024) / _dl_count)
+                                        _max_bytes_per_second = CLng((_max_bytes_per_second * 1024) / _dl_count)
                                     Else
-                                        _max_bytes_per_second = CInt((_max_bytes_per_second * 1024))
+                                        _max_bytes_per_second = CLng((_max_bytes_per_second * 1024))
                                     End If
 
                                     ThrottleByteTransfer(_max_bytes_per_second, _item.SizeDownloaded, _ctime, bytesPerSec)
