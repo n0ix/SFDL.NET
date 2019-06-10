@@ -265,7 +265,7 @@
     <value>Maximale Retries:</value>
   </data>
   <data name="Settings_MaximumThreads" xml:space="preserve">
-    <value>Maximale Threads:</value>
+    <value>Maximale Download Threads:</value>
   </data>
   <data name="Settings_PasswordList" xml:space="preserve">
     <value>Kennwortliste:</value>
@@ -781,5 +781,8 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   </data>
   <data name="TrayIcon_RestoreWindow" xml:space="preserve">
     <value>Fenster wiederherstellen</value>
+  </data>
+  <data name="Settings_ChecksumThreads" xml:space="preserve">
+    <value>Maximale Checksum Threads:</value>
   </data>
 </root>

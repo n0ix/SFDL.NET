@@ -41,21 +41,28 @@
 
     End Function
 
-    Private Function CalculateSpeed(ByVal _starttime As Date, ByVal _stoptime As Date, ByVal _item_list As List(Of DownloadItem)) As Double
+    Private Function CalculateAvgSpeedAsKBs(ByVal _container_time As Double, ByVal _item_list As List(Of DownloadItem)) As Double
 
         Dim _full_session_size As Double
-        Dim _time_elapsed As Double
         Dim _rt As Double
 
         _full_session_size = _item_list.Aggregate(_full_session_size, Function(current, _file) current + _file.SizeDownloaded)
 
         _full_session_size = _full_session_size / 1024
 
-        _time_elapsed = DateDiff(DateInterval.Second, _starttime, _stoptime)
-
-        _rt = _full_session_size / _time_elapsed
+        _rt = _full_session_size / _container_time
 
         Return _rt
+
+    End Function
+
+    Private Function CalculateSessionTimeElapsed(ByVal _starttime As Date, ByVal _stoptime As Date, ByVal _item_list As List(Of DownloadItem)) As Double
+
+        Dim _time_elapsed As Double
+
+        _time_elapsed = DateDiff(DateInterval.Second, _starttime, _stoptime)
+
+        Return _time_elapsed
 
     End Function
 
@@ -64,24 +71,21 @@
         Dim _rt_speedreport As String = String.Empty
         Dim _speed As Double = 0
         Dim _size As Double = 0
+        Dim _container_time As Double = 0
 
         Try
 
 
             Dim _tmp_list As New List(Of DownloadItem)
 
-            For Each _item In session.DownloadItems
+            _tmp_list = session.DownloadItems.Where(Function(x) x.SizeDownloaded <> 0).ToList
 
-                If Not _item.SizeDownloaded = 0 Then
-                    _tmp_list.Add(_item)
-                End If
-
-            Next
+            _container_time = CalculateSessionTimeElapsed(session.DownloadStartedTime, session.DownloadStoppedTime, _tmp_list)
 
             _size = CalculateSizeAsMB(_tmp_list)
-            _speed = CalculateSpeed(session.DownloadStartedTime, session.DownloadStoppedTime, _tmp_list)
+            _speed = CalculateAvgSpeedAsKBs(_container_time, _tmp_list)
 
-            _rt_speedreport = String.Format(My.Resources.Strings.GenerateSimpleSpeedreport_AppTask_Completed_Message, Math.Round(_size, 2) & " MB", SecToHMS(DateDiff(DateInterval.Second, session.DownloadStartedTime, session.DownloadStoppedTime)), Math.Round(_speed, 2) & " KB/s")
+            _rt_speedreport = String.Format(My.Resources.Strings.GenerateSimpleSpeedreport_AppTask_Completed_Message, Math.Round(_size, 2) & " MB", SecToHMS(_container_time), Math.Round(_speed, 2) & " KB/s")
 
         Catch ex As NoSpeedreportDataException
             _log.Info("Nothing was downloaded - Skipping Speedreport generation")
@@ -100,22 +104,19 @@
         Dim _rt_speedreport As String = String.Empty
         Dim _speed As Double = 0
         Dim _size As Double = 0
+        Dim _container_time As Double = 0
 
         Try
 
 
             Dim _tmp_list As New List(Of DownloadItem)
 
-            For Each _item In session.DownloadItems
+            _tmp_list = session.DownloadItems.Where(Function(x) x.SizeDownloaded <> 0).ToList
 
-                If Not _item.SizeDownloaded = 0 Then
-                    _tmp_list.Add(_item)
-                End If
-
-            Next
+            _container_time = CalculateSessionTimeElapsed(session.DownloadStartedTime, session.DownloadStoppedTime, _tmp_list)
 
             _size = CalculateSizeAsMB(_tmp_list)
-            _speed = CalculateSpeed(session.DownloadStartedTime, session.DownloadStoppedTime, _tmp_list)
+            _speed = CalculateAvgSpeedAsKBs(_container_time, _tmp_list)
 
             If Math.Round(_size, 2) = 0 Then
                 Throw New NoSpeedreportDataException

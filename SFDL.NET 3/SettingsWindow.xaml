@@ -238,6 +238,7 @@
                                                 <StackPanel>
                                                     <Label Margin="5,5,5,0" Content="{x:Static p:Strings.Settings_ExistingFile}" />
                                                     <Label Margin="5,5,5,0" Content="{x:Static p:Strings.Settings_MaximumThreads}" />
+                                                    <Label Margin="5,5,5,0" Content="{x:Static p:Strings.Settings_ChecksumThreads}" />
                                                     <Label Margin="5,5,5,0" Content="{x:Static p:Strings.Settings_MaximumRetries}" />
                                                     <Label Margin="5,5,5,0" Content="{x:Static p:Strings.Settings_WaitTimeRetries}" />
                                                 </StackPanel>
@@ -262,6 +263,13 @@
                                                         Minimum="1"
                                                         Value="{Binding MaxDownloadThreads}" />
                                                     <Controls:NumericUpDown
+                                                        x:Name="NumChecksumThreads"
+                                                        Width="150"
+                                                        Margin="5,5,5,0"
+                                                        Maximum="100"
+                                                        Minimum="1"
+                                                        Value="{Binding MaxChecksumThreads}" />
+                                                    <Controls:NumericUpDown
                                                         x:Name="NumMaxRetries"
                                                         Width="150"
                                                         Margin="5,5,5,0"
@@ -275,7 +283,6 @@
                                                         Maximum="120"
                                                         Minimum="1"
                                                         Value="{Binding RetryWaitTime}" />
-
                                                 </StackPanel>
 
                                             </StackPanel>

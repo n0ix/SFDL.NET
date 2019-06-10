@@ -1,4 +1,6 @@
-﻿Class DownloadHelper
+﻿Imports Amib.Threading
+
+Class DownloadHelper
     Implements IDisposable
 
     Private _log As NLog.Logger = NLog.LogManager.GetLogger("DownloadHelper")
@@ -10,10 +12,13 @@
     Private _obj_session_dic_lock As New Object
     Private _dl_count As Integer = 0
     Private _ftp_session_count As Integer = 0
+    Private _post_stp As SmartThreadPool
 
 
     Public Sub New()
         _settings = CType(Application.Current.Resources("Settings"), Settings)
+        _post_stp = New SmartThreadPool
+        _post_stp.MaxThreads = _settings.MaxChecksumThreads
     End Sub
 
     Public Event ServerFull(ByVal _item As DownloadItem)
@@ -434,7 +439,11 @@
             ParseFTPException(ex, _item)
         Finally
 
-            PostDownload(_item, _ftp_session, _args.SingleSessionMode, _ftp_server_uid)
+            'PostDownload(_item, _ftp_session, _args.SingleSessionMode, _ftp_server_uid)
+            _post_stp.QueueWorkItem(Function()
+                                        Me.PostDownload(_item, _ftp_session, _args.SingleSessionMode, _ftp_server_uid)
+                                        Return True
+                                    End Function)
 
         End Try
 
@@ -451,7 +460,7 @@
         'IO Stream Variablen
         Dim buffer As [Byte]()
         Dim bytesRead As Integer = 0
-        Dim _starttime As DateTime = DateTime.Now
+        Dim _starttime As DateTime
 
         Dim _percent_downloaded As Integer = 0
         Dim _ctime As TimeSpan
@@ -489,7 +498,6 @@
                 GetItemFileSize(_item, _ftp_session)
             End If
 
-
             If (_settings.ExistingFileHandling = ExistingFileHandling.ResumeFile Or _isRetry = True) AndAlso (IO.File.Exists(_item.LocalFile)) Then
 
                 _filemode = IO.FileMode.Append
@@ -510,6 +518,8 @@
             If _skip_download = True Then
                 _log.Info("File already completed - Skipping FTP Connect!")
             Else
+
+                _starttime = Now
 
                 _item.DownloadStatus = NET3.DownloadItem.Status.Running
 
@@ -686,13 +696,12 @@
             End SyncLock
 
             _item.DownloadSpeed = String.Empty
-            PostDownload(_item, _ftp_session, _ssm, _ftp_server_uid)
 
         End Try
 
     End Sub
 
-    Private Sub PostDownload(ByRef _item As DownloadItem, ByVal _ftp_session As ArxOne.Ftp.FtpSession, ByVal _ssm As Boolean, ByVal _ftp_server_uid As String)
+    Public Sub PostDownload(ByRef _item As DownloadItem, ByVal _ftp_session As ArxOne.Ftp.FtpSession, ByVal _ssm As Boolean, ByVal _ftp_server_uid As String)
 
         Dim _hashcommand As String = String.Empty
         Dim _reply As ArxOne.Ftp.FtpReply

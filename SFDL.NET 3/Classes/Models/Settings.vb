@@ -8,6 +8,7 @@
     Public Property CreatePackageSubfolder As Boolean = False
     Public Property AskForDownloadDirectory As Boolean = False
     Public Property MaxDownloadThreads As Integer = 3
+    Public Property MaxChecksumThreads As Integer = 2
     Public Property MaxRetry As Integer = 3
     Public Property RetryWaitTime As Integer = 3
     Public Property NotMarkAllContainerFiles As Boolean = False

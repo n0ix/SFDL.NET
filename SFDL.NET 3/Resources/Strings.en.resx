@@ -773,4 +773,7 @@ Restart the download to apply these settings.</value>
   <data name="TrayIcon_RestoreWindow" xml:space="preserve">
     <value>Restore window</value>
   </data>
+  <data name="Settings_ChecksumThreads" xml:space="preserve">
+    <value>Miximum Checksum Threads:</value>
+  </data>
 </root>

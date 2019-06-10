@@ -22,7 +22,7 @@ Namespace My.Resources
     '''<summary>
     '''  Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
     '''</summary>
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0"),  _
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0"),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute()>  _
     Public Class Strings
@@ -1077,6 +1077,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Maximale Checksum Threads: ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_ChecksumThreads() As String
+            Get
+                Return ResourceManager.GetString("Settings_ChecksumThreads", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Click&apos;n&apos;Load aktivieren ähnelt.
         '''</summary>
         Public Shared ReadOnly Property Settings_ClicknLoad() As String
@@ -1329,7 +1338,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die Maximale Threads: ähnelt.
+        '''  Sucht eine lokalisierte Zeichenfolge, die Maximale Download Threads: ähnelt.
         '''</summary>
         Public Shared ReadOnly Property Settings_MaximumThreads() As String
             Get

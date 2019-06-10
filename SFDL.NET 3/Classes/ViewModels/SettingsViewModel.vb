@@ -119,6 +119,15 @@ Public Class SettingsViewModel
             Return _settings.MaxDownloadThreads
         End Get
     End Property
+    Public Property MaxChecksumThreads As Integer
+        Set(value As Integer)
+            _settings.MaxChecksumThreads = value
+            RaisePropertyChanged("MaxChecksumThreads")
+        End Set
+        Get
+            Return _settings.MaxChecksumThreads
+        End Get
+    End Property
     Public Property MaxRetry As Integer
         Set(value As Integer)
             _settings.MaxRetry = value
