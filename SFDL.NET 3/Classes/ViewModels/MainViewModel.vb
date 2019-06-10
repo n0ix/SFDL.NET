@@ -973,17 +973,21 @@ Decrypt:
 
                                      If _settings.UnRARSettings.UnRARAfterDownload = True And _chain.UnRARDone = False Then
 
-                                         _unrar_task = New AppTask(String.Format(My.Resources.Strings.UnRAR_AppTask_Start_Message, Path.GetFileName(_chain.MasterUnRarChainFile.LocalFile)))
+                                         If _chain.MasterUnRarChainFile.LocalFile.Length >= 255 Then
+                                             _log.Warn("Skipping Unrar cause we cannot unpack Archives where path is longer than 255 Chars")
+                                         Else
+                                             _unrar_task = New AppTask(String.Format(My.Resources.Strings.UnRAR_AppTask_Start_Message, Path.GetFileName(_chain.MasterUnRarChainFile.LocalFile)))
 
-                                         AddHandler _unrar_task.TaskDone, AddressOf TaskDoneEvent
+                                             AddHandler _unrar_task.TaskDone, AddressOf TaskDoneEvent
 
-                                         ActiveTasks.Add(_unrar_task)
+                                             ActiveTasks.Add(_unrar_task)
 
-                                         UnRAR(_chain, _unrar_task, _settings.UnRARSettings)
+                                             UnRAR(_chain, _unrar_task, _settings.UnRARSettings)
 
-                                         _chain.UnRARDone = True
+                                             _chain.UnRARDone = True
 
-                                         _chain.UnRARRunning = False
+                                             _chain.UnRARRunning = False
+                                         End If
 
                                      Else
                                          _log.Info("UnRARChain is not yet complete or it is already unpacked / processed ")

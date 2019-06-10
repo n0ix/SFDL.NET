@@ -483,10 +483,6 @@ Class DownloadHelper
                 Throw New Exception("Filepath is empty!")
             End If
 
-            If _item.LocalFile.Length >= 255 Then
-                Throw New FileNameTooLongException("File path is too long! - Can't write file!")
-            End If
-
             If IO.Directory.Exists(IO.Path.GetDirectoryName(_item.LocalFile)) = False Then
 
                 _log.Warn("Target directory not exists --> creating")

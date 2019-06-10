@@ -1,4 +1,6 @@
 ﻿Imports System.Windows.Forms
+Imports Microsoft.Win32
+
 Module GeneralHelper
 
     Private _lock_download_stopped As New Object
@@ -28,6 +30,38 @@ Module GeneralHelper
         Catch ex As Exception
             Return False
         End Try
+    End Function
+
+    Public Function EnableLongPathSupport() As Boolean
+
+        Dim reg As RegistryKey = Nothing
+
+        Try
+
+            Registry.LocalMachine.CreateSubKey("SYSTEM\CurrentControlSet\Control\FileSystem")
+            reg = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\FileSystem", True)
+            reg.SetValue("LongPathsEnabled", 1, RegistryValueKind.DWord)
+
+        Catch ex As Exception
+            Return False
+        Finally
+            If reg IsNot Nothing Then
+                reg.Dispose()
+            End If
+        End Try
+
+        Return True
+
+    End Function
+
+    Public Function IsLongPathEnabled() As Boolean
+
+        If Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\FileSystem").GetValue("LongPathsEnabled") = 1 Then
+            Return True
+        Else
+            Return False
+        End If
+
     End Function
 
 End Module

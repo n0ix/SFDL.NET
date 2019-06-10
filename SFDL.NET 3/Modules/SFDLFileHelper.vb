@@ -587,8 +587,11 @@ Module SFDLFileHelper
             _log.Error(ex, ex.Message)
         End Try
 
-
-        Return _dowload_local_filename
+        If IsLongPathEnabled() Then
+            Return "\\?\" & _dowload_local_filename
+        Else
+            Return _dowload_local_filename
+        End If
 
     End Function
 

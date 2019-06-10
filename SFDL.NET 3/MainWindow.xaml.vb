@@ -119,6 +119,12 @@ Public Class MainWindow
 
                 _log.Info("SFDL Extension registerd!")
 
+                'Enable LongPaths Support
+                Registry.LocalMachine.CreateSubKey("SYSTEM\CurrentControlSet\Control\FileSystem")
+                Dim reg As RegistryKey = Registry.LocalMachine.OpenSubKey("SYSTEM\CurrentControlSet\Control\FileSystem", True)
+                reg.SetValue("LongPathsEnabled", 1, RegistryValueKind.DWord)
+                reg.Close()
+
                 UpdateInstallState()
 
             Catch ex As Exception
