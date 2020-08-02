@@ -1,5 +1,8 @@
 ﻿Imports System.ComponentModel
 Imports MahApps.Metro.Controls.Dialogs
+Imports System.Linq
+Imports ControlzEx.Theming
+
 Public Class SettingsViewModel
     Inherits ViewModelBase
     Implements IDataErrorInfo
@@ -14,15 +17,15 @@ Public Class SettingsViewModel
 
 #Region "General/Basic Settings Properties"
 
-    Public ReadOnly Property AppAccentList As List(Of MahApps.Metro.Accent)
+    Public ReadOnly Property ColorSchemeList As List(Of String)
         Get
-            Return CType(MahApps.Metro.ThemeManager.Accents, List(Of MahApps.Metro.Accent))
+            Return ControlzEx.Theming.ThemeManager.Current.ColorSchemes.ToList()
         End Get
     End Property
 
-    Public ReadOnly Property AppThemeList As List(Of MahApps.Metro.AppTheme)
+    Public ReadOnly Property BaseColorSchemeList As List(Of String)
         Get
-            Return CType(MahApps.Metro.ThemeManager.AppThemes, List(Of MahApps.Metro.AppTheme))
+            Return ControlzEx.Theming.ThemeManager.Current.BaseColors.ToList()
         End Get
     End Property
 
@@ -175,25 +178,36 @@ Public Class SettingsViewModel
         End Get
     End Property
 
-    Public Property AppAccent As MahApps.Metro.Accent
-        Set(value As MahApps.Metro.Accent)
-            _settings.AppAccent = value.Name
-            RaisePropertyChanged("AppAccent")
-            MahApps.Metro.ThemeManager.ChangeAppStyle(Application.Current, MahApps.Metro.ThemeManager.GetAccent(value.Name), Me.AppTheme)
+    Public Property ColorScheme As String
+        Set(value As String)
+            _settings.ColorScheme = value
+            RaisePropertyChanged("ColorScheme")
+            ThemeManager.Current.ChangeThemeColorScheme(Application.Current, value)
         End Set
         Get
-            Return MahApps.Metro.ThemeManager.GetAccent(_settings.AppAccent)
+            Return _settings.ColorScheme
         End Get
     End Property
 
-    Public Property AppTheme As MahApps.Metro.AppTheme
-        Set(value As MahApps.Metro.AppTheme)
-            _settings.AppTheme = value.Name
-            RaisePropertyChanged("AppTheme")
-            MahApps.Metro.ThemeManager.ChangeAppStyle(Application.Current, Me.AppAccent, MahApps.Metro.ThemeManager.GetAppTheme(value.Name))
+    Public Property BaseColorScheme As String
+        Set(value As String)
+            _settings.BaseColorScheme = value
+            RaisePropertyChanged("BaseColorScheme")
+            ThemeManager.Current.ChangeThemeBaseColor(Application.Current, value)
         End Set
         Get
-            Return MahApps.Metro.ThemeManager.GetAppTheme(_settings.AppTheme)
+            Return _settings.BaseColorScheme
+        End Get
+    End Property
+
+    Public Property SyncThemeWithWindows As Boolean
+        Set(value As Boolean)
+            _settings.SyncThemeWithWindows = value
+            RaisePropertyChanged("SyncThemeWithWindows")
+            ControlzEx.Theming.ThemeManager.Current.SyncTheme(ControlzEx.Theming.ThemeSyncMode.SyncAll)
+        End Set
+        Get
+            Return _settings.SyncThemeWithWindows
         End Get
     End Property
 

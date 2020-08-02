@@ -776,4 +776,7 @@ Restart the download to apply these settings.</value>
   <data name="Settings_ChecksumThreads" xml:space="preserve">
     <value>Miximum Checksum Threads:</value>
   </data>
+  <data name="Settings_SyncThemeWithWindows" xml:space="preserve">
+    <value>Sync with Windows</value>
+  </data>
 </root>

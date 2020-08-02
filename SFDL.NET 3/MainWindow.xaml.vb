@@ -23,8 +23,17 @@ Public Class MainWindow
 
     Private Sub LoadTheme()
 
-        If Not String.IsNullOrWhiteSpace(CType(Application.Current.Resources("Settings"), Settings).AppAccent) And Not String.IsNullOrWhiteSpace(CType(Application.Current.Resources("Settings"), Settings).AppTheme) Then
-            ThemeManager.ChangeAppStyle(Application.Current, ThemeManager.GetAccent(CType(Application.Current.Resources("Settings"), Settings).AppAccent), ThemeManager.GetAppTheme(CType(Application.Current.Resources("Settings"), Settings).AppTheme))
+        Dim baseColorScheme As String = CType(Application.Current.Resources("Settings"), Settings).BaseColorScheme
+        Dim colorScheme As String = CType(Application.Current.Resources("Settings"), Settings).ColorScheme
+
+        If Not String.IsNullOrWhiteSpace(baseColorScheme) And Not String.IsNullOrWhiteSpace(colorScheme) Then
+            ControlzEx.Theming.ThemeManager.Current.ChangeThemeBaseColor(Application.Current, baseColorScheme)
+            ControlzEx.Theming.ThemeManager.Current.ChangeThemeColorScheme(Application.Current, colorScheme)
+        End If
+
+
+        If (CType(Application.Current.Resources("Settings"), Settings).SyncThemeWithWindows) Then
+            ControlzEx.Theming.ThemeManager.Current.SyncTheme(ControlzEx.Theming.ThemeSyncMode.SyncAll)
         End If
 
     End Sub

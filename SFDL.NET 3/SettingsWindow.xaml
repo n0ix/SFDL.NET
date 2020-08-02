@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:SFDL.NET3"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -12,7 +13,7 @@
     Title="{x:Static p:Strings.Settings_Title}"
     Dialog:DialogParticipation.Register="{Binding}"
     BorderThickness="2"
-    GlowBrush="{DynamicResource AccentColorBrush2}"
+    GlowBrush="{DynamicResource MahApps.Brushes.Accent2}"
     Icon="Resources/Icons/appbar.settings.png"
     IsMaxRestoreButtonEnabled="False"
     ResizeMode="NoResize"
@@ -31,13 +32,10 @@
                 <Setter Property="Background" Value="{DynamicResource BaseColorBrush}" />
             </Style>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/Icons.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary>
                     <Style
                         x:Key="OpenFileMetroTextBox"
-                        BasedOn="{StaticResource ButtonCommandMetroTextBox}"
+                        BasedOn="{StaticResource MahApps.Styles.TextBox.Button}"
                         TargetType="{x:Type TextBox}">
                         <Setter Property="Controls:TextBoxHelper.ButtonTemplate">
                             <Setter.Value>
@@ -83,7 +81,7 @@
                         Height="16"
                         Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_reset}" />
+                            <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=Reset}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                     <TextBlock
@@ -97,8 +95,8 @@
 
     <Grid>
         <StackPanel>
-            <TabControl Controls:TabControlHelper.IsUnderlined="True">
-                <TabItem Controls:ControlsHelper.HeaderFontSize="15" Header="{x:Static p:Strings.Settings_GeneralSettings}">
+            <TabControl Controls:TabControlHelper.Underlined="SelectedTabItem">
+                <TabItem Controls:HeaderedControlHelper.HeaderFontSize="15" Header="{x:Static p:Strings.Settings_GeneralSettings}">
                     <Grid>
                         <StackPanel>
 
@@ -172,25 +170,30 @@
                                 <GroupBox MinWidth="400" Header="{x:Static p:Strings.Settings_Style}">
                                     <StackPanel>
 
+                                        <CheckBox x:Name="Chk_SyncWithWindows"
+                                                  Margin="0,5,0,10"
+                                                  IsChecked="{Binding SyncThemeWithWindows}"
+                                                  Content="{x:Static p:Strings.Settings_SyncThemeWithWindows}" />
+                                        
                                         <ComboBox
                                             x:Name="ComBAppAccent"
                                             Margin="0,5,0,10"
                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                            Controls:TextBoxHelper.Watermark="Accent"
-                                            DisplayMemberPath="Name"
+                                            Controls:TextBoxHelper.Watermark="Color Scheme"
                                             IsReadOnly="True"
-                                            ItemsSource="{Binding AppAccentList}"
-                                            SelectedValue="{Binding AppAccent, Mode=TwoWay}" />
+                                            ItemsSource="{Binding ColorSchemeList}"
+                                            SelectedValue="{Binding ColorScheme, Mode=TwoWay}"
+                                            IsEnabled="{Binding SyncThemeWithWindows, Mode=OneWay,Converter={StaticResource InvertBool}}"/>
 
                                         <ComboBox
                                             x:Name="ComBAppTheme"
                                             Panel.ZIndex="11"
                                             Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                            Controls:TextBoxHelper.Watermark="App Theme"
-                                            DisplayMemberPath="Name"
+                                            Controls:TextBoxHelper.Watermark="Base Color"
                                             IsReadOnly="True"
-                                            ItemsSource="{Binding AppThemeList}"
-                                            SelectedValue="{Binding AppTheme, Mode=TwoWay}" />
+                                            ItemsSource="{Binding BaseColorSchemeList}"
+                                            SelectedValue="{Binding BaseColorScheme, Mode=TwoWay}"
+                                            IsEnabled="{Binding SyncThemeWithWindows, Mode=OneWay,Converter={StaticResource InvertBool}}"/>
 
                                     </StackPanel>
 
@@ -303,7 +306,6 @@
                                                         Width="24"
                                                         Height="24"
                                                         Margin="5,0,0,5"
-                                                        Background="{DynamicResource BaseColorBrush}"
                                                         Command="{Binding AddBlacklistItemCommand}">
                                                         <StackPanel
                                                             HorizontalAlignment="Center"
@@ -314,9 +316,9 @@
                                                                 Height="16"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_add}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=Add}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </StackPanel>
@@ -325,7 +327,6 @@
                                                         Width="24"
                                                         Height="24"
                                                         Margin="5,0,0,5"
-                                                        Background="{DynamicResource BaseColorBrush}"
                                                         Command="{Binding RemoveBlacklistItemCommand}">
                                                         <StackPanel
                                                             HorizontalAlignment="Center"
@@ -336,9 +337,9 @@
                                                                 Height="16"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_checkmark_cross}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=CheckmarkCross}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </StackPanel>
@@ -389,7 +390,7 @@
                         </StackPanel>
                     </Grid>
                 </TabItem>
-                <TabItem Controls:ControlsHelper.HeaderFontSize="15" Header="{x:Static p:Strings.Settings_UnrarSettings}">
+                <TabItem Controls:HeaderedControlHelper.HeaderFontSize="15" Header="{x:Static p:Strings.Settings_UnrarSettings}">
                     <Grid>
                         <StackPanel>
                             <GroupBox
@@ -433,7 +434,6 @@
                                                         Width="24"
                                                         Height="24"
                                                         Margin="5,0,0,5"
-                                                        Background="{DynamicResource BaseColorBrush}"
                                                         Command="{Binding AddUnRARPasswordCommand}">
                                                         <StackPanel
                                                             HorizontalAlignment="Center"
@@ -444,9 +444,9 @@
                                                                 Height="16"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_add}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=Add}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </StackPanel>
@@ -457,7 +457,6 @@
                                                         Width="24"
                                                         Height="24"
                                                         Margin="5,0,0,5"
-                                                        Background="{DynamicResource BaseColorBrush}"
                                                         Command="{Binding RemoveUnRARPasswordCommand}">
                                                         <StackPanel
                                                             HorizontalAlignment="Center"
@@ -468,9 +467,9 @@
                                                                 Height="16"
                                                                 HorizontalAlignment="Center"
                                                                 VerticalAlignment="Center"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_checkmark_cross}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=CheckmarkCross}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </StackPanel>
@@ -485,7 +484,7 @@
                         </StackPanel>
                     </Grid>
                 </TabItem>
-                <TabItem Controls:ControlsHelper.HeaderFontSize="15" Header="{x:Static p:Strings.Settings_SpeedreportSettings}">
+                <TabItem Controls:HeaderedControlHelper.HeaderFontSize="15" Header="{x:Static p:Strings.Settings_SpeedreportSettings}">
                     <Grid>
                         <StackPanel MaxWidth="650">
                             <GroupBox Header="{x:Static p:Strings.Settings_SpeedreportSettings}">
@@ -493,13 +492,13 @@
                                     <StackPanel>
                                         <Controls:ToggleSwitch
                                             Margin="0,5,0,10"
-                                            Controls:ControlsHelper.HeaderFontSize="12"
-                                            Controls:ControlsHelper.HeaderFontWeight="Light"
+                                            Controls:HeaderedControlHelper.HeaderFontSize="12"
+                                            Controls:HeaderedControlHelper.HeaderFontWeight="Light"
                                             FontSize="11"
-                                            IsChecked="{Binding SpeedreportEnabled}"
-                                            OffLabel="{x:Static p:Strings.VariousStrings_Disabled}"
-                                            OnLabel="{x:Static p:Strings.VariousStrings_Enabled}"
-                                            Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" />
+                                            IsOn="{Binding SpeedreportEnabled}"
+                                            OffContent="{x:Static p:Strings.VariousStrings_Disabled}"
+                                            OnContent="{x:Static p:Strings.VariousStrings_Enabled}"
+                                            Style="{StaticResource MahApps.Styles.ToggleSwitch}" />
 
                                         <TextBox
                                             x:Name="TxtSpeedreportUsername"
@@ -528,8 +527,7 @@
                                             IsEnabled="{Binding SpeedreportEnabled}"
                                             ToolBarTray.IsLocked="True">
                                             <Menu
-                                                Background="{DynamicResource BaseColorBrush}"
-                                                BorderBrush="{DynamicResource AccentColorBrush2}"
+                                                BorderBrush="{DynamicResource MahApps.Brushes.Accent2}"
                                                 BorderThickness="1"
                                                 ItemContainerStyle="{StaticResource ThemeMenuItemStyle}">
                                                 <MenuItem
@@ -542,9 +540,9 @@
                                                         <Rectangle
                                                             Width="16"
                                                             Height="16"
-                                                            Fill="{DynamicResource AccentColorBrush}">
+                                                            Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                             <Rectangle.OpacityMask>
-                                                                <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_code_xml}" />
+                                                                <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=CodeXml}" />
                                                             </Rectangle.OpacityMask>
                                                         </Rectangle>
                                                     </MenuItem.Icon>
@@ -556,9 +554,9 @@
                                                             <Rectangle
                                                                 Width="16"
                                                                 Height="16"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_user}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=User}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </MenuItem.Icon>
@@ -571,9 +569,9 @@
                                                             <Rectangle
                                                                 Width="16"
                                                                 Height="16"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_connection_quality_veryhigh}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=ConnectionQualityVeryhigh}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </MenuItem.Icon>
@@ -586,9 +584,9 @@
                                                             <Rectangle
                                                                 Width="16"
                                                                 Height="16"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_notification}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=Notification}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </MenuItem.Icon>
@@ -601,9 +599,9 @@
                                                             <Rectangle
                                                                 Width="16"
                                                                 Height="16"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_gauge_75}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=Gauge75}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </MenuItem.Icon>
@@ -617,9 +615,9 @@
                                                             <Rectangle
                                                                 Width="16"
                                                                 Height="16"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_timer}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=Timer}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </MenuItem.Icon>
@@ -636,9 +634,9 @@
                                                         <Rectangle
                                                             Width="16"
                                                             Height="16"
-                                                            Fill="{DynamicResource AccentColorBrush}">
+                                                            Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                             <Rectangle.OpacityMask>
-                                                                <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_information_circle}" />
+                                                                <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=InformationCircle}" />
                                                             </Rectangle.OpacityMask>
                                                         </Rectangle>
                                                     </MenuItem.Icon>
@@ -651,9 +649,9 @@
                                                             <Rectangle
                                                                 Width="16"
                                                                 Height="16"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_interface_textbox}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=InterfaceTextbox}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </MenuItem.Icon>
@@ -666,9 +664,9 @@
                                                             <Rectangle
                                                                 Width="16"
                                                                 Height="16"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_people_up}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=PeopleUp}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </MenuItem.Icon>
@@ -681,9 +679,9 @@
                                                             <Rectangle
                                                                 Width="16"
                                                                 Height="16"
-                                                                Fill="{DynamicResource AccentColorBrush}">
+                                                                Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                                 <Rectangle.OpacityMask>
-                                                                    <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_pie}" />
+                                                                    <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=Pie}" />
                                                                 </Rectangle.OpacityMask>
                                                             </Rectangle>
                                                         </MenuItem.Icon>
@@ -702,9 +700,9 @@
                                                         <Rectangle
                                                             Width="16"
                                                             Height="16"
-                                                            Fill="{DynamicResource AccentColorBrush}">
+                                                            Fill="{DynamicResource MahApps.Brushes.Accent}">
                                                             <Rectangle.OpacityMask>
-                                                                <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_reset}" />
+                                                                <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=Reset}" />
                                                             </Rectangle.OpacityMask>
                                                         </Rectangle>
                                                     </MenuItem.Icon>
@@ -779,7 +777,7 @@
                 MaxWidth="100"
                 MaxHeight="30"
                 Margin="0,10"
-                BorderBrush="{DynamicResource AccentColorBrush2}"
+                BorderBrush="{DynamicResource MahApps.Brushes.Accent2}"
                 BorderThickness="1"
                 Command="{Binding SaveSettingsCommand}">
                 <StackPanel Orientation="Horizontal">
@@ -787,9 +785,9 @@
                         Width="16"
                         Height="16"
                         Margin="0,0,5,0"
-                        Fill="{DynamicResource AccentColorBrush}">
+                        Fill="{DynamicResource MahApps.Brushes.Accent}">
                         <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_save}" />
+                            <VisualBrush Stretch="Uniform" Visual="{iconPacks:Modern Kind=Save}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                     <TextBlock

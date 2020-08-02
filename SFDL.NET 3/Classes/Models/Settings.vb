@@ -18,8 +18,9 @@
     Public Property UnRARSettings As New UnRARSettings
     Public Property SpeedReportSettings As New SpeedreportSettings
     Public Property RemoteControlSettings As New RemoteControlSettings
-    Public Property AppAccent As String = "Blue"
-    Public Property AppTheme As String = "BaseLight"
+    Public Property ColorScheme As String = "Blue"
+    Public Property BaseColorScheme As String = "Light"
+    Public Property SyncThemeWithWindows As Boolean = True
     Public Property ExcludeMaliciousFiles As Boolean = True
     Public Property AutoPasswordContainer As Boolean = False
     Public Property AutoPasswordContainerList As New List(Of String)
@@ -75,8 +76,8 @@
             .DownloadDirectory = IO.Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), "Downloads")
             .ExistingFileHandling = ExistingFileHandling.ResumeFile
             .InstantVideo = False
-            .AppAccent = "Blue"
-            .AppTheme = "BaseLight"
+            .ColorScheme = "Blue"
+            .BaseColorScheme = "Light"
             .Language = "de"
             .MaxDownloadThreads = 3
             .MaxRetry = 3
@@ -84,6 +85,7 @@
             .UnRARSettings = New UnRARSettings
             .ExcludeMaliciousFiles = True
             .SpeedReportSettings = New SpeedreportSettings
+            .SyncThemeWithWindows = True
 
         End With
 

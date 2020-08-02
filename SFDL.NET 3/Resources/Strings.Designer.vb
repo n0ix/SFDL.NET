@@ -1618,6 +1618,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die Mit Windows synchronisieren ähnelt.
+        '''</summary>
+        Public Shared ReadOnly Property Settings_SyncThemeWithWindows() As String
+            Get
+                Return ResourceManager.GetString("Settings_SyncThemeWithWindows", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Sucht eine lokalisierte Zeichenfolge, die Einstellungen ähnelt.
         '''</summary>
         Public Shared ReadOnly Property Settings_Title() As String

@@ -785,4 +785,7 @@ Starten Sie den Download neu damit alle Einstellungen übernommen werden.</value
   <data name="Settings_ChecksumThreads" xml:space="preserve">
     <value>Maximale Checksum Threads:</value>
   </data>
+  <data name="Settings_SyncThemeWithWindows" xml:space="preserve">
+    <value>Mit Windows synchronisieren</value>
+  </data>
 </root>
