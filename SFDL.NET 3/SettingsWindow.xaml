@@ -29,8 +29,9 @@
             <local:InvertBooleanConverter x:Key="InvertBool" />
 
             <Style x:Key="ThemeMenuItemStyle" TargetType="MenuItem">
-                <Setter Property="Background" Value="{DynamicResource BaseColorBrush}" />
+                <Setter Property="Background" Value="{DynamicResource MahApps.Colors.ThemeBackground}" />
             </Style>
+            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <Style
@@ -527,6 +528,7 @@
                                             IsEnabled="{Binding SpeedreportEnabled}"
                                             ToolBarTray.IsLocked="True">
                                             <Menu
+                                                Background="{StaticResource MahApps.Brushes.ThemeBackground}"
                                                 BorderBrush="{DynamicResource MahApps.Brushes.Accent2}"
                                                 BorderThickness="1"
                                                 ItemContainerStyle="{StaticResource ThemeMenuItemStyle}">
