@@ -8,6 +8,7 @@
     xmlns:local="clr-namespace:SFDL.NET3"
     xmlns:p="clr-namespace:SFDL.NET3.My.Resources"
     xmlns:tb="http://www.hardcodet.net/taskbar"
+    xmlns:Flags="clr-namespace:FamFamFam.Flags.Wpf;assembly=FamFamFam.Flags.Wpf"
     x:Name="SFDL_MainWindow"
     Title="SFDL.NET 3"
     WindowTitleBrush="{DynamicResource WhiteColorBrush}"
@@ -40,6 +41,7 @@
             <local:CollectionViewNameConverter x:Key="CollectionViewNameConv" />
             <local:FileSizeConverter x:Key="FileSizeConv" />
             <local:CollectionViewNameSecureIndicatorConverter x:Key="CollectionViewName2SecureIndicator"/>
+            <Flags:CountryIdToFlagImageSourceConverter x:Key="CountryIdToFlagImageSourceConverter" />
 
             <Style x:Key="MyCustomListView" TargetType="{x:Type ListView}" BasedOn="{StaticResource VirtualisedMetroListView}">
                 <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
@@ -263,10 +265,10 @@
                                         FontWeight="Bold" />
                                     <Image
                                         x:Name="img_containerinfo_serverlocation"
-                                        Width="32"
-                                        Height="32"
+                                        Width="24"
+                                        Height="24"
                                         Margin="0,0,2,0"
-                                        Source="{Binding ContainerInfoServerWhois.Result.CountryImage}" />
+                                        Source="{Binding ContainerInfoServerWhois.Result.CountryCode, Converter={StaticResource CountryIdToFlagImageSourceConverter}}" RenderOptions.BitmapScalingMode="HighQuality" />
                                     <Label
                                         x:Name="txt_containerinfo_serverlocation"
                                         Content="{Binding ContainerInfoServerWhois.Result.CountryCode}"

@@ -41,7 +41,6 @@ Module WhoisHelper
 
 
         _rt.CountryCode = _country_code
-        _rt.CountryImage = Await DownloadFlagImage(_country_code)
 
         If IO.File.Exists(_local_xml) Then 'CleanUp
             IO.File.Delete(_local_xml)
@@ -51,39 +50,5 @@ Module WhoisHelper
 
     End Function
 
-    Private Async Function DownloadFlagImage(ByVal _countrycode As String) As Task(Of BitmapImage)
-
-        Dim _flag As System.Drawing.Image
-        Dim _bitmap_flag As BitmapImage
-        Dim _local_flag As String
-        Dim _memory_stream As MemoryStream
-
-        _local_flag = Await DownloadFile2Temp("http://n1.dlcache.com/flags/" & _countrycode.ToLower & ".gif")
-
-        _flag = System.Drawing.Image.FromFile(_local_flag)
-
-        _bitmap_flag = New BitmapImage
-
-        _bitmap_flag.BeginInit()
-
-        _memory_stream = New MemoryStream
-
-        _flag.Save(_memory_stream, System.Drawing.Imaging.ImageFormat.Bmp)
-
-        _memory_stream.Seek(0, SeekOrigin.Begin)
-
-        _bitmap_flag.StreamSource = _memory_stream
-
-        _bitmap_flag.EndInit()
-
-        _flag.Dispose()
-
-        If IO.File.Exists(_local_flag) Then 'CleanUp
-            IO.File.Delete(_local_flag)
-        End If
-
-        Return _bitmap_flag
-
-    End Function
 
 End Module
