@@ -475,6 +475,7 @@ Class DownloadHelper
                 _dl_count += 1
             End SyncLock
 
+
             If _item.IWorkItemResult.IsCanceled = True Then
                 Throw New DownloadStoppedException("DownloadStopped")
             End If
@@ -492,6 +493,10 @@ Class DownloadHelper
             If _item.FileSize = 0 Then
                 _log.Warn("No fie size found - trying to determining")
                 GetItemFileSize(_item, _ftp_session)
+            End If
+
+            If GetFreeDiskSpaceForPath(_item.LocalFile) < _item.FileSize Then
+                Throw New IO.IOException("NotEnoughDiskSpace")
             End If
 
             If (_settings.ExistingFileHandling = ExistingFileHandling.ResumeFile Or _isRetry = True) AndAlso (IO.File.Exists(_item.LocalFile)) Then
@@ -652,7 +657,14 @@ Class DownloadHelper
                 _item.DownloadStatus = NET3.DownloadItem.Status.Stopped
             Else
                 _log.Error(ex, ex.Message)
-                ParseFTPException(ex, _item)
+
+                If String.IsNullOrWhiteSpace(_item.LocalFile) = False AndAlso (GetFreeDiskSpaceForPath(_item.LocalFile) <= 4096 Or GetFreeDiskSpaceForPath(_item.LocalFile) < _item.FileSize) Then
+                    _log.Error("Disk is full or not enough space to fully save this file")
+                    _item.DownloadStatus = NET3.DownloadItem.Status.Failed_NotEnoughDiskSpace
+                Else
+                    ParseFTPException(ex, _item)
+                End If
+
             End If
 
         Catch ex As ArxOne.Ftp.Exceptions.FtpException
@@ -669,7 +681,7 @@ Class DownloadHelper
 
             _log.Error(ex, ex.Message)
 
-            If IsDiskFull(ex) = True Then
+            If IsDiskFull(ex) = True Or ex.Message = "NotEnoughDiskSpace" Then
                 _item.DownloadStatus = NET3.DownloadItem.Status.Failed_NotEnoughDiskSpace
             Else
                 _item.DownloadStatus = NET3.DownloadItem.Status.Failed_IOError

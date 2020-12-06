@@ -1,4 +1,5 @@
-﻿Imports System.Windows.Forms
+﻿Imports System.IO
+Imports System.Windows.Forms
 Imports Microsoft.Win32
 
 Module GeneralHelper
@@ -61,6 +62,24 @@ Module GeneralHelper
         Else
             Return False
         End If
+
+    End Function
+
+    Public Function GetFreeDiskSpaceForPath(ByVal _path As String) As Double
+
+        Dim diskLetter As String = IO.Path.GetPathRoot(_path)
+
+        If diskLetter.StartsWith("\\?\") Then
+            diskLetter = diskLetter.Replace("\\?\", "")
+        End If
+
+        If diskLetter.EndsWith(":\") Then
+            diskLetter = diskLetter.Replace(":\", "")
+        End If
+
+        Dim driveInfo As DriveInfo = New DriveInfo(diskLetter)
+
+        Return driveInfo.AvailableFreeSpace
 
     End Function
 
