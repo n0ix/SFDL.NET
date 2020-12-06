@@ -505,32 +505,6 @@ Module SFDLFileHelper
 
     End Function
 
-    Private Function CleanDownloadPathInput(strIn As String) As String
-        ' Replace invalid characters with empty strings.
-
-        Dim _rt As String = String.Empty
-        Dim _org_filename As String = String.Empty
-
-        Try
-
-            If Not String.IsNullOrWhiteSpace(strIn) Then
-
-                _org_filename = IO.Path.GetFileName(strIn)
-
-                _rt = strIn.Replace(_org_filename, "")
-
-                _rt = IO.Path.Combine(_rt, Text.RegularExpressions.Regex.Replace(_org_filename, "[^\w\.@-]", ""))
-
-            End If
-
-        Catch e As TimeoutException
-            Return String.Empty
-        End Try
-
-        Return _rt
-
-    End Function
-
     Private Function SanitiseFileOrFolderName(ByVal filename As String) As String
         Dim invalidChars = Regex.Escape(New String(IO.Path.GetInvalidFileNameChars()))
         Dim invalidReStr = String.Format("[{0}]+", invalidChars)
@@ -581,7 +555,6 @@ Module SFDLFileHelper
 
             _dowload_local_filename = IO.Path.Combine(_download_dir, SanitiseFileOrFolderName(_tmp_last_sub_dir), SanitiseFileOrFolderName(_item.FileName))
 
-            _dowload_local_filename = CleanDownloadPathInput(_dowload_local_filename)
 
         Catch ex As Exception
             _log.Error(ex, ex.Message)
