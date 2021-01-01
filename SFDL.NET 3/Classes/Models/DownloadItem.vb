@@ -15,7 +15,7 @@ Public Class DownloadItem
 
     Private _download_speed As String = String.Empty
     Private _selected As Boolean = False
-    Private _download_progress As Integer = 0
+    Private _download_progress As Double = 0
     Private _parent_container_id As Guid
     Private _status_image As String = "None"
     Private _status As Status = Status.None
@@ -93,8 +93,8 @@ Public Class DownloadItem
             Return _selected
         End Get
     End Property
-    Public Property DownloadProgress As Integer
-        Set(value As Integer)
+    Public Property DownloadProgress As Double
+        Set(value As Double)
             _download_progress = value
             RaisePropertyChanged("DownloadProgress")
         End Set

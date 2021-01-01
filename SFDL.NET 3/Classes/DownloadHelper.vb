@@ -462,7 +462,7 @@ Class DownloadHelper
         Dim bytesRead As Integer = 0
         Dim _starttime As DateTime
 
-        Dim _percent_downloaded As Integer = 0
+        Dim _percent_downloaded As Double = 0
         Dim _ctime As TimeSpan
         Dim elapsed As TimeSpan
         Dim bytesPerSec As Integer = 0
@@ -534,7 +534,7 @@ Class DownloadHelper
                         While bytesRead > 0 And (_item.IWorkItemResult.IsCanceled = False)
 
                             Dim _tmp_percent_downloaded As Double = 0
-                            Dim _new_perc As Integer = 0
+                            Dim _new_perc As Double = 0
                             Dim _download_speed As String = String.Empty
 
                             _local_write_stream.Write(buffer, 0, bytesRead)
@@ -547,10 +547,19 @@ Class DownloadHelper
 
 #Region "Berechnung Download Speed / Fortschritt"
 
-                            _tmp_percent_downloaded = CDbl(_local_write_stream.Position) / CDbl(_item.FileSize)
-                            _new_perc = CInt(_tmp_percent_downloaded * 100)
+                            _tmp_percent_downloaded = _local_write_stream.Position / _item.FileSize
+                            _new_perc = _tmp_percent_downloaded * 100
 
-                            If _new_perc <> _percent_downloaded Then 'Nicht jedesmal Updaten
+                            If _new_perc <= 0.1 Then
+                                _new_perc = Math.Round(_new_perc, 4)
+                            ElseIf _new_perc <= 1 Then
+                                _new_perc = Math.Round(_new_perc, 2)
+                            Else
+                                _new_perc = Math.Round(_new_perc, 1)
+                            End If
+
+
+                            If _new_perc <> _percent_downloaded Then
 
                                 Dim _tmp_speed As Double
 
