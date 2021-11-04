@@ -1,4 +1,5 @@
 ^.*\.(SCR|scr)$
+^.*\.(lnk|LNK)$
 IMG001.exe
 Info.zip
 info.zip
